@@ -1,4 +1,6 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+
+import Home from "../pages/Home";
 import Login from "../pages/Login";
 import SignUp from "../pages/Signup";
 
@@ -7,7 +9,7 @@ function Router() {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/Signup" element={<SignUp />} />
-            <Route path="/" element={<>Home Page</>} />
+            <Route path="/" element={<Home />} />
             <Route path="*" element={<>Not Found</>} />
         </Routes>
     );
