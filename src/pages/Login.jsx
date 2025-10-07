@@ -17,21 +17,21 @@ const Login = () => {
     }
 
     const foodIcons = [
-        { icon: <GiChickenLeg className="text-purple-300" /> },
-        { icon: <GiFruitBowl className="text-blue-300" /> },
-        { icon: <GiHotMeal className="text-indigo-300" /> },
-        { icon: <GiSushis className="text-pink-300" /> },
-        { icon: <GiCupcake className="text-rose-300" /> },
-        { icon: <GiCheeseWedge className="text-cyan-200" /> },
-        { icon: <GiDonerKebab className="text-violet-300" /> },
-        { icon: <GiMeat className="text-fuchsia-300" /> },
-        { icon: <GiCorn className="text-teal-300" /> },
-        { icon: <GiPotato className="text-lavender-300" /> },
-        { icon: <GiCarrot className="text-amber-300" /> },
-        { icon: <GiOlive className="text-emerald-300" /> },
-        { icon: <GiCoffeeBeans className="text-blue-400" /> },
-        { icon: <GiCroissant className="text-purple-200" /> },
-        { icon: <GiGrapes className="text-indigo-200" /> },
+        { icon: <GiChickenLeg className="text-amber-500" /> },
+        { icon: <GiFruitBowl className="text-red-400" /> },
+        { icon: <GiHotMeal className="text-orange-500" /> },
+        { icon: <GiSushis className="text-rose-500" /> },
+        { icon: <GiCupcake className="text-pink-400" /> },
+        { icon: <GiCheeseWedge className="text-yellow-400" /> },
+        { icon: <GiDonerKebab className="text-amber-600" /> },
+        { icon: <GiMeat className="text-red-500" /> },
+        { icon: <GiCorn className="text-yellow-500" /> },
+        { icon: <GiPotato className="text-amber-700" /> },
+        { icon: <GiCarrot className="text-orange-600" /> },
+        { icon: <GiOlive className="text-emerald-500" /> },
+        { icon: <GiCoffeeBeans className="text-brown-500" /> },
+        { icon: <GiCroissant className="text-amber-400" /> },
+        { icon: <GiGrapes className="text-purple-400" /> },
     ];
 
     // Generate floating icons once and store in a ref
@@ -42,7 +42,7 @@ const Login = () => {
             const animationDuration = Math.random() * 20 + 15;
             const animationDelay = Math.random() * 5;
             const size = Math.random() * 24 + 16;
-            const opacity = Math.random() * 0.4 + 0.1;
+            const opacity = Math.random() * 0.6 + 0.3;
 
             return (
                 <div
@@ -55,7 +55,7 @@ const Login = () => {
                         animationDelay: `${animationDelay}s`,
                         fontSize: `${size}px`,
                         opacity: opacity,
-                        filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.2))',
+                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
                         zIndex: 0,
                     }}
                 >
@@ -66,32 +66,38 @@ const Login = () => {
     );
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-transparent">
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
             {/* Floating icons */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 {floatingIconsRef.current}
             </div>
 
-            {/* Subtle gradient background for the form only */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-blue-400/5 to-indigo-600/5 backdrop-blur-[2px] rounded-3xl -z-10"></div>
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-200 to-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
+                <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-red-200 to-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow animation-delay-2000"></div>
+                <div className="absolute bottom-1/4 left-1/3 w-64 h-64 bg-gradient-to-r from-yellow-200 to-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow animation-delay-4000"></div>
+            </div>
 
             {/* Glassmorphic Card */}
             <div className="w-full max-w-md z-10 animate-fadeIn">
-                <div className="bg-gradient-to-br from-purple-400/15 via-blue-300/15 to-indigo-500/15 backdrop-blur-xl rounded-3xl shadow-2xl shadow-purple-500/20 border border-white/30 border-b-white/20 border-r-white/20 transform transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/30 relative overflow-hidden">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-orange-200/50 border border-white/60 transform transition-all duration-700 hover:scale-[1.02] hover:shadow-orange-300/60 relative overflow-hidden">
                     {/* Subtle shimmer effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-50/30 to-transparent -skew-x-12 animate-shimmer pointer-events-none"></div>
                     
                     <div className="p-8 relative">
                         <div className="text-center mb-10">
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-200 to-blue-200 bg-clip-text text-transparent mb-2 drop-shadow-md">Welcome Back</h1>
-                            <p className="text-white/90 drop-shadow-sm text-lg">Sign in to your BiteBot account</p>
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-2 drop-shadow-sm animate-gradient-x">
+                                Welcome Back
+                            </h1>
+                            <p className="text-gray-600 text-lg font-medium">Sign in to your BiteBot account</p>
                         </div>
 
                         <div className="space-y-6">
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text text-white font-semibold drop-shadow-sm flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-300" viewBox="0 0 20 20" fill="currentColor">
+                                    <span className="label-text text-gray-700 font-semibold flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                         </svg>
@@ -102,7 +108,7 @@ const Login = () => {
                                     type="text"
                                     value={Email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="input w-full bg-white/15 border border-white/30 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 outline-none transition-all duration-300 text-white placeholder-white/70 backdrop-blur-sm py-4 px-5 rounded-xl"
+                                    className="input w-full bg-white border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 py-4 px-5 rounded-xl hover:border-orange-300"
                                     placeholder="Enter your email"
                                     required
                                 />
@@ -110,8 +116,8 @@ const Login = () => {
 
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text text-white font-semibold drop-shadow-sm flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
+                                    <span className="label-text text-gray-700 font-semibold flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                         </svg>
                                         Password
@@ -121,7 +127,7 @@ const Login = () => {
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="input w-full bg-white/15 border border-white/30 focus:border-purple-400 focus:ring-2 focus:ring-purple-400/30 outline-none transition-all duration-300 text-white placeholder-white/70 backdrop-blur-sm py-4 px-5 rounded-xl"
+                                    className="input w-full bg-white border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 py-4 px-5 rounded-xl hover:border-orange-300"
                                     placeholder="Enter your password"
                                     required
                                 />
@@ -130,7 +136,7 @@ const Login = () => {
                             <button
                                 onClick={handleLogin}
                                 disabled={loading}
-                                className="btn btn-lg border-0 btn-block bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 shadow-lg shadow-purple-500/30 hover:shadow-purple-600/40 transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 text-white font-bold py-4 rounded-xl relative overflow-hidden group"
+                                className="btn btn-lg border-0 btn-block bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 shadow-lg shadow-orange-300/40 hover:shadow-orange-400/50 transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 text-white font-bold py-4 rounded-xl relative overflow-hidden group animate-bounce-gentle"
                             >
                                 <span className="relative z-10">
                                     {loading ? (
@@ -142,20 +148,20 @@ const Login = () => {
                                         "Continue"
                                     )}
                                 </span>
-                                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                <span className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                             </button>
                         </div>
 
                         <div className="mt-8 text-center">
-                            <p className="text-white/80 text-sm">
+                            <p className="text-gray-600 text-sm">
                                 Don't have an account?
-                                <Link to={'/Signup'} className="text-blue-300 hover:text-purple-300 font-semibold ml-1 transition-colors duration-300 hover:underline">
+                                <Link to={'/Signup'} className="text-orange-500 hover:text-red-500 font-semibold ml-1 transition-colors duration-300 hover:underline">
                                     Sign up
                                 </Link>
                             </p>
 
-                            <p className="text-white/80 text-sm mt-2">
-                                <Link to={'/ForgetPassword'} className="text-blue-300 hover:text-purple-300 font-semibold transition-colors duration-300 hover:underline">
+                            <p className="text-gray-600 text-sm mt-2">
+                                <Link to={'/ForgetPassword'} className="text-orange-500 hover:text-red-500 font-semibold transition-colors duration-300 hover:underline">
                                     Forgot password?
                                 </Link>
                             </p>

@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
 import RecipeCard from "./RecipeCard";
 
 const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
@@ -10,7 +9,7 @@ const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
         const container = scrollRef.current;
         if (!container) return;
 
-        const scrollAmount = 320; // Approximate width of one card plus gap
+        const scrollAmount = 320; // width of one card + gap
         const newScrollLeft =
             direction === "left"
                 ? container.scrollLeft - scrollAmount
@@ -22,26 +21,28 @@ const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
         });
     };
 
-    if (!recipes || recipes.length === 0) {
-        return null;
-    }
+    if (!recipes || recipes.length === 0) return null;
 
     return (
-        <div className={`space-y-4 ${className}`}>
+        <div className={`space-y-6 ${className}`}>
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-primary">{title}</h2>
+            <div className="flex items-center justify-between px-2 md:px-4">
+                <h2 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+                    {title}
+                </h2>
+
+                {/* Arrow buttons */}
                 <div className="flex gap-2">
                     <button
                         onClick={() => scroll("left")}
-                        className="btn btn-circle btn-sm btn-outline"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:shadow-lg hover:from-orange-200 hover:to-amber-200 transition-all duration-300 hover:scale-105"
                         aria-label="Scroll left"
                     >
                         <FaChevronLeft className="w-4 h-4" />
                     </button>
                     <button
                         onClick={() => scroll("right")}
-                        className="btn btn-circle btn-sm btn-outline"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:shadow-lg hover:from-orange-200 hover:to-amber-200 transition-all duration-300 hover:scale-105"
                         aria-label="Scroll right"
                     >
                         <FaChevronRight className="w-4 h-4" />
@@ -52,7 +53,7 @@ const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
             {/* Carousel */}
             <div
                 ref={scrollRef}
-                className="flex gap-4 overflow-x-auto scrollbar-hide pb-4"
+                className="flex gap-6 overflow-x-auto pb-4 scroll-smooth"
                 style={{
                     scrollbarWidth: "none",
                     msOverflowStyle: "none",
