@@ -125,41 +125,46 @@ const RecipeGrid = () => {
     ];
 
     return (
-        <>
-            {/* More Recipes Bar */}
-            <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-foreground">
+        <section className="container mx-auto px-6 py-16 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/40">
+            {/* Header Bar */}
+            <div className="flex items-center justify-between mb-10">
+                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
                     More Recipes
                 </h2>
                 <button
                     onClick={() => {}}
-                    className="px-4 py-2 border rounded text-sm hover:bg-muted"
+                    className="px-5 py-2.5 text-sm font-medium rounded-full border border-orange-200 text-orange-600 hover:bg-orange-100 transition-all duration-200"
                 >
-                    Browse All
+                    Browse All →
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Grid Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                    <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        className="h-full"
+                    />
                 ))}
             </div>
 
             {/* No Results */}
             {recipes.length === 0 && (
-                <div className="text-center py-16">
-                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-2xl">🔍</span>
+                <div className="text-center py-20">
+                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-3xl text-orange-500">🔍</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
                         No recipes found
                     </h3>
-                    <p className="text-muted-foreground mb-4">
+                    <p className="text-gray-500">
                         Try browsing our featured categories above.
                     </p>
                 </div>
             )}
-        </>
+        </section>
     );
 };
 

@@ -1,10 +1,8 @@
 import { AiFillStar } from "react-icons/ai";
 import { FaBolt, FaFire, FaGem, FaUser } from "react-icons/fa";
-
 import RecipeCarousel from "../recipe/RecipeCarousel";
 
 function RecipeCarousels() {
-    // Hardcoded JSON data
     const sampleRecipes = [
         {
             id: "r1",
@@ -128,21 +126,14 @@ function RecipeCarousels() {
         },
     ];
 
-    // Data processor
     const buildFromRawJson = () => {
         const merged = [...sampleRecipes];
         const getTotalTime = (r) => (r.prepMinutes || 0) + (r.cookMinutes || 0);
 
-        const trending = [...merged]
-            .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
-            .slice(0, 8);
-
+        const trending = [...merged].slice(0, 8);
         const newest = [...sampleRecipes].slice(0, 8);
-
         const forYou = [...merged].slice(0, 8);
-
         const premium = merged.filter((r) => r.isPremium).slice(0, 8);
-
         const quickEasy = merged
             .filter(
                 (r) => (r.tags || []).includes("quick") || getTotalTime(r) <= 30
@@ -155,13 +146,15 @@ function RecipeCarousels() {
     const data = buildFromRawJson();
 
     return (
-        <div className="container mx-auto px-4 py-8 space-y-12">
+        <div className="container mx-auto px-6 py-16 space-y-20 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
             {/* Trending */}
             {data.trending && (
-                <section className="mb-12">
-                    <h2 className="flex items-center gap-2 text-2xl font-bold mb-6 text-primary">
-                        <FaFire className="text-error" />
-                        <span>Trending Now</span>
+                <section className="space-y-6">
+                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+                        <FaFire className="text-orange-500 drop-shadow-sm" />
+                        <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                            Trending Now
+                        </span>
                     </h2>
                     <RecipeCarousel
                         recipes={data.trending}
@@ -172,10 +165,12 @@ function RecipeCarousels() {
 
             {/* New Recipes */}
             {data.newest && (
-                <section className="mb-12">
-                    <h2 className="flex items-center gap-2 text-2xl font-bold mb-6 text-primary">
-                        <AiFillStar className="text-warning" />
-                        <span>Fresh & New</span>
+                <section className="space-y-6">
+                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+                        <AiFillStar className="text-yellow-500 drop-shadow-sm" />
+                        <span className="bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
+                            Fresh & New
+                        </span>
                     </h2>
                     <RecipeCarousel
                         recipes={data.newest}
@@ -186,10 +181,12 @@ function RecipeCarousels() {
 
             {/* For You */}
             {data.forYou && (
-                <section className="mb-12">
-                    <h2 className="flex items-center gap-2 text-2xl font-bold mb-6 text-primary">
-                        <FaUser className="text-info" />
-                        <span>Recommended for You</span>
+                <section className="space-y-6">
+                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+                        <FaUser className="text-blue-500 drop-shadow-sm" />
+                        <span className="bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+                            Recommended for You
+                        </span>
                     </h2>
                     <RecipeCarousel
                         recipes={data.forYou}
@@ -200,10 +197,12 @@ function RecipeCarousels() {
 
             {/* Quick & Easy */}
             {data.quickEasy && (
-                <section className="mb-12">
-                    <h2 className="flex items-center gap-2 text-2xl font-bold mb-6 text-primary">
-                        <FaBolt className="text-success" />
-                        <span>Quick & Easy</span>
+                <section className="space-y-6">
+                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+                        <FaBolt className="text-green-500 drop-shadow-sm" />
+                        <span className="bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">
+                            Quick & Easy
+                        </span>
                     </h2>
                     <RecipeCarousel
                         recipes={data.quickEasy}
@@ -214,10 +213,12 @@ function RecipeCarousels() {
 
             {/* Premium */}
             {data.premium && (
-                <section className="mb-12">
-                    <h2 className="flex items-center gap-2 text-2xl font-bold mb-6 text-primary">
-                        <FaGem className="text-secondary" />
-                        <span>Premium Picks</span>
+                <section className="space-y-6">
+                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+                        <FaGem className="text-purple-500 drop-shadow-sm" />
+                        <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                            Premium Picks
+                        </span>
                     </h2>
                     <RecipeCarousel
                         recipes={data.premium}
