@@ -137,355 +137,181 @@ function RecipeDetail() {
 
     return (
         <HomeLayout>
-            <div className="min-h-screen bg-gradient-to-br from-base-100 via-slate-50 to-accent/5">
-                <div className="container mx-auto px-4 py-8">
-                    <div className="max-w-6xl mx-auto">
-                        {/* Hero */}
-                        <div className="relative mb-8">
-                            <div className="aspect-video w-full rounded-xl overflow-hidden bg-gray-100 shadow">
-                                <img
-                                    src={recipe.heroImage}
-                                    alt={recipe.title}
-                                    className="w-full h-full object-cover"
-                                />
-                                {recipe.isPremium && (
-                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                        <div className="text-center text-white">
-                                            <FaCrown className="mx-auto h-16 w-16 mb-4 text-yellow-400" />
-                                            <h3 className="text-2xl font-bold mb-2">
-                                                Premium Recipe
-                                            </h3>
-                                            <p className="text-lg mb-4">
-                                                Subscribe to access this
-                                                exclusive content
-                                            </p>
-                                            <button className="btn btn-lg bg-yellow-600 hover:bg-yellow-700">
-                                                <FaCrown className="mr-2 h-5 w-5" />{" "}
-                                                Unlock Premium
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
+            <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
+                {/* ✨ Floating gradient lights for futuristic depth */}
+                <div className="absolute inset-0 -z-10 overflow-hidden">
+                    <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-to-br from-orange-200 to-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+                    <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-br from-red-200 to-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse animation-delay-2000"></div>
+                </div>
+
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+                    <div className="max-w-6xl mx-auto space-y-10">
+                        {/* 🍛 Hero Section */}
+                        <div className="relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
+                            <img
+                                src={recipe.heroImage}
+                                alt={recipe.title}
+                                className="w-full h-[280px] sm:h-[400px] lg:h-[500px] object-cover transition-transform duration-700 hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                            <div className="absolute bottom-8 left-6 sm:left-10">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
+                                    {recipe.title}
+                                </h1>
+                                <p className="text-sm sm:text-base text-white/90 max-w-lg mt-1">
+                                    {recipe.description}
+                                </p>
                             </div>
                         </div>
 
+                        {/* 🌶️ Main Grid */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Main */}
+                            {/* Left (Main content) */}
                             <div className="lg:col-span-2 space-y-8">
-                                {/* Header */}
-                                <div>
-                                    <div className="flex flex-wrap gap-2 mb-4">
-                                        <span className="badge badge-outline">
-                                            {recipe.cuisine}
-                                        </span>
-                                        <span className="badge badge-outline">
-                                            {recipe.difficulty}
-                                        </span>
-                                        {recipe.tags.map((tag) => (
-                                            <span
-                                                key={tag}
-                                                className="badge badge-outline"
+                                {/* 👩‍🍳 Chef Info */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white/60 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-100 hover:shadow-orange-200/60 transition-transform hover:-translate-y-1">
+                                    <div className="flex items-center gap-4 mb-4 sm:mb-0">
+                                        <img
+                                            src={chef.avatar}
+                                            alt={chef.name}
+                                            className="w-14 h-14 rounded-full border-2 border-orange-200 object-cover"
+                                        />
+                                        <div>
+                                            <Link
+                                                to={`/chef/${chef.id}`}
+                                                className="font-semibold text-gray-800 hover:text-orange-500 transition-colors"
                                             >
-                                                {tag}
-                                            </span>
-                                        ))}
+                                                {chef.name}
+                                            </Link>
+                                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                                                <FaStar className="text-yellow-400" /> {chef.rating} •{" "}
+                                                {chef.recipes.length} recipes
+                                            </div>
+                                        </div>
                                     </div>
+                                    <button className="px-4 py-2 rounded-xl border border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 transition-all duration-300 flex items-center justify-center">
+                                        <FaHeart className="mr-2 text-orange-500" /> Subscribe
+                                    </button>
+                                </div>
 
-                                    <h1 className="text-4xl font-bold mb-4">
-                                        {recipe.title}
-                                    </h1>
-                                    <p className="text-lg text-gray-600 mb-6">
-                                        {recipe.description}
+                                {/* ⏱️ Stats */}
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                    {[
+                                        { icon: <FaUsers />, label: "Servings", value: recipe.servings },
+                                        { icon: <FaClock />, label: "Total Time", value: `${totalTime} min` },
+                                        { icon: <FaUtensils />, label: "Difficulty", value: recipe.difficulty },
+                                        { icon: <FaDollarSign />, label: "Per Serving", value: `$${costPerServing.toFixed(2)}` },
+                                    ].map((item, i) => (
+                                        <div
+                                            key={i}
+                                            className="p-4 text-center bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-sm shadow-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1"
+                                        >
+                                            <div className="text-orange-500 mx-auto h-6 w-6 mb-1">{item.icon}</div>
+                                            <div className="font-semibold text-gray-700">{item.value}</div>
+                                            <div className="text-sm text-gray-500">{item.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* 🧂 Ingredients */}
+                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/40">
+                                    <h3 className="text-xl font-bold mb-3 text-gray-800">Ingredients</h3>
+
+                                    <p className="text-sm text-gray-500 mb-4">
+                                        Total cost: ${totalCost?.toFixed(2) ?? "0.00"}
+                                        ({costPerServing?.toFixed(2) ?? "0.00"} per serving)
                                     </p>
 
-                                    {/* Chef Info */}
-                                    <div className="flex items-center justify-between p-6 border rounded-xl bg-white shadow-sm">
-                                        <div className="flex items-center gap-4">
-                                            <img
-                                                src={chef.avatar}
-                                                alt={chef.name}
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
-                                            <div>
-                                                <Link
-                                                    to={`/chef/${chef.id}`}
-                                                    className="font-semibold hover:text-primary"
-                                                >
-                                                    {chef.name}
-                                                </Link>
-                                                <div className="flex items-center gap-1 text-sm text-gray-500">
-                                                    <FaStar className="h-4 w-4 text-yellow-400" />
-                                                    {chef.rating} •{" "}
-                                                    {chef.recipes.length}{" "}
-                                                    recipes
-                                                </div>
+                                    <div className="divide-y divide-orange-100">
+                                        {recipe.ingredients.map((ing) => (
+                                            <div
+                                                key={ing.name}
+                                                className="grid grid-cols-3 gap-4 py-2 text-gray-700"
+                                            >
+                                                <span className="font-medium">{ing.name}</span>
+                                                <span className="text-gray-600 text-sm">
+                                                    {ing.quantity} {ing.unit}
+                                                </span>
+                                                <span className="text-sm text-gray-500 text-right">
+                                                    ${(ing.quantity * (ing.pricePerUnit ?? 0)).toFixed(2)}
+                                                </span>
                                             </div>
-                                        </div>
-
-                                        <button className="btn btn-outline">
-                                            <FaHeart className="mr-2 h-4 w-4" />
-                                            Subscribe
-                                        </button>
-                                    </div>
-
-                                    {/* Meta */}
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                                        <div className="text-center p-4 border rounded-xl bg-white">
-                                            <FaUsers className="mx-auto h-6 w-6 mb-2 text-primary" />
-                                            <div className="font-semibold">
-                                                {recipe.servings}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                Servings
-                                            </div>
-                                        </div>
-                                        <div className="text-center p-4 border rounded-xl bg-white">
-                                            <FaClock className="mx-auto h-6 w-6 mb-2 text-primary" />
-                                            <div className="font-semibold">
-                                                {totalTime} min
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                Total Time
-                                            </div>
-                                        </div>
-                                        <div className="text-center p-4 border rounded-xl bg-white">
-                                            <FaUtensils className="mx-auto h-6 w-6 mb-2 text-primary" />
-                                            <div className="font-semibold">
-                                                {recipe.difficulty}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                Difficulty
-                                            </div>
-                                        </div>
-                                        <div className="text-center p-4 border rounded-xl bg-white">
-                                            <FaDollarSign className="mx-auto h-6 w-6 mb-2 text-primary" />
-                                            <div className="font-semibold">
-                                                ${costPerServing.toFixed(2)}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                Per Serving
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="flex flex-wrap gap-3 mt-6">
-                                        <button
-                                            className="btn btn-outline"
-                                            onClick={handleFavorite}
-                                        >
-                                            <FaHeart
-                                                className={`mr-2 h-4 w-4 ${
-                                                    isFavorited
-                                                        ? "text-red-500"
-                                                        : ""
-                                                }`}
-                                            />
-                                            {isFavorited
-                                                ? "Favorited"
-                                                : "Save Recipe"}
-                                        </button>
-
-                                        <button
-                                            className="btn btn-outline"
-                                            onClick={handleShare}
-                                        >
-                                            <FaShareAlt className="mr-2 h-4 w-4" />
-                                            Share
-                                        </button>
-
-                                        <button
-                                            className="btn btn-outline"
-                                            onClick={handlePrint}
-                                        >
-                                            <FaPrint className="mr-2 h-4 w-4" />
-                                            Print
-                                        </button>
+                                        ))}
                                     </div>
                                 </div>
 
-                                {/* Ingredients */}
-                                <div className="card bg-base-100 shadow">
-                                    <div className="card-body">
-                                        <h3 className="card-title">
-                                            Ingredients
-                                        </h3>
-                                        <p className="text-sm text-gray-500 mb-4">
-                                            Total cost: ${totalCost.toFixed(2)}{" "}
-                                            (${costPerServing.toFixed(2)} per
-                                            serving)
-                                        </p>
 
-                                        <div className="space-y-3">
-                                            {recipe.ingredients.map(
-                                                (ingredient, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="flex justify-between items-center py-2 border-b last:border-0"
-                                                    >
-                                                        <div className="flex-1">
-                                                            <span className="font-medium capitalize">
-                                                                {
-                                                                    ingredient.name
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                        <div className="text-gray-500">
-                                                            {
-                                                                ingredient.quantity
-                                                            }{" "}
-                                                            {ingredient.unit}
-                                                        </div>
-                                                        <div className="text-sm text-gray-500 w-16 text-right">
-                                                            $
-                                                            {(
-                                                                ingredient.quantity *
-                                                                ingredient.pricePerUnit
-                                                            ).toFixed(2)}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Instructions */}
-                                <div className="card bg-base-100 shadow">
-                                    <div className="card-body">
-                                        <h3 className="card-title">
-                                            Instructions
-                                        </h3>
-                                        <div className="space-y-6">
-                                            {recipe.steps.map((step, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex gap-4"
-                                                >
-                                                    <div className="flex-shrink-0">
-                                                        <div className="w-8 h-8 bg-primary text-primary-content rounded-full flex items-center justify-center font-semibold">
-                                                            {step.step}
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <p className="mb-2">
-                                                            {step.text}
-                                                        </p>
-                                                        {step.timeMinutes >
-                                                            0 && (
-                                                            <div className="flex items-center gap-1 text-sm text-gray-500">
-                                                                <FaClock className="h-4 w-4" />
-                                                                {
-                                                                    step.timeMinutes
-                                                                }{" "}
-                                                                minutes
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                {/* 🪄 Instructions */}
+                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/40">
+                                    <h3 className="text-xl font-bold mb-4 text-gray-800">Instructions</h3>
+                                    <div className="space-y-6">
+                                        {recipe.steps.map((step, i) => (
+                                            <div key={i} className="flex items-start gap-4">
+                                                <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
+                                                    {step.step}
                                                 </div>
-                                            ))}
-                                        </div>
+                                                <div>
+                                                    <p className="text-gray-700 leading-relaxed">{step.text}</p>
+                                                    {step.timeMinutes > 0 && (
+                                                        <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
+                                                            <FaClock className="text-orange-400" /> {step.timeMinutes} minutes
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Sidebar */}
+                            {/* 🍽️ Sidebar */}
                             <div className="space-y-6">
-                                {/* Nutrition */}
+                                {/* 🥗 Nutrition */}
                                 {nutritionData && (
-                                    <div className="card bg-base-100 shadow">
-                                        <div className="card-body">
-                                            <h4 className="card-title">
-                                                Nutrition (per serving)
-                                            </h4>
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between">
-                                                    <span>Calories</span>
-                                                    <span className="font-semibold">
-                                                        {nutritionData.calories}
-                                                    </span>
+                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50">
+                                        <h4 className="text-lg font-bold text-gray-800 mb-4">Nutrition (per serving)</h4>
+                                        <div className="space-y-2 text-gray-700 text-sm">
+                                            {Object.entries(nutritionData).map(([key, val]) => (
+                                                <div key={key} className="flex justify-between capitalize">
+                                                    <span>{key}</span>
+                                                    <span className="font-semibold">{val}</span>
                                                 </div>
-                                                <div className="flex justify-between">
-                                                    <span>Protein</span>
-                                                    <span>
-                                                        {nutritionData.protein}g
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span>Carbs</span>
-                                                    <span>
-                                                        {nutritionData.carbs}g
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span>Fat</span>
-                                                    <span>
-                                                        {nutritionData.fat}g
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span>Fiber</span>
-                                                    <span>
-                                                        {nutritionData.fiber}g
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span>Sugar</span>
-                                                    <span>
-                                                        {nutritionData.sugar}g
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Related */}
-                                {relatedRecipes.length > 0 && (
-                                    <div className="card bg-base-100 shadow">
-                                        <div className="card-body">
-                                            <h4 className="card-title">
-                                                More {recipe.cuisine} Recipes
-                                            </h4>
-                                            <div className="space-y-4">
-                                                {relatedRecipes.map((r) => (
-                                                    <RecipeCard
-                                                        key={r.id}
-                                                        recipe={r}
-                                                        compact
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Rating */}
-                                <div className="card bg-base-100 shadow">
-                                    <div className="card-body text-center">
-                                        <div className="flex items-center justify-center gap-1 mb-2">
-                                            {[...Array(5)].map((_, i) => (
-                                                <FaStar
-                                                    key={i}
-                                                    className={`h-6 w-6 ${
-                                                        i <
-                                                        Math.floor(
-                                                            recipe.rating
-                                                        )
-                                                            ? "text-yellow-400"
-                                                            : "text-gray-300"
-                                                    }`}
-                                                />
                                             ))}
                                         </div>
-                                        <div className="text-2xl font-bold mb-1">
-                                            {recipe.rating}
-                                        </div>
-                                        <div className="text-sm text-gray-500">
-                                            Based on {recipe.reviewCount}{" "}
-                                            reviews
+                                    </div>
+                                )}
+
+                                {/* 🧁 Related Recipes */}
+                                {relatedRecipes.length > 0 && (
+                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50">
+                                        <h4 className="text-lg font-bold text-gray-800 mb-4">
+                                            More {recipe.cuisine} Recipes
+                                        </h4>
+                                        <div className="space-y-4">
+                                            {relatedRecipes.map((r) => (
+                                                <RecipeCard key={r.id} recipe={r} compact />
+                                            ))}
                                         </div>
                                     </div>
+                                )}
+
+                                {/* ⭐ Rating */}
+                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50 text-center">
+                                    <div className="flex justify-center gap-1 mb-2">
+                                        {[...Array(5)].map((_, i) => (
+                                            <FaStar
+                                                key={i}
+                                                className={`text-xl ${i < Math.floor(recipe.rating)
+                                                        ? "text-yellow-400"
+                                                        : "text-gray-300"
+                                                    }`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <div className="text-2xl font-bold text-gray-700">{recipe.rating}</div>
+                                    <p className="text-sm text-gray-500">
+                                        Based on {recipe.reviewCount} reviews
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -493,6 +319,7 @@ function RecipeDetail() {
                 </div>
             </div>
         </HomeLayout>
+
     );
 }
 
