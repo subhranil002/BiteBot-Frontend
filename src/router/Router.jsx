@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
+import Chat from "../pages/Chatbot/Chat";
 import AddRecipe from "../pages/Chef/AddRecipe";
 import ChefDashboard from "../pages/Chef/ChefDashboard";
 import ChefProfile from "../pages/Chef/ChefProfile";
@@ -16,6 +17,7 @@ function Router() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/chef-profile" element={<ChefProfile />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />

@@ -1,19 +1,67 @@
-import React, { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-import cuisines from "../data/cuisines.json"
-import dietaryPreferences from "../data/dietaryPreferences.json";
-
-import {
-    GiChickenLeg, GiFruitBowl, GiHotMeal, GiSushis, GiCupcake, GiCheeseWedge,
-    GiDonerKebab, GiMeat, GiCorn, GiPotato, GiCarrot, GiOlive,
-    GiCoffeeBeans, GiCroissant, GiGrapes
-} from "react-icons/gi";
+import { useRef } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
+import {
+    GiCarrot,
+    GiCheeseWedge,
+    GiChickenLeg,
+    GiCoffeeBeans,
+    GiCorn,
+    GiCroissant,
+    GiCupcake,
+    GiDonerKebab,
+    GiFruitBowl,
+    GiGrapes,
+    GiHotMeal,
+    GiMeat,
+    GiOlive,
+    GiPotato,
+    GiSushis,
+} from "react-icons/gi";
+import { Link } from "react-router-dom";
+
+const cuisines = [
+    "American",
+    "British",
+    "Chinese",
+    "French",
+    "German",
+    "Greek",
+    "Indian",
+    "Italian",
+    "Japanese",
+    "Korean",
+    "Mediterranean",
+    "Mexican",
+    "Middle Eastern",
+    "Spanish",
+    "Thai",
+    "Vietnamese",
+];
+const dietaryPreferences = [
+    "vegetarian",
+    "vegan",
+    "keto",
+    "paleo",
+    "gluten-free",
+    "dairy-free",
+    "low-carb",
+    "high-protein",
+    "sugar-free",
+    "organic",
+    "raw",
+    "mediterranean",
+    "low-fat",
+];
 
 const SignUp = () => {
-    const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors }, watch, control } = useForm();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        watch,
+        control,
+    } = useForm();
     const password = watch("password");
 
     // Floating icons setup
@@ -32,12 +80,13 @@ const SignUp = () => {
         <GiOlive className="text-emerald-500" />,
         <GiCoffeeBeans className="text-brown-500" />,
         <GiCroissant className="text-amber-400" />,
-        <GiGrapes className="text-purple-400" />
+        <GiGrapes className="text-purple-400" />,
     ];
 
     const floatingIconsRef = useRef(
         Array.from({ length: 40 }, (_, i) => {
-            const icon = foodIcons[Math.floor(Math.random() * foodIcons.length)];
+            const icon =
+                foodIcons[Math.floor(Math.random() * foodIcons.length)];
             const left = Math.random() * 100;
             const duration = Math.random() * 20 + 15;
             const delay = Math.random() * 5;
@@ -54,7 +103,7 @@ const SignUp = () => {
                         animationDelay: `${delay}s`,
                         fontSize: `${size}px`,
                         opacity,
-                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))"
+                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))",
                     }}
                 >
                     {icon}
@@ -64,15 +113,20 @@ const SignUp = () => {
     );
 
     const onSubmit = async (data) => {
-        const signupData = {
-            ...data,
-            profile: {
-                name: data.username,
-                avatar: data.avatar?.[0] || null
-            }
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({ message: "Success!" });
+            }, 3000);
+        });
+        const userData = {
+            profile_name: data.profile_name,
+            email: data.email,
+            password: data.password,
+            cuisine: data.cuisine,
+            dietaryLabels: data.dietaryLabels,
+            avatar: data.avatar,
         };
-        console.log("Signup data:", signupData);
-        navigate("/");
+        console.log("Signup data:", userData);
     };
 
     return (
@@ -93,10 +147,15 @@ const SignUp = () => {
                     <h1 className="text-4xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-gradient-x">
                         Create Account
                     </h1>
-                    <p className="text-gray-600 mt-2 text-sm font-medium">Join the Loda community</p>
+                    <p className="text-gray-600 mt-2 text-sm font-medium">
+                        Join the Loda community
+                    </p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
+                >
                     {/* LEFT COLUMN */}
                     <div className="space-y-6">
                         {/* Avatar */}
@@ -108,9 +167,14 @@ const SignUp = () => {
                                 control={control}
                                 name="avatar"
                                 defaultValue={null}
-                                render={({ field }) => {
+                                rules={{
+                                    required: "Profile picture is required",
+                                }}
+                                render={({ field, fieldState: { error } }) => {
                                     const file = field.value?.[0];
-                                    const previewUrl = file ? URL.createObjectURL(file) : null;
+                                    const previewUrl = file
+                                        ? URL.createObjectURL(file)
+                                        : null;
 
                                     return (
                                         <div className="flex flex-col items-center">
@@ -124,7 +188,9 @@ const SignUp = () => {
                                                     />
                                                     <button
                                                         type="button"
-                                                        onClick={() => field.onChange(null)} // clear file
+                                                        onClick={() =>
+                                                            field.onChange(null)
+                                                        } // clear file
                                                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                                     >
                                                         ×
@@ -139,49 +205,85 @@ const SignUp = () => {
                                             {/* Upload Button */}
                                             <label className="cursor-pointer mt-3">
                                                 <div className="px-4 py-2 rounded-xl border border-orange-300 text-orange-500 font-semibold hover:bg-orange-50 hover:border-orange-400 transition-all duration-300">
-                                                    {previewUrl ? "Change Avatar" : "Upload Avatar"}
+                                                    {previewUrl
+                                                        ? "Change Avatar"
+                                                        : "Upload Avatar"}
                                                 </div>
                                                 <input
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept=".jpg, .jpeg, .png, .webp"
                                                     className="hidden"
                                                     onChange={(e) => {
-                                                        const files = e.target.files;
+                                                        const files =
+                                                            e.target.files;
                                                         if (files && files[0]) {
-                                                            field.onChange(files);
+                                                            field.onChange(
+                                                                files
+                                                            );
                                                         }
                                                     }}
                                                 />
                                             </label>
+
+                                            {/* Error message */}
+                                            {error && (
+                                                <p className="text-red-500 text-xs mt-1">
+                                                    {error.message}
+                                                </p>
+                                            )}
                                         </div>
                                     );
                                 }}
                             />
                         </div>
 
-
-                        {/* Username */}
+                        {/* Name */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Username</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Name
+                            </label>
                             <input
                                 type="text"
-                                {...register("username", { required: "Username is required" })}
+                                {...register("profile_name", {
+                                    required: "Name is required",
+                                    minLength: {
+                                        value: 2,
+                                        message:
+                                            "Name must be at least 2 characters",
+                                    },
+                                })}
                                 className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
-                                placeholder="Enter username"
+                                placeholder="Enter your name"
                             />
-                            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
+                            {errors.profile_name && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.profile_name.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Email
+                            </label>
                             <input
                                 type="email"
-                                {...register("email", { required: "Email is required" })}
+                                {...register("email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                                        message: "Invalid email format",
+                                    },
+                                })}
                                 className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
                                 placeholder="Enter email"
                             />
-                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                            {errors.email && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -189,58 +291,105 @@ const SignUp = () => {
                     <div className="space-y-6">
                         {/* Password */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Password
+                            </label>
                             <input
                                 type="password"
-                                {...register("password", { required: "Password is required" })}
+                                {...register("password", {
+                                    required: "Password is required",
+                                    minLength: {
+                                        value: 8,
+                                        message:
+                                            "Password must be at least 8 characters",
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+                                        message:
+                                            "Must include uppercase, number, and special character",
+                                    },
+                                })}
                                 className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
                                 placeholder="Enter password"
                             />
+                            {errors.password && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Confirm Password</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Confirm Password
+                            </label>
                             <input
                                 type="password"
                                 {...register("confirmPassword", {
                                     required: "Please confirm password",
-                                    validate: (v) => v === password || "Passwords do not match"
+                                    validate: (v) =>
+                                        v === password ||
+                                        "Passwords do not match",
                                 })}
                                 className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
                                 placeholder="Confirm password"
                             />
+                            {errors.confirmPassword && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.confirmPassword.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Cuisine */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">Favorite Cuisine</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Favorite Cuisine
+                            </label>
                             <select
-                                {...register("cuisine")}
+                                {...register("cuisine", {
+                                    required: "Cuisine is required",
+                                })}
                                 className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
                             >
                                 <option value="">Select cuisine</option>
                                 {cuisines.map((cuisine) => (
-                                    <option key={cuisine.toLowerCase()} value={cuisine.toLowerCase()}>
+                                    <option
+                                        key={cuisine.toLowerCase()}
+                                        value={cuisine.toLowerCase()}
+                                    >
                                         {cuisine}
                                     </option>
                                 ))}
                             </select>
+                            {errors.cuisine && (
+                                <p className="text-red-500 text-xs mt-1">
+                                    {errors.cuisine.message}
+                                </p>
+                            )}
                         </div>
 
                         {/* Dietary Preferences */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Dietary Preferences</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                Dietary Preferences
+                            </label>
                             <div className="flex flex-wrap gap-3">
                                 {dietaryPreferences.map((pref) => (
-                                    <label key={pref} className="flex items-center gap-2 text-sm text-gray-700">
+                                    <label
+                                        key={pref}
+                                        className="flex items-center gap-2 text-sm text-gray-700"
+                                    >
                                         <input
                                             type="checkbox"
                                             value={pref}
                                             {...register("dietaryLabels")}
                                             className="accent-orange-500"
                                         />
-                                        <span className="capitalize">{pref}</span>
+                                        <span className="capitalize">
+                                            {pref}
+                                        </span>
                                     </label>
                                 ))}
                             </div>
@@ -252,13 +401,19 @@ const SignUp = () => {
                         <button
                             type="submit"
                             className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+                            disabled={isSubmitting}
                         >
-                            <span className="relative z-10">Sign Up</span>
+                            <span className="relative z-10">
+                                {isSubmitting ? "Signing up..." : "Sign Up"}
+                            </span>
                             <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </button>
                         <p className="text-center text-sm text-gray-600 mt-4">
                             Already a user?{" "}
-                            <Link to="/login" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300">
+                            <Link
+                                to="/login"
+                                className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300"
+                            >
                                 Sign in
                             </Link>
                         </p>
