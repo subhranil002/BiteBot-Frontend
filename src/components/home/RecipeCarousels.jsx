@@ -147,86 +147,72 @@ function RecipeCarousels() {
 
     return (
         <div className="container mx-auto px-6 py-16 space-y-20 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
-            {/* Trending */}
-            {data.trending && (
-                <section className="space-y-6">
-                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
-                        <FaFire className="text-orange-500 drop-shadow-sm" />
-                        <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                            Trending Now
-                        </span>
-                    </h2>
-                    <RecipeCarousel
-                        recipes={data.trending}
-                        onRecipeClick={() => {}}
-                    />
-                </section>
-            )}
+  {/* Trending */}
+  {data.trending && (
+    <section className="space-y-6">
+      <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+        <FaFire className="text-orange-500 drop-shadow-sm" />
+        <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+          Trending Now
+        </span>
+      </h2>
+      <RecipeCarousel recipes={data.trending} onRecipeClick={() => {}} />
+    </section>
+  )}
 
-            {/* New Recipes */}
-            {data.newest && (
-                <section className="space-y-6">
-                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
-                        <AiFillStar className="text-yellow-500 drop-shadow-sm" />
-                        <span className="bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
-                            Fresh & New
-                        </span>
-                    </h2>
-                    <RecipeCarousel
-                        recipes={data.newest}
-                        onRecipeClick={() => {}}
-                    />
-                </section>
-            )}
+  {/* New Recipes */}
+  {data.newest && (
+    <section className="space-y-6">
+      <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+        <AiFillStar className="text-yellow-500 drop-shadow-sm" />
+        <span className="bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
+          Fresh & New
+        </span>
+      </h2>
+      <RecipeCarousel recipes={data.newest} onRecipeClick={() => {}} />
+    </section>
+  )}
 
-            {/* For You */}
-            {data.forYou && (
-                <section className="space-y-6">
-                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
-                        <FaUser className="text-blue-500 drop-shadow-sm" />
-                        <span className="bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-                            Recommended for You
-                        </span>
-                    </h2>
-                    <RecipeCarousel
-                        recipes={data.forYou}
-                        onRecipeClick={() => {}}
-                    />
-                </section>
-            )}
+  {/* For You */}
+  {data.forYou && (
+    <section className="space-y-6">
+      <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+        <FaUser className="text-orange-500 drop-shadow-sm" />
+        <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+          Recommended for You
+        </span>
+      </h2>
+      <RecipeCarousel recipes={data.forYou} onRecipeClick={() => {}} />
+    </section>
+  )}
 
-            {/* Quick & Easy */}
-            {data.quickEasy && (
-                <section className="space-y-6">
-                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
-                        <FaBolt className="text-green-500 drop-shadow-sm" />
-                        <span className="bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">
-                            Quick & Easy
-                        </span>
-                    </h2>
-                    <RecipeCarousel
-                        recipes={data.quickEasy}
-                        onRecipeClick={() => {}}
-                    />
-                </section>
-            )}
+  {/* Quick & Easy */}
+  {data.quickEasy && (
+    <section className="space-y-6">
+      <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+        <FaBolt className="text-orange-500 drop-shadow-sm" />
+        <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+          Quick & Easy
+        </span>
+      </h2>
+      <RecipeCarousel recipes={data.quickEasy} onRecipeClick={() => {}} />
+    </section>
+  )}
 
-            {/* Premium */}
-            {data.premium && (
-                <section className="space-y-6">
-                    <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
-                        <FaGem className="text-purple-500 drop-shadow-sm" />
-                        <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-                            Premium Picks
-                        </span>
-                    </h2>
-                    <RecipeCarousel
-                        recipes={data.premium}
-                        onRecipeClick={() => {}}
-                    />
-                </section>
-            )}
-        </div>
+  {/* Premium */}
+  {data.premium && (
+    <section className="space-y-6">
+      <h2 className="flex items-center gap-3 text-3xl font-extrabold text-gray-800">
+        <FaGem className="text-yellow-500 drop-shadow-sm" />
+        <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+          Premium Picks
+        </span>
+      </h2>
+      <RecipeCarousel recipes={data.premium} onRecipeClick={() => {}} />
+    </section>
+  )}
+</div>
+
     );
 }
 

@@ -11,14 +11,14 @@ const NotFound = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
-      {/* Floating holographic food icons */}
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+      {/* Floating icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 20 }, (_, i) => {
+        {Array.from({ length: 20 }).map((_, i) => {
           const randomFood = foodIcons[Math.floor(Math.random() * foodIcons.length)];
           const left = Math.random() * 100;
-          const animationDuration = Math.random() * 20 + 15;
-          const animationDelay = Math.random() * 5;
+          const duration = Math.random() * 20 + 15;
+          const delay = Math.random() * 5;
           const opacity = Math.random() * 0.5 + 0.3;
 
           return (
@@ -28,85 +28,75 @@ const NotFound = () => {
               style={{
                 left: `${left}%`,
                 top: "100vh",
-                animationDuration: `${animationDuration}s`,
-                animationDelay: `${animationDelay}s`,
+                animationDuration: `${duration}s`,
+                animationDelay: `${delay}s`,
                 opacity,
-                filter: "drop-shadow(0 0 10px rgba(255, 140, 0, 0.3))",
+                filter: "drop-shadow(0 0 10px rgba(255,140,0,0.3))",
                 zIndex: 0,
               }}
             >
-              <div className={`${randomFood.size} blur-[0.2px]`}>{randomFood.icon}</div>
+              <div className={`${randomFood.size}`}>{randomFood.icon}</div>
             </div>
           );
         })}
       </div>
 
-      {/* Animated glowing orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-orange-300/30 to-amber-300/20 rounded-full blur-3xl mix-blend-overlay animate-pulse-slow"></div>
-        <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-red-300/30 to-pink-300/20 rounded-full blur-3xl mix-blend-overlay animate-pulse-slow animation-delay-2000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-gradient-to-r from-yellow-300/30 to-orange-300/20 rounded-full blur-3xl mix-blend-overlay animate-pulse-slow animation-delay-4000"></div>
+      {/* Glowing orbs */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-orange-200/30 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-red-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000" />
+        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-amber-200/30 rounded-full blur-3xl animate-pulse-slow delay-4000" />
       </div>
 
-      {/* Main glassmorphic card */}
-      <div className="text-center relative z-10 max-w-2xl mx-auto bg-white/30 backdrop-blur-2xl border border-white/40 rounded-3xl p-10 shadow-[0_0_60px_rgba(255,160,90,0.2)] transition-all duration-700 hover:shadow-[0_0_80px_rgba(255,100,50,0.35)]">
-        {/* 404 glowing number */}
+      {/* Main Glass Card */}
+      <div className="card glass shadow-2xl p-10 max-w-2xl text-center z-10">
         <div className="relative mb-8">
-          <div className="text-9xl md:text-[12rem] font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,100,50,0.4)] animate-gradient-x">
+          <h1 className="text-9xl md:text-[12rem] font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-gradient-x drop-shadow-lg">
             404
-          </div>
-          <div className="absolute -top-4 -right-4 animate-bounce">
-            <FaSadTear className="text-6xl text-amber-400 opacity-80 drop-shadow-[0_0_8px_rgba(255,200,100,0.5)]" />
-          </div>
+          </h1>
+          <FaSadTear className="absolute -top-4 -right-4 text-6xl text-amber-400 animate-bounce opacity-80 drop-shadow" />
         </div>
 
-        {/* Message */}
         <div className="space-y-6 mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 drop-shadow-sm">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800">
             Recipe Not Found!
-          </h1>
-          <p className="text-lg text-gray-700 max-w-md mx-auto leading-relaxed">
+          </h2>
+          <p className="text-lg opacity-80">
             Oops! This recipe might have simmered away into the digital kitchen.
             Let’s get you cooking again with something delicious!
           </p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <Link
-            to="/"
-            className="btn btn-lg bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 text-white shadow-lg shadow-orange-400/40 hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-1 rounded-xl"
-          >
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <Link to="/" className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 text-white border-none shadow-lg hover:scale-105 transition-transform">
             <FaHome className="w-5 h-5 mr-2" />
             Back to Home
           </Link>
-          <Link
-            to="/recipes"
-            className="btn btn-lg border-2 border-orange-400/60 text-orange-600 hover:bg-orange-100/30 hover:border-orange-500 transition-all duration-300 rounded-xl backdrop-blur-sm"
-          >
+          <Link to="/recipes" className="btn btn-outline btn-warning hover:bg-orange-100/40 transition">
             <FaSearch className="w-5 h-5 mr-2" />
             Explore Recipes
           </Link>
         </div>
 
-        {/* Animated cooking icons row */}
-        <div className="flex justify-center items-center gap-8 text-gray-500 mb-8">
-          <div className="flex items-center gap-2 animate-bounce animation-delay-100">
+        {/* Icons Row */}
+        <div className="flex justify-center gap-8 text-gray-500 mb-8">
+          <div className="flex items-center gap-2 animate-bounce delay-100">
             <GiKnifeFork className="w-6 h-6 text-orange-500" />
             <span className="text-sm font-medium">Chop</span>
           </div>
-          <div className="flex items-center gap-2 animate-bounce animation-delay-300">
+          <div className="flex items-center gap-2 animate-bounce delay-300">
             <GiCookingPot className="w-7 h-7 text-amber-500" />
             <span className="text-sm font-medium">Cook</span>
           </div>
-          <div className="flex items-center gap-2 animate-bounce animation-delay-500">
+          <div className="flex items-center gap-2 animate-bounce delay-500">
             <FaUtensils className="w-5 h-5 text-red-400" />
             <span className="text-sm font-medium">Serve</span>
           </div>
         </div>
 
-        {/* AI Chef Card */}
-        <div className="bg-white/50 backdrop-blur-xl rounded-2xl p-6 border border-orange-200/50 shadow-[0_0_25px_rgba(255,160,90,0.25)] hover:shadow-[0_0_35px_rgba(255,120,60,0.35)] transition-all duration-500">
+        {/* AI Tip Card */}
+        <div className="card bg-base-100/60 backdrop-blur-xl border border-orange-200/50 shadow-lg hover:shadow-xl transition-all p-6">
           <div className="flex items-center justify-center gap-3 mb-3">
             <GiCookingPot className="w-8 h-8 text-amber-500 animate-pulse" />
             <h3 className="text-lg font-semibold text-gray-800">AI Kitchen Tip</h3>
@@ -116,7 +106,7 @@ const NotFound = () => {
           </p>
           <Link
             to="/chat"
-            className="btn btn-sm mt-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl shadow-md shadow-orange-300/30 hover:shadow-orange-400/40 transition-all duration-300"
+            className="btn btn-sm mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md hover:scale-105 transition-transform"
           >
             Try AI Chef →
           </Link>
@@ -124,9 +114,9 @@ const NotFound = () => {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center text-gray-500 text-sm">
-        <p className="tracking-wide uppercase">Error 404 • Page Not Found • BiteBot</p>
-      </div>
+      <footer className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-gray-500">
+        Error 404 • Page Not Found • BiteBot
+      </footer>
     </div>
   );
 };

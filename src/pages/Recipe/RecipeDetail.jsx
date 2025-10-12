@@ -29,7 +29,7 @@ const HARDCODED_RECIPE = {
     description:
         "A fragrant, tangy Bengali fish curry with mustard and spices. Great with steamed rice.",
     heroImage:
-        "https://images.unsplash.com/photo-1543353071-087092ec3935?w=1600&q=60",
+        "https://tse4.mm.bing.net/th/id/OIP.yegn3aAPGUyQs6Ko3z2TNQAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
     chefId: HARDCODED_CHEF.id,
     isPremium: false,
     cuisine: "Bengali",
@@ -67,7 +67,7 @@ const SAMPLE_RELATED = [
         id: "r1",
         title: "Rosogolla (Soft Bengali Sweet)",
         heroImage:
-            "https://images.unsplash.com/photo-1604908177522-7f17f3f04f8b?w=800&q=60",
+            "https://happietrio.com/wp-content/uploads/2016/10/DSC_1656.jpg",
         description:
             "Soft, syrupy cheese balls simmered in light sugar syrup — an iconic Bengali sweet that's melt-in-your-mouth delightful.",
         isPremium: false,

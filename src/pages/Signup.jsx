@@ -20,56 +20,25 @@ import {
 } from "react-icons/gi";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
 import { registerUser } from "../redux/slices/authSlice";
 
 const cuisines = [
-    "indian",
-    "italian",
-    "chinese",
-    "mexican",
-    "thai",
-    "japanese",
-    "french",
-    "mediterranean",
-    "american",
-    "korean",
-    "vietnamese",
-    "middle-eastern",
-    "british",
-    "spanish",
-    "german",
-    "greek",
+    "indian", "italian", "chinese", "mexican", "thai", "japanese",
+    "french", "mediterranean", "american", "korean", "vietnamese",
+    "middle-eastern", "british", "spanish", "german", "greek",
 ];
+
 const dietaryPreferences = [
-    "vegetarian",
-    "vegan",
-    "keto",
-    "paleo",
-    "gluten-free",
-    "dairy-free",
-    "low-carb",
-    "high-protein",
-    "sugar-free",
-    "organic",
-    "raw",
-    "mediterranean",
-    "low-fat",
+    "vegetarian", "vegan", "keto", "paleo", "gluten-free", "dairy-free",
+    "low-carb", "high-protein", "sugar-free", "organic", "raw", "mediterranean", "low-fat",
 ];
 
 const SignUp = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        watch,
-        control,
-    } = useForm();
+    const { register, handleSubmit, formState: { errors, isSubmitting }, watch, control } = useForm();
     const password = watch("password");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // Floating icons setup
     const foodIcons = [
         <GiChickenLeg className="text-amber-500" />,
         <GiFruitBowl className="text-red-400" />,
@@ -90,8 +59,7 @@ const SignUp = () => {
 
     const floatingIconsRef = useRef(
         Array.from({ length: 40 }, (_, i) => {
-            const icon =
-                foodIcons[Math.floor(Math.random() * foodIcons.length)];
+            const icon = foodIcons[Math.floor(Math.random() * foodIcons.length)];
             const left = Math.random() * 100;
             const duration = Math.random() * 20 + 15;
             const delay = Math.random() * 5;
@@ -119,9 +87,7 @@ const SignUp = () => {
 
     const onSubmit = async (data) => {
         const res = await dispatch(registerUser(data));
-        if (res?.payload?.success) {
-            navigate("/");
-        }
+        if (res?.payload?.success) navigate("/");
     };
 
     return (
@@ -143,37 +109,27 @@ const SignUp = () => {
                         Create Account
                     </h1>
                     <p className="text-gray-600 mt-2 text-sm font-medium">
-                        Join the Loda community
+                        Sign up and make every meal a masterpiece!
                     </p>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* LEFT COLUMN */}
                     <div className="space-y-6">
                         {/* Avatar */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Profile Avatar
-                            </label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Profile Avatar</label>
                             <Controller
                                 control={control}
                                 name="avatar"
                                 defaultValue={null}
-                                rules={{
-                                    required: "Profile picture is required",
-                                }}
+                                rules={{ required: "Profile picture is required" }}
                                 render={({ field, fieldState: { error } }) => {
                                     const file = field.value?.[0];
-                                    const previewUrl = file
-                                        ? URL.createObjectURL(file)
-                                        : null;
+                                    const previewUrl = file ? URL.createObjectURL(file) : null;
 
                                     return (
                                         <div className="flex flex-col items-center">
-                                            {/* Preview */}
                                             {previewUrl ? (
                                                 <div className="relative group">
                                                     <img
@@ -183,10 +139,8 @@ const SignUp = () => {
                                                     />
                                                     <button
                                                         type="button"
-                                                        onClick={() =>
-                                                            field.onChange(null)
-                                                        } // clear file
-                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                        onClick={() => field.onChange(null)}
+                                                        className="absolute -top-2 -right-2 btn btn-xs btn-error opacity-0 group-hover:opacity-100"
                                                     >
                                                         ×
                                                     </button>
@@ -197,35 +151,22 @@ const SignUp = () => {
                                                 </div>
                                             )}
 
-                                            {/* Upload Button */}
-                                            <label className="cursor-pointer mt-3">
-                                                <div className="px-4 py-2 rounded-xl border border-orange-300 text-orange-500 font-semibold hover:bg-orange-50 hover:border-orange-400 transition-all duration-300">
-                                                    {previewUrl
-                                                        ? "Change Avatar"
-                                                        : "Upload Avatar"}
-                                                </div>
+                                            <label className="mt-3 cursor-pointer">
                                                 <input
                                                     type="file"
-                                                    accept=".jpg, .jpeg, .png, .webp"
+                                                    accept=".jpg,.jpeg,.png,.webp"
                                                     className="hidden"
                                                     onChange={(e) => {
-                                                        const files =
-                                                            e.target.files;
-                                                        if (files && files[0]) {
-                                                            field.onChange(
-                                                                files
-                                                            );
-                                                        }
+                                                        const files = e.target.files;
+                                                        if (files && files[0]) field.onChange(files);
                                                     }}
                                                 />
+                                                <span className="btn btn-outline btn-sm mt-2">
+                                                    {previewUrl ? "Change Avatar" : "Upload Avatar"}
+                                                </span>
                                             </label>
 
-                                            {/* Error message */}
-                                            {error && (
-                                                <p className="text-red-500 text-xs mt-1">
-                                                    {error.message}
-                                                </p>
-                                            )}
+                                            {error && <p className="text-red-500 text-xs mt-1">{error.message}</p>}
                                         </div>
                                     );
                                 }}
@@ -234,36 +175,29 @@ const SignUp = () => {
 
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Name
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Name</span>
                             </label>
                             <input
                                 type="text"
+                                placeholder="Enter your name"
                                 {...register("profile_name", {
                                     required: "Name is required",
-                                    minLength: {
-                                        value: 2,
-                                        message:
-                                            "Name must be at least 2 characters",
-                                    },
+                                    minLength: { value: 2, message: "Name must be at least 2 characters" },
                                 })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
-                                placeholder="Enter your name"
+                                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             />
-                            {errors.profile_name && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.profile_name.message}
-                                </p>
-                            )}
+                            {errors.profile_name && <p className="text-red-500 text-xs mt-1">{errors.profile_name.message}</p>}
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Email
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Email</span>
                             </label>
                             <input
                                 type="email"
+                                placeholder="Enter email"
                                 {...register("email", {
                                     required: "Email is required",
                                     pattern: {
@@ -271,14 +205,9 @@ const SignUp = () => {
                                         message: "Invalid email format",
                                     },
                                 })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
-                                placeholder="Enter email"
+                                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             />
-                            {errors.email && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.email.message}
-                                </p>
-                            )}
+                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                         </div>
                     </div>
 
@@ -286,104 +215,64 @@ const SignUp = () => {
                     <div className="space-y-6">
                         {/* Password */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Password
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Password</span>
                             </label>
                             <input
                                 type="password"
+                                placeholder="Enter password"
                                 {...register("password", {
                                     required: "Password is required",
-                                    minLength: {
-                                        value: 8,
-                                        message:
-                                            "Password must be at least 8 characters",
-                                    },
+                                    minLength: { value: 8, message: "Password must be at least 8 characters" },
                                     pattern: {
                                         value: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
-                                        message:
-                                            "Must include uppercase, number, and special character",
+                                        message: "Must include uppercase, number, and special character",
                                     },
                                 })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
-                                placeholder="Enter password"
+                                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             />
-                            {errors.password && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.password.message}
-                                </p>
-                            )}
+                            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                         </div>
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Confirm Password
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Confirm Password</span>
                             </label>
                             <input
                                 type="password"
+                                placeholder="Confirm password"
                                 {...register("confirmPassword", {
                                     required: "Please confirm password",
-                                    validate: (v) =>
-                                        v === password ||
-                                        "Passwords do not match",
+                                    validate: (v) => v === password || "Passwords do not match",
                                 })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
-                                placeholder="Confirm password"
+                                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             />
-                            {errors.confirmPassword && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.confirmPassword.message}
-                                </p>
-                            )}
+                            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
                         </div>
 
                         {/* Cuisine */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Favorite Cuisine
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Favorite Cuisine</span>
                             </label>
-                            <select
-                                {...register("profile_cuisine", {
-                                    required: "Cuisine is required",
-                                })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300 capitalize"
-                            >
+                            <select {...register("profile_cuisine", { required: "Cuisine is required" })} className="select select-bordered w-full capitalize focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 border-gray-200">
                                 <option value="">Select cuisine</option>
-                                {cuisines.map((cuisine) => (
-                                    <option key={cuisine} value={cuisine}>
-                                        {cuisine}
-                                    </option>
-                                ))}
+                                {cuisines.map((c) => <option key={c} value={c}>{c}</option>)}
                             </select>
-                            {errors.cuisine && (
-                                <p className="text-red-500 text-xs mt-1">
-                                    {errors.cuisine.message}
-                                </p>
-                            )}
+                            {errors.profile_cuisine && <p className="text-red-500 text-xs mt-1">{errors.profile_cuisine.message}</p>}
                         </div>
 
                         {/* Dietary Preferences */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Dietary Preferences
+                            <label className="label">
+                                <span className="label-text font-semibold text-gray-700">Dietary Preferences</span>
                             </label>
                             <div className="flex flex-wrap gap-3">
                                 {dietaryPreferences.map((pref) => (
-                                    <label
-                                        key={pref}
-                                        className="flex items-center gap-2 text-sm text-gray-700"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            value={pref}
-                                            {...register(
-                                                "profile_dietaryLabels"
-                                            )}
-                                            className="accent-orange-500"
-                                        />
-                                        <span className="capitalize">
-                                            {pref}
-                                        </span>
+                                    <label key={pref} className="flex items-center gap-2 text-sm text-gray-700">
+                                        <input type="checkbox" value={pref} {...register("profile_dietaryLabels")} className="checkbox accent-orange-500" />
+                                        <span className="capitalize">{pref}</span>
                                     </label>
                                 ))}
                             </div>
@@ -392,24 +281,13 @@ const SignUp = () => {
 
                     {/* Submit Button */}
                     <div className="col-span-1 md:col-span-2 mt-6">
-                        <button
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
-                            disabled={isSubmitting}
-                        >
-                            <span className="relative z-10">
-                                {isSubmitting ? "Signing up..." : "Sign Up"}
-                            </span>
+                        <button className="btn w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group" disabled={isSubmitting}>
+                            <span className="relative z-10">{isSubmitting ? "Signing up..." : "Sign Up"}</span>
                             <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </button>
                         <p className="text-center text-sm text-gray-600 mt-4">
                             Already a user?{" "}
-                            <Link
-                                to="/login"
-                                className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300"
-                            >
-                                Sign in
-                            </Link>
+                            <Link to="/login" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300">Sign in</Link>
                         </p>
                     </div>
                 </form>

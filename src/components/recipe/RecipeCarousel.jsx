@@ -35,14 +35,14 @@ const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
                 <div className="flex gap-2">
                     <button
                         onClick={() => scroll("left")}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:shadow-lg hover:from-orange-200 hover:to-amber-200 transition-all duration-300 hover:scale-105"
+                        className="btn btn-circle bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
                         aria-label="Scroll left"
                     >
                         <FaChevronLeft className="w-4 h-4" />
                     </button>
                     <button
                         onClick={() => scroll("right")}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:shadow-lg hover:from-orange-200 hover:to-amber-200 transition-all duration-300 hover:scale-105"
+                        className="btn btn-circle bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
                         aria-label="Scroll right"
                     >
                         <FaChevronRight className="w-4 h-4" />
@@ -70,6 +70,7 @@ const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
                 ))}
             </div>
         </div>
+
     );
 };
 

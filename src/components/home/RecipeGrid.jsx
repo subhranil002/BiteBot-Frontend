@@ -132,28 +132,24 @@ const RecipeGrid = () => {
                     More Recipes
                 </h2>
                 <button
-                    onClick={() => {}}
-                    className="px-5 py-2.5 text-sm font-medium rounded-full border border-orange-200 text-orange-600 hover:bg-orange-100 transition-all duration-200"
+                    onClick={() => { }}
+                    className="px-5 py-2.5 text-sm font-medium rounded-full border border-orange-200 text-orange-600 hover:bg-orange-100 transition-all duration-200 shadow-sm"
                 >
                     Browse All →
                 </button>
             </div>
 
             {/* Grid Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {recipes.map((recipe) => (
-                    <RecipeCard
-                        key={recipe.id}
-                        recipe={recipe}
-                        className="h-full"
-                    />
-                ))}
-            </div>
-
-            {/* No Results */}
-            {recipes.length === 0 && (
+            {recipes.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    {recipes.map((recipe) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} className="h-full" />
+                    ))}
+                </div>
+            ) : (
+                /* No Results */
                 <div className="text-center py-20">
-                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
                         <span className="text-3xl text-orange-500">🔍</span>
                     </div>
                     <h3 className="text-xl font-semibold mb-2 text-gray-800">
@@ -165,6 +161,7 @@ const RecipeGrid = () => {
                 </div>
             )}
         </section>
+
     );
 };
 

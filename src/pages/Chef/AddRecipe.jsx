@@ -255,199 +255,197 @@ export default function AddRecipe() {
         0
     );
 
-    if (currentStep === 5) {
-        return (
-            <HomeLayout>
-                <div className="container mx-auto px-4 py-16 text-center">
-                    <div className="max-w-md mx-auto space-y-6">
-                        <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
-                            <FaCheckCircle className="w-8 h-8 text-success" />
-                        </div>
-                        <div className="space-y-2">
-                            <h1 className="text-2xl font-bold">
-                                Recipe Published!
-                            </h1>
-                            <p className="text-gray-600">
-                                Your recipe "{formData.title}" has been saved
-                                locally (demo mode).
-                            </p>
-                        </div>
-                        <div className="flex gap-4 justify-center">
-                            <button
-                                onClick={() =>
-                                    navigate(`/recipe/${formData.id}`)
-                                }
-                            >
-                                View Recipe
-                            </button>
-                            <button
-                                variant="outline"
-                                onClick={() => {
-                                    setFormData(DEFAULT_FORM);
-                                    setCurrentStep(1);
-                                }}
-                            >
-                                Add Another Recipe
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </HomeLayout>
-        );
-    }
-
     return (
         <HomeLayout>
-            <div className="container mx-auto px-4 py-8 max-w-4xl">
-                {/* Progress Steps */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between relative">
-                        {STEPS.slice(0, 4).map((step) => (
-                            <div
-                                key={step.id}
-                                className="flex flex-col items-center relative z-10"
-                            >
-                                <div
-                                    className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-medium ${
-                                        currentStep === step.id
-                                            ? "border-primary bg-primary text-white"
-                                            : currentStep > step.id
-                                            ? "border-success bg-success text-white"
-                                            : "border-muted bg-white text-muted"
-                                    }`}
-                                >
-                                    {currentStep > step.id ? (
-                                        <FaCheckCircle className="w-5 h-5" />
-                                    ) : (
-                                        step.id
-                                    )}
-                                </div>
-                                <div className="mt-2 text-center">
-                                    <div className="text-sm font-medium">
-                                        {step.title}
-                                    </div>
-                                    <div className="text-xs text-gray-500 hidden sm:block">
-                                        {step.description}
-                                    </div>
-                                </div>
+            {/* ✅ Success View */}
+            {currentStep === 5 && (
+                <div className="container mx-auto px-4 py-16 text-center">
+                    <div className="card glass max-w-md mx-auto shadow-md">
+                        <div className="card-body space-y-6">
+                            <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
+                                <FaCheckCircle className="w-8 h-8 text-success" />
                             </div>
-                        ))}
-
-                        {/* Progress Line */}
-                        <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10">
-                            <div
-                                className="h-full bg-primary transition-all duration-300"
-                                style={{
-                                    width: `${((currentStep - 1) / 3) * 100}%`,
-                                }}
-                            />
+                            <div className="space-y-2">
+                                <h1 className="text-2xl font-bold">
+                                    Recipe Published!
+                                </h1>
+                                <p className="text-gray-600">
+                                    Your recipe "{formData.title}" has been saved locally (demo mode).
+                                </p>
+                            </div>
+                            <div className="card-actions justify-center mt-4">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => navigate(`/recipe/${formData.id}`)}
+                                >
+                                    View Recipe
+                                </button>
+                                <button
+                                    className="btn btn-outline btn-accent"
+                                    onClick={() => {
+                                        setFormData(DEFAULT_FORM);
+                                        setCurrentStep(1);
+                                    }}
+                                >
+                                    Add Another Recipe
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div className="bg-white border rounded-lg p-6">
-                    {/* Step content */}
-                    {currentStep === 1 && (
-                        <Step1BasicDetails
-                            formData={formData}
-                            setFormData={setFormData}
-                            errors={errors}
-                            cuisineOptions={cuisineOptions}
-                            commonTags={commonTags}
-                            onAddTag={addTag}
-                            onRemoveTag={removeTag}
-                            newTag={newTag}
-                            setNewTag={setNewTag}
-                            onAddCustomTag={handleAddCustomTag}
-                        />
-                    )}
-
-                    {currentStep === 2 && (
-                        <Step2Ingredients
-                            formData={formData}
-                            errors={errors}
-                            unitOptions={unitOptions}
-                            onAddIngredient={addIngredient}
-                            onRemoveIngredient={removeIngredient}
-                            onUpdateIngredient={updateIngredient}
-                        />
-                    )}
-
-                    {currentStep === 3 && (
-                        <Step3Instructions
-                            formData={formData}
-                            errors={errors}
-                            onAddStep={addStep}
-                            onRemoveStep={removeStep}
-                            onUpdateStep={updateStep}
-                        />
-                    )}
-
-                    {currentStep === 4 && <Step4Preview formData={formData} />}
-                </div>
-
-                {/* Navigation */}
-                <div className="flex justify-between mt-8">
-                    <div className="flex gap-2">
-                        <button
-                            variant="outline"
-                            onClick={() => {
-                                prevStep();
-                            }}
-                            className="flex items-center gap-2"
-                        >
-                            <FaChevronLeft />
-                            Back
-                        </button>
+            )}
+    
+            {/* ✅ Form Wizard */}
+            {currentStep < 5 && (
+                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                    {/* Progress Steps */}
+                    <div className="mb-8">
+                        <div className="flex items-center justify-between relative">
+                            {STEPS.slice(0, 4).map((step) => (
+                                <div
+                                    key={step.id}
+                                    className="flex flex-col items-center relative z-10"
+                                >
+                                    <div
+                                        className={`btn btn-circle ${
+                                            currentStep === step.id
+                                                ? "btn-primary text-white"
+                                                : currentStep > step.id
+                                                ? "btn-success text-white"
+                                                : "btn-outline btn-ghost text-gray-500"
+                                        }`}
+                                    >
+                                        {currentStep > step.id ? (
+                                            <FaCheckCircle className="w-5 h-5" />
+                                        ) : (
+                                            step.id
+                                        )}
+                                    </div>
+                                    <div className="mt-2 text-center">
+                                        <div className="text-sm font-medium">{step.title}</div>
+                                        <div className="text-xs text-gray-500 hidden sm:block">
+                                            {step.description}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+    
+                            {/* Progress Line */}
+                            <div className="absolute top-5 left-0 right-0 h-0.5 bg-base-300 -z-10">
+                                <div
+                                    className="h-full bg-primary transition-all duration-300"
+                                    style={{
+                                        width: `${((currentStep - 1) / 3) * 100}%`,
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
-
-                    {currentStep < 4 ? (
-                        <button onClick={nextStep} className="gap-2">
-                            Next
-                            <FaChevronRight />
-                        </button>
-                    ) : (
-                        <div className="flex gap-2 items-center">
+    
+                    {/* Step Container */}
+                    <div className="card bg-base-100 shadow-md border border-base-200">
+                        <div className="card-body">
+                            {currentStep === 1 && (
+                                <Step1BasicDetails
+                                    formData={formData}
+                                    setFormData={setFormData}
+                                    errors={errors}
+                                    cuisineOptions={cuisineOptions}
+                                    commonTags={commonTags}
+                                    onAddTag={addTag}
+                                    onRemoveTag={removeTag}
+                                    newTag={newTag}
+                                    setNewTag={setNewTag}
+                                    onAddCustomTag={handleAddCustomTag}
+                                />
+                            )}
+    
+                            {currentStep === 2 && (
+                                <Step2Ingredients
+                                    formData={formData}
+                                    errors={errors}
+                                    unitOptions={unitOptions}
+                                    onAddIngredient={addIngredient}
+                                    onRemoveIngredient={removeIngredient}
+                                    onUpdateIngredient={updateIngredient}
+                                />
+                            )}
+    
+                            {currentStep === 3 && (
+                                <Step3Instructions
+                                    formData={formData}
+                                    errors={errors}
+                                    onAddStep={addStep}
+                                    onRemoveStep={removeStep}
+                                    onUpdateStep={updateStep}
+                                />
+                            )}
+    
+                            {currentStep === 4 && <Step4Preview formData={formData} />}
+                        </div>
+                    </div>
+    
+                    {/* Navigation */}
+                    <div className="flex justify-between mt-8">
+                        <div className="flex gap-2">
                             <button
-                                onClick={handleSubmit}
-                                disabled={isSubmitting}
-                                className="gap-2"
-                                aria-disabled={isSubmitting}
+                                className="btn btn-outline btn-neutral flex items-center gap-2"
+                                onClick={prevStep}
                             >
-                                {isSubmitting
-                                    ? "Publishing..."
-                                    : "Publish Recipe"}
+                                <FaChevronLeft />
+                                Back
                             </button>
                         </div>
-                    )}
-                </div>
-
-                {/* Optional sidebar preview info */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="md:col-span-2" />
-                    <div className="p-4 border rounded-lg">
-                        <h4 className="font-semibold mb-2">Summary</h4>
-                        <div className="text-sm text-gray-600">
-                            <div className="flex justify-between">
-                                <span>Estimated cost</span>
-                                <span>${estimatedPrice.toFixed(2)}</span>
+    
+                        {currentStep < 4 ? (
+                            <button className="btn btn-primary gap-2" onClick={nextStep}>
+                                Next
+                                <FaChevronRight />
+                            </button>
+                        ) : (
+                            <div className="flex gap-2 items-center">
+                                <button
+                                    className={`btn btn-success gap-2 ${
+                                        isSubmitting ? "loading" : ""
+                                    }`}
+                                    onClick={handleSubmit}
+                                    disabled={isSubmitting}
+                                    aria-disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? "Publishing..." : "Publish Recipe"}
+                                </button>
                             </div>
-                            <div className="flex justify-between mt-2">
-                                <span>Servings</span>
-                                <span>{formData.servings}</span>
-                            </div>
-                            <div className="flex justify-between mt-2">
-                                <span>Total time</span>
-                                <span>
-                                    {formData.prepMinutes +
-                                        formData.cookMinutes}{" "}
-                                    min
-                                </span>
+                        )}
+                    </div>
+    
+                    {/* Optional Sidebar */}
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="md:col-span-2" />
+                        <div className="card bg-base-100 border border-base-200 shadow-sm">
+                            <div className="card-body">
+                                <h4 className="font-semibold mb-2">Summary</h4>
+                                <div className="text-sm text-gray-600 space-y-2">
+                                    <div className="flex justify-between">
+                                        <span>Estimated cost</span>
+                                        <span>${estimatedPrice.toFixed(2)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Servings</span>
+                                        <span>{formData.servings}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Total time</span>
+                                        <span>
+                                            {formData.prepMinutes + formData.cookMinutes} min
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </HomeLayout>
     );
+    
 }

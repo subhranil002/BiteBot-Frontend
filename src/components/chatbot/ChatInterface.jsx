@@ -87,58 +87,73 @@ const ChatInterface = () => {
     };
 
     return (
-        <div className="flex flex-col h-full bg-base-100">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} />
-                ))}
-                {isTyping && (
-                    <div className="flex items-center gap-2 text-gray-400">
-                        <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                            <FaSpinner className="animate-spin w-4 h-4" />
-                        </div>
-                        <span className="text-sm">BiteBot is thinking...</span>
-                    </div>
+        <div className="flex flex-col h-full bg-gradient-to-b from-white/50 via-orange-50/40 to-amber-50/50">
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((message) => (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                className="bg-white/50 backdrop-blur-md border border-orange-100 rounded-2xl p-3 shadow-md"
+              />
+            ))}
+      
+            {isTyping && (
+              <div className="flex items-center gap-2 text-gray-500">
+                <div className="w-8 h-8 bg-gradient-to-r from-orange-100 to-amber-100/50 rounded-full flex items-center justify-center shadow-inner">
+                  <FaSpinner className="animate-spin w-4 h-4 text-orange-500" />
+                </div>
+                <span className="text-sm text-gray-600">
+                  BiteBot is thinking...
+                </span>
+              </div>
+            )}
+      
+            <div ref={messagesEndRef} />
+          </div>
+      
+          {/* Suggestions */}
+          <ChatSuggestions
+            suggestions={hardcodedSuggestions}
+            onSuggestionClick={handleSuggestionClick}
+            className="bg-white/50 backdrop-blur-md border border-orange-100 rounded-2xl p-3 shadow-md"
+          />
+      
+          {/* Input Area */}
+          <div className="border-t border-orange-100 bg-white/60 backdrop-blur-md p-4 rounded-t-3xl">
+            <form onSubmit={handleSubmit} className="flex items-end gap-2">
+              <div className="flex-1">
+                <textarea
+                  ref={inputRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask me about recipes, ingredients, or cooking techniques..."
+                  className="w-full p-3 bg-white/50 border border-orange-100 rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-300 min-h-[44px] max-h-32 shadow-inner"
+                  rows={1}
+                  disabled={isTyping}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={!inputValue.trim() || isTyping}
+                className="btn btn-gradient from-orange-400 to-red-400 text-white btn-square shrink-0 shadow-md hover:opacity-90 transition-all"
+                style={{ minWidth: 44, minHeight: 44 }}
+              >
+                {isTyping ? (
+                  <FaSpinner className="animate-spin w-4 h-4" />
+                ) : (
+                  <FaPaperPlane className="w-4 h-4" />
                 )}
-                <div ref={messagesEndRef} />
-            </div>
-            <ChatSuggestions
-                suggestions={hardcodedSuggestions}
-                onSuggestionClick={handleSuggestionClick}
-            />
-            <div className="border-t bg-base-200 p-4">
-                <form onSubmit={handleSubmit} className="flex items-end gap-2">
-                    <div className="flex-1">
-                        <textarea
-                            ref={inputRef}
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder="Ask me about recipes, ingredients, or cooking techniques..."
-                            className="w-full p-3 bg-base-100 border rounded-lg text-sm resize-none focus:outline-none focus:ring focus:border-none min-h-[44px] max-h-32"
-                            rows={1}
-                            disabled={isTyping}
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        disabled={!inputValue.trim() || isTyping}
-                        className="btn btn-primary btn-square shrink-0"
-                        style={{ minWidth: 44, minHeight: 44 }}
-                    >
-                        {isTyping ? (
-                            <FaSpinner className="animate-spin w-4 h-4" />
-                        ) : (
-                            <FaPaperPlane className="w-4 h-4" />
-                        )}
-                    </button>
-                </form>
-                <p className="text-xs text-gray-400 mt-2 text-center">
-                    Press Enter to send, Shift+Enter for new line
-                </p>
-            </div>
+              </button>
+            </form>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              Press Enter to send, Shift+Enter for new line
+            </p>
+          </div>
         </div>
-    );
+      );
+      
 };
 
 export default ChatInterface;

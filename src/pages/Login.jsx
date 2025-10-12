@@ -93,7 +93,7 @@ const Login = () => {
                 {floatingIconsRef.current}
             </div>
 
-            {/* Glowing Blobs (background) */}
+            {/* Glowing Blobs */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-gradient-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
                 <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
@@ -110,14 +110,11 @@ const Login = () => {
                     </p>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="p-8 space-y-6"
-                >
+                <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
                     {/* Email */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
-                            Email
+                        <label className="label">
+                            <span className="label-text font-semibold text-gray-700">Email</span>
                         </label>
                         <input
                             type="email"
@@ -128,20 +125,16 @@ const Login = () => {
                                     message: "Invalid email address",
                                 },
                             })}
-                            className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300 placeholder-gray-400 text-gray-800"
+                            className="input input-bordered w-full placeholder-gray-400 text-gray-800 focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             placeholder="Enter your email"
                         />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.email.message}
-                            </p>
-                        )}
+                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                     </div>
 
                     {/* Password */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">
-                            Password
+                        <label className="label">
+                            <span className="label-text font-semibold text-gray-700">Password</span>
                         </label>
                         <input
                             type="password"
@@ -149,34 +142,26 @@ const Login = () => {
                                 required: "Password is required",
                                 minLength: {
                                     value: 8,
-                                    message:
-                                        "Password must be at least 8 characters",
+                                    message: "Password must be at least 8 characters",
                                 },
                                 pattern: {
                                     value: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
-                                    message:
-                                        "Must include uppercase, number, and special character",
+                                    message: "Must include uppercase, number, and special character",
                                 },
                             })}
-                            className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300 placeholder-gray-400 text-gray-800"
+                            className="input input-bordered w-full placeholder-gray-400 text-gray-800 focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                             placeholder="Enter your password"
                         />
-                        {errors.password && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.password.message}
-                            </p>
-                        )}
+                        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                     </div>
 
                     {/* Submit */}
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+                        className="btn w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
                     >
-                        <span className="relative z-10">
-                            {isSubmitting ? "Logging in..." : "Continue"}
-                        </span>
+                        <span className="relative z-10">{isSubmitting ? "Logging in..." : "Continue"}</span>
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </button>
 
@@ -184,18 +169,12 @@ const Login = () => {
                     <div className="text-center text-sm text-gray-600 mt-6 space-y-2">
                         <p>
                             Don’t have an account?{" "}
-                            <Link
-                                to="/Signup"
-                                className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline"
-                            >
+                            <Link to="/Signup" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
                                 Sign up
                             </Link>
                         </p>
                         <p>
-                            <Link
-                                to="/ForgetPassword"
-                                className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline"
-                            >
+                            <Link to="/ForgetPassword" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
                                 Forgot password?
                             </Link>
                         </p>

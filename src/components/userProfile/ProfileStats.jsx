@@ -38,14 +38,10 @@ function ProfileStats() {
                 return (
                     <div
                         key={idx}
-                        className="bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-md shadow-orange-100/40
-                   hover:shadow-orange-300/50 hover:-translate-y-1 hover:scale-[1.02]
-                   transition-all duration-300 ease-out p-5 text-center flex flex-col items-center justify-center"
+                        className="card bg-base-100/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition-all duration-300 p-5 text-center flex flex-col items-center justify-center"
                     >
-                        <div className="flex items-center justify-center mb-3">
-                            <Icon
-                                className={`w-7 h-7 sm:w-8 sm:h-8 ${item.colorClass} drop-shadow-md`}
-                            />
+                        <div className="mb-3">
+                            <Icon className={`w-7 h-7 sm:w-8 sm:h-8 ${item.colorClass} drop-shadow-md`} />
                         </div>
                         <div className="text-2xl sm:text-3xl font-extrabold text-gray-900">
                             {item.value}
@@ -57,8 +53,6 @@ function ProfileStats() {
                 );
             })}
         </div>
-
-
     );
 }
 

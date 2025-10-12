@@ -18,34 +18,33 @@ function UserProfile() {
       <EditProfileDialog />
       <HomeLayout>
         <div className="relative min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
-          {/* ✨ Soft ambient gradient blobs */}
+          {/* ✨ Ambient blobs */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-gradient-to-br from-orange-200 to-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-            <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-gradient-to-br from-rose-200 to-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse animation-delay-2000"></div>
+            <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-200/30 rounded-full blur-3xl mix-blend-multiply animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl mix-blend-multiply animate-pulse delay-2000" />
           </div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10 space-y-8">
             {/* 🧑‍🍳 Profile Header */}
-            <div className="bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-md shadow-orange-200/50 transition-all hover:shadow-orange-300/70 hover:-translate-y-1">
-              <div className="p-6 flex flex-col md:flex-row gap-6 items-start">
+            <div className="card glass border border-orange-100 shadow-lg hover:shadow-orange-300/70 transition-transform hover:-translate-y-1">
+              <div className="card-body flex flex-col md:flex-row gap-6 items-start">
                 {/* Avatar */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white ring-4 ring-orange-200 overflow-hidden shadow-lg">
+                <div className="avatar">
+                  <div className="w-28 sm:w-32 ring ring-orange-200 ring-offset-base-100 ring-offset-2 rounded-full shadow-lg">
                     {profileData.avatar ? (
                       <img
                         src={profileData.avatar}
                         alt={profileData.name}
-                        className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-orange-100 flex items-center justify-center text-2xl font-semibold text-orange-500">
+                      <div className="bg-orange-100 flex items-center justify-center text-2xl font-semibold text-orange-500">
                         {profileData.name?.charAt(0) ?? "U"}
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Profile Info */}
+                {/* Info */}
                 <div className="flex-1 w-full">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
@@ -76,14 +75,12 @@ function UserProfile() {
                       </div>
                     </div>
 
-                    {/* Actions */}
+                    {/* Buttons */}
                     <div className="flex gap-3">
                       <button
-                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold flex items-center gap-2 shadow-md shadow-orange-200/50 hover:shadow-orange-400/50 hover:-translate-y-1 transition-all"
+                        className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md hover:scale-105 transition-transform"
                         onClick={() =>
-                          document
-                            .getElementById("edit-profile")
-                            ?.showModal()
+                          document.getElementById("edit-profile")?.showModal()
                         }
                       >
                         <FaEdit className="w-4 h-4" />
@@ -91,10 +88,10 @@ function UserProfile() {
                       </button>
 
                       <button
-                        className="p-3 rounded-xl bg-white/70 border border-orange-100 text-gray-700 shadow-md shadow-orange-100/40 hover:bg-orange-50 transition-all"
-                        aria-label="Open settings tab"
+                        className="btn btn-circle btn-outline border-orange-200 text-orange-500 hover:bg-orange-50"
+                        aria-label="Settings"
                       >
-                        <FaCog className="w-4 h-4 text-orange-500" />
+                        <FaCog className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -103,13 +100,17 @@ function UserProfile() {
             </div>
 
             {/* 📊 Profile Stats */}
-            <div className="bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-md shadow-orange-200/50 p-6 transition-all hover:-translate-y-1 hover:shadow-orange-300/60">
-              <ProfileStats />
+            <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 transition-transform hover:-translate-y-1">
+              <div className="card-body">
+                <ProfileStats />
+              </div>
             </div>
 
             {/* 📑 Profile Tabs */}
-            <div className="bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-md shadow-orange-200/50 p-6 transition-all hover:-translate-y-1 hover:shadow-orange-300/60">
-              <ProfileTabs />
+            <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 transition-transform hover:-translate-y-1">
+              <div className="card-body">
+                <ProfileTabs />
+              </div>
             </div>
           </div>
         </div>
