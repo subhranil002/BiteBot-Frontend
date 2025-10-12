@@ -17,7 +17,10 @@ import {
     GiPotato,
     GiSushis,
 } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+
+import { login } from "../redux/slices/authSlice";
 
 const Login = () => {
     const {
@@ -25,14 +28,14 @@ const Login = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
-        await new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ message: "Success!" });
-            }, 3000);
-        });
-        console.log("Login data:", data);
+        const res = await dispatch(login(data));
+        if (res?.payload?.success) {
+            navigate("/");
+        }
     };
 
     const foodIcons = [

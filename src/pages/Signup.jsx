@@ -18,25 +18,28 @@ import {
     GiPotato,
     GiSushis,
 } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+
+import { registerUser } from "../redux/slices/authSlice";
 
 const cuisines = [
-    "American",
-    "British",
-    "Chinese",
-    "French",
-    "German",
-    "Greek",
-    "Indian",
-    "Italian",
-    "Japanese",
-    "Korean",
-    "Mediterranean",
-    "Mexican",
-    "Middle Eastern",
-    "Spanish",
-    "Thai",
-    "Vietnamese",
+    "indian",
+    "italian",
+    "chinese",
+    "mexican",
+    "thai",
+    "japanese",
+    "french",
+    "mediterranean",
+    "american",
+    "korean",
+    "vietnamese",
+    "middle-eastern",
+    "british",
+    "spanish",
+    "german",
+    "greek",
 ];
 const dietaryPreferences = [
     "vegetarian",
@@ -63,6 +66,8 @@ const SignUp = () => {
         control,
     } = useForm();
     const password = watch("password");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // Floating icons setup
     const foodIcons = [
@@ -113,20 +118,10 @@ const SignUp = () => {
     );
 
     const onSubmit = async (data) => {
-        await new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ message: "Success!" });
-            }, 3000);
-        });
-        const userData = {
-            profile_name: data.profile_name,
-            email: data.email,
-            password: data.password,
-            cuisine: data.cuisine,
-            dietaryLabels: data.dietaryLabels,
-            avatar: data.avatar,
-        };
-        console.log("Signup data:", userData);
+        const res = await dispatch(registerUser(data));
+        if (res?.payload?.success) {
+            navigate("/");
+        }
     };
 
     return (
@@ -348,17 +343,14 @@ const SignUp = () => {
                                 Favorite Cuisine
                             </label>
                             <select
-                                {...register("cuisine", {
+                                {...register("profile_cuisine", {
                                     required: "Cuisine is required",
                                 })}
-                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300"
+                                className="w-full rounded-xl border border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 py-3 px-4 outline-none transition-all duration-300 capitalize"
                             >
                                 <option value="">Select cuisine</option>
                                 {cuisines.map((cuisine) => (
-                                    <option
-                                        key={cuisine.toLowerCase()}
-                                        value={cuisine.toLowerCase()}
-                                    >
+                                    <option key={cuisine} value={cuisine}>
                                         {cuisine}
                                     </option>
                                 ))}
@@ -384,7 +376,9 @@ const SignUp = () => {
                                         <input
                                             type="checkbox"
                                             value={pref}
-                                            {...register("dietaryLabels")}
+                                            {...register(
+                                                "profile_dietaryLabels"
+                                            )}
                                             className="accent-orange-500"
                                         />
                                         <span className="capitalize">
