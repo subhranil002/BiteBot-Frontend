@@ -1,9 +1,10 @@
-import { useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import HomeLayout from "../layouts/HomeLayout";
+import { FaStar } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+
 import RecipeCard from "../components/recipe/RecipeCard";
 import recipesData from "../data/recipes.json";
-import { FaStar } from "react-icons/fa";
+import HomeLayout from "../layouts/HomeLayout";
 
 const DEFAULT_FILTERS = {
   minPrice: 0,

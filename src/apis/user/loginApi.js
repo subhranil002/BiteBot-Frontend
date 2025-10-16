@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 
-import axiosInstance from "../configs/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 
 export default async function loginApi(data) {
     const res = axiosInstance.post("/user/login", data);

@@ -20,6 +20,7 @@ import {
 } from "react-icons/gi";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+
 import { registerUser } from "../redux/slices/authSlice";
 
 const cuisines = [

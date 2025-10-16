@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
-import changeAvatarApi from "../../apis/changeAvatarApi";
-import getProfileApi from "../../apis/getProfileApi";
-import loginApi from "../../apis/loginApi";
-import registerApi from "../../apis/registerApi";
+import changeAvatarApi from "../../apis/user/changeAvatarApi";
+import getProfileApi from "../../apis/user/getProfileApi";
+import loginApi from "../../apis/user/loginApi";
+import logoutApi from "../../apis/user/logoutApi";
+import registerApi from "../../apis/user/registerApi";
+import updateProfileApi from "../../apis/user/updateProfileApi";
 
 const authStorage = {
     get: (key, defaultValue) => {
@@ -58,7 +60,7 @@ export const registerUser = createAsyncThunk(
             await registerApi(data);
             if (data.avatar) {
                 const avatar = new FormData();
-                avatar.append("avatar", data.avatar);
+                avatar.append("avatar", data.avatar[0]);
                 await changeAvatarApi(avatar);
             }
             return await getProfileApi();
@@ -76,6 +78,14 @@ export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
     }
 });
 
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+    try {
+        return await logoutApi();
+    } catch (error) {
+        return thunkAPI.rejectWithValue(handleError(error));
+    }
+});
+
 export const getProfile = createAsyncThunk("auth/getProfile", async () => {
     try {
         return await getProfileApi();
@@ -83,6 +93,22 @@ export const getProfile = createAsyncThunk("auth/getProfile", async () => {
         console.log(error);
     }
 });
+
+export const updateProfile = createAsyncThunk(
+    "auth/updateProfile",
+    async (data, thunkAPI) => {
+        try {
+            if (data?.avatar) {
+                const avatar = new FormData();
+                avatar.append("avatar", data.avatar);
+                await changeAvatarApi(avatar);
+            }
+            return await updateProfileApi(data);
+        } catch (error) {
+            return thunkAPI.rejectWithValue(handleError(error));
+        }
+    }
+);
 
 const authSlice = createSlice({
     name: "auth",
@@ -99,6 +125,28 @@ const authSlice = createSlice({
                 authStorage.set("userData", action.payload?.data);
             })
             .addCase(login.fulfilled, (state, action) => {
+                state.isLoggedIn = action.payload?.success;
+                state.role = action.payload?.data?.role;
+                state.userData = action.payload?.data;
+                authStorage.set("isLoggedIn", action.payload?.success);
+                authStorage.set("role", action.payload?.data?.role);
+                authStorage.set("userData", action.payload?.data);
+            })
+            .addCase(logout.fulfilled, (state) => {
+                state.isLoggedIn = false;
+                state.role = "GUEST";
+                state.userData = {};
+                authStorage.clear();
+            })
+            .addCase(getProfile.fulfilled, (state, action) => {
+                state.isLoggedIn = action.payload?.success;
+                state.role = action.payload?.data?.role;
+                state.userData = action.payload?.data;
+                authStorage.set("isLoggedIn", action.payload?.success);
+                authStorage.set("role", action.payload?.data?.role);
+                authStorage.set("userData", action.payload?.data);
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload?.success;
                 state.role = action.payload?.data?.role;
                 state.userData = action.payload?.data;

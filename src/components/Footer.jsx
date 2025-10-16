@@ -1,13 +1,13 @@
 import {
+    FaCookie,
     FaEnvelope,
+    FaFire,
     FaGithub,
     FaHeart,
     FaInstagram,
+    FaSeedling,
     FaTwitter,
     FaUtensils,
-    FaFire,
-    FaSeedling,
-    FaCookie,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -27,11 +27,15 @@ function Footer() {
                                 <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                                     BiteBot
                                 </h3>
-                                <p className="text-sm text-gray-600">Taste the Difference</p>
+                                <p className="text-sm text-gray-600">
+                                    Taste the Difference
+                                </p>
                             </div>
                         </Link>
                         <p className="text-sm text-gray-600 leading-relaxed">
-                            Your culinary companion for discovering amazing recipes, cooking tips, and creating unforgettable meals.
+                            Your culinary companion for discovering amazing
+                            recipes, cooking tips, and creating unforgettable
+                            meals.
                         </p>
                         <div className="flex gap-3">
                             <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -53,28 +57,38 @@ function Footer() {
                         </h3>
                         <ul className="space-y-3 text-sm">
                             <li>
-                                <Link to="/" className="text-gray-600 hover:text-orange-600 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/"
+                                    className="text-gray-600 hover:text-orange-600 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-orange-400 rounded-full mr-3 group-hover:bg-orange-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Home
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/chat" className="text-gray-600 hover:text-red-500 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/chat"
+                                    className="text-gray-600 hover:text-red-500 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-red-400 rounded-full mr-3 group-hover:bg-red-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Recipe Chat
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/trending" className="text-gray-600 hover:text-amber-600 transition-all duration-300 flex items-center group font-medium">
+                                <span
+                                    className="text-gray-600 hover:text-amber-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
+                                >
                                     <span className="w-2 h-2 bg-amber-400 rounded-full mr-3 group-hover:bg-amber-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Trending Recipes
-                                </Link>
+                                </span>
                             </li>
                             <li>
-                                <Link to="/healthy" className="text-gray-600 hover:text-emerald-600 transition-all duration-300 flex items-center group font-medium">
+                                <span
+                                    className="text-gray-600 hover:text-amber-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
+                                >
                                     <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 group-hover:bg-emerald-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Healthy Options
-                                </Link>
+                                </span>
                             </li>
                         </ul>
                     </nav>
@@ -87,25 +101,37 @@ function Footer() {
                         </h3>
                         <ul className="space-y-3 text-sm">
                             <li>
-                                <Link to="/docs" className="text-gray-600 hover:text-cyan-600 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/docs"
+                                    className="text-gray-600 hover:text-cyan-600 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3 group-hover:bg-cyan-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Documentation
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/support" className="text-gray-600 hover:text-teal-600 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/contact"
+                                    className="text-gray-600 hover:text-teal-600 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-teal-400 rounded-full mr-3 group-hover:bg-teal-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Support
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/privacy" className="text-gray-600 hover:text-violet-600 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/privacy"
+                                    className="text-gray-600 hover:text-violet-600 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-violet-400 rounded-full mr-3 group-hover:bg-violet-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Privacy Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/terms" className="text-gray-600 hover:text-indigo-600 transition-all duration-300 flex items-center group font-medium">
+                                <Link
+                                    to="/terms"
+                                    className="text-gray-600 hover:text-indigo-600 transition-all duration-300 flex items-center group font-medium"
+                                >
                                     <span className="w-2 h-2 bg-indigo-400 rounded-full mr-3 group-hover:bg-indigo-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Terms of Service
                                 </Link>
@@ -154,7 +180,9 @@ function Footer() {
 
                         {/* Social links */}
                         <div className="space-y-2">
-                            <p className="text-sm text-gray-600 font-medium">Follow us</p>
+                            <p className="text-sm text-gray-600 font-medium">
+                                Follow us
+                            </p>
                             <div className="flex gap-3">
                                 <a
                                     href="#"
@@ -191,15 +219,24 @@ function Footer() {
                             for food lovers
                         </p>
                     </div>
-                    
+
                     <div className="flex items-center gap-6 text-sm">
-                        <Link to="/privacy" className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium">
+                        <Link
+                            to="/privacy"
+                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
+                        >
                             Privacy
                         </Link>
-                        <Link to="/terms" className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium">
+                        <Link
+                            to="/terms"
+                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
+                        >
                             Terms
                         </Link>
-                        <Link to="/contact" className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium">
+                        <Link
+                            to="/contact"
+                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
+                        >
                             Contact
                         </Link>
                     </div>

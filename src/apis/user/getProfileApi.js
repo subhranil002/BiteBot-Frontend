@@ -1,4 +1,4 @@
-import axiosInstance from "../configs/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 
 export default async function getProfileApi() {
     const res = axiosInstance.get("/user/me");

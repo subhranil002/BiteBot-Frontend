@@ -4,7 +4,6 @@ import {
     FaChevronLeft,
     FaChevronRight,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 import Step1BasicDetails from "../../components/addRecipe/Step1BasicDetails";
 import Step2Ingredients from "../../components/addRecipe/Step2Ingredients";
@@ -103,8 +102,6 @@ const unitOptions = [
 ];
 
 export default function AddRecipe() {
-    const navigate = useNavigate();
-
     const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState(DEFAULT_FORM);
@@ -276,7 +273,7 @@ export default function AddRecipe() {
                             <div className="card-actions justify-center mt-4">
                                 <button
                                     className="btn btn-primary"
-                                    onClick={() => navigate(`/recipe/${formData.id}`)}
+                                    onClick={() => {}}
                                 >
                                     View Recipe
                                 </button>

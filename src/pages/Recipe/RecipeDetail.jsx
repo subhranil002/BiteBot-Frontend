@@ -178,7 +178,7 @@ function RecipeDetail() {
                                         />
                                         <div>
                                             <Link
-                                                to={`/chef/${chef.id}`}
+                                                to={`/profile/${chef.id}`}
                                                 className="font-semibold text-gray-800 hover:text-orange-500 transition-colors"
                                             >
                                                 {chef.name}

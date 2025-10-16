@@ -51,7 +51,7 @@ const HeroSection = () => (
                             Start Cooking Chat
                         </Link>
                         <Link
-                            to="/recipes"
+                            to="/search"
                             className="btn border-2 border-orange-400 text-orange-600 hover:bg-orange-50 font-semibold px-6 py-3 rounded-2xl transition-all duration-300"
                         >
                             Explore Recipes

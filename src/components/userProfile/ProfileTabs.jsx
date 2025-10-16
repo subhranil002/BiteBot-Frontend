@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  FaCog,
   FaCrown,
   FaHeart,
   FaRegClock,
@@ -100,7 +99,7 @@ function ProfileTabs() {
 
   const handleChefClick = (chef) => {
     if (!chef?._id) return;
-    navigate(`/chef/${chef._id}`);
+    navigate(`/profile/${chef._id}`);
   };
 
   const handleUnsubscribe = (chefId) => {

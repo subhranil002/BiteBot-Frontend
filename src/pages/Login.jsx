@@ -169,12 +169,12 @@ const Login = () => {
                     <div className="text-center text-sm text-gray-600 mt-6 space-y-2">
                         <p>
                             Don’t have an account?{" "}
-                            <Link to="/Signup" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
+                            <Link to="/signup" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
                                 Sign up
                             </Link>
                         </p>
                         <p>
-                            <Link to="/ForgetPassword" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
+                            <Link to="/forgetpassword" className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline">
                                 Forgot password?
                             </Link>
                         </p>
