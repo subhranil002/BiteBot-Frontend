@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
     FaBars,
     FaHome,
@@ -11,22 +11,41 @@ import {
     FaSeedling,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../redux/slices/authSlice"; // adjust import path
+import toast from "react-hot-toast";
 
 function Navbar({ children }) {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [isScrolled, setIsScrolled] = useState(false);
-    const isLoggedIn = false;
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const { userData, isLoggedIn } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const handleScroll = () => setIsScrolled(window.scrollY > 10);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    // Fetch user profile if logged in but userData not loaded
+    useEffect(() => {
+        if (isLoggedIn && !userData?.email) {
+            dispatch(getProfile());
+        }
+    }, [isLoggedIn, dispatch, userData]);
 
     const handleSearch = (e) => {
         e?.preventDefault();
+        if (!searchTerm.trim()) return;
+        navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    };
+
+    const handleLogout = () => {
+        sessionStorage.clear();
+        toast.success("Logged out successfully!");
+        window.location.reload();
     };
 
     return (
@@ -35,10 +54,16 @@ function Navbar({ children }) {
 
             <div className="drawer-content">
                 {/* Enhanced Gradient Navbar */}
-                <header className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled 
-                    ? 'shadow-2xl shadow-orange-300/20 border-b border-orange-200/50' 
-                    : 'shadow-lg shadow-orange-200/10'}`}>
-                    <div className={`bg-gradient-to-r from-orange-400/10 via-red-400/10 to-amber-400/10 backdrop-blur-xl transition-all duration-500 ${isScrolled ? 'py-0' : 'py-1'}`}>
+                <header
+                    className={`sticky top-0 z-50 transition-all duration-500 ${isScrolled
+                            ? "shadow-2xl shadow-orange-300/20 border-b border-orange-200/50"
+                            : "shadow-lg shadow-orange-200/10"
+                        }`}
+                >
+                    <div
+                        className={`bg-gradient-to-r from-orange-400/10 via-red-400/10 to-amber-400/10 backdrop-blur-xl transition-all duration-500 ${isScrolled ? "py-0" : "py-1"
+                            }`}
+                    >
                         <div className="container mx-auto px-4 md:px-8">
                             <div className="navbar h-16 md:h-18">
                                 {/* Left: Logo + Menu */}
@@ -61,19 +86,20 @@ function Navbar({ children }) {
                                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 animate-pulse-slow">
                                                     <FaUtensils className="w-5 h-5 text-white" />
                                                 </div>
-                                                {/* <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-amber-400 to-yellow-400 rounded-full border-2 border-white shadow-sm animate-bounce-gentle"></div> */}
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="bg-gradient-to-r from-orange-600 via-red-600 to-amber-600 bg-clip-text text-transparent font-bold text-2xl leading-6">
                                                     BiteBot
                                                 </span>
-                                                <span className="text-xs text-gray-600 font-normal">Taste the Difference</span>
+                                                <span className="text-xs text-gray-600 font-normal">
+                                                    Taste the Difference
+                                                </span>
                                             </div>
                                         </div>
                                     </Link>
                                 </div>
 
-                                {/* Center: Search (desktop only) */}
+                                {/* Center: Search */}
                                 <div className="flex-1 hidden lg:flex justify-center">
                                     <form
                                         onSubmit={handleSearch}
@@ -87,29 +113,14 @@ function Navbar({ children }) {
                                                 placeholder="Search recipes, ingredients, chefs..."
                                                 className="input w-full pl-12 pr-4 py-3 text-sm rounded-2xl transition-all backdrop-blur-sm bg-gray-100 border-2 border-orange-200 text-gray-900 placeholder-gray-500 focus:border-orange-400 focus:ring-4 focus:ring-orange-200/50 hover:border-orange-300 shadow-inner"
                                                 aria-label="Search"
+                                                onChange={(e) => setSearchTerm(e.target.value)}
                                             />
-                                            {/* <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                                <kbd className="kbd kbd-sm bg-orange-500 text-white border-0">⌘K</kbd>
-                                            </div> */}
                                         </div>
                                     </form>
                                 </div>
 
-                                {/* Right: Navigation Icons + User/Login */}
+                                {/* Right: User / Login */}
                                 <div className="flex items-center gap-3">
-                                    {/* Quick Action Icons */}
-                                    {/* <div className="hidden md:flex items-center gap-1 mr-4">
-                                        <Link to="/trending" className="btn btn-ghost btn-circle text-orange-600 hover:text-red-600 hover:bg-orange-50 transition-all duration-300 tooltip" data-tip="Trending">
-                                            <FaFire className="w-5 h-5" />
-                                        </Link>
-                                        <Link to="/healthy" className="btn btn-ghost btn-circle text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all duration-300 tooltip" data-tip="Healthy">
-                                            <FaSeedling className="w-5 h-5" />
-                                        </Link>
-                                        <Link to="/favorites" className="btn btn-ghost btn-circle text-rose-500 hover:text-rose-600 hover:bg-rose-50 transition-all duration-300 tooltip" data-tip="Favorites">
-                                            <FaHeart className="w-5 h-5" />
-                                        </Link>
-                                    </div> */}
-
                                     {isLoggedIn ? (
                                         <div className="dropdown dropdown-end">
                                             <label
@@ -119,7 +130,10 @@ function Navbar({ children }) {
                                                 <div className="w-10 rounded-full ring-2 ring-white/30">
                                                     <img
                                                         alt="user avatar"
-                                                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=user&backgroundColor=ffd5b5,ffb5a7,ff9aa2"
+                                                        src={
+                                                            userData?.avatarUrl ||
+                                                            "https://img.freepik.com/premium-photo/girl-eating-food_981168-3742.jpg"
+                                                        }
                                                     />
                                                 </div>
                                             </label>
@@ -131,20 +145,55 @@ function Navbar({ children }) {
                                                     <div className="flex items-center gap-3">
                                                         <div className="avatar">
                                                             <div className="w-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500">
-                                                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user&backgroundColor=ffd5b5,ffb5a7,ff9aa2" alt="User" />
+                                                                <img
+                                                                    src={
+                                                                        userData?.avatarUrl ||
+                                                                        "https://img.freepik.com/premium-photo/girl-eating-food_981168-3742.jpg"
+                                                                    }
+                                                                    alt="User"
+                                                                />
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <p className="font-bold text-gray-900">John Chef</p>
-                                                            <p className="text-xs text-gray-600">Food Enthusiast</p>
+                                                            <p className="font-bold text-gray-900">
+                                                                {userData?.name || "User"}
+                                                            </p>
+                                                            <p className="text-xs text-gray-600">
+                                                                {userData?.email || "Food Enthusiast"}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li><Link to="/profile" className="rounded-lg hover:bg-orange-50 transition-colors py-3"><FaUser className="text-orange-500" /> My Profile</Link></li>
-                                                <li><Link to="/chat" className="rounded-lg hover:bg-orange-50 transition-colors py-3"><FaUtensils className="text-orange-500" /> Recipe Chat</Link></li>
-                                                <li><Link to="/favorites" className="rounded-lg hover:bg-orange-50 transition-colors py-3"><FaHeart className="text-rose-500" /> My Favorites</Link></li>
+                                                <li>
+                                                    <Link
+                                                        to="/profile"
+                                                        className="rounded-lg hover:bg-orange-50 transition-colors py-3"
+                                                    >
+                                                        <FaUser className="text-orange-500" /> My
+                                                        Profile
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        to="/chat"
+                                                        className="rounded-lg hover:bg-orange-50 transition-colors py-3"
+                                                    >
+                                                        <FaUtensils className="text-orange-500" /> Recipe Chat
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <Link
+                                                        to="/favorites"
+                                                        className="rounded-lg hover:bg-orange-50 transition-colors py-3"
+                                                    >
+                                                        <FaHeart className="text-rose-500" /> My Favorites
+                                                    </Link>
+                                                </li>
                                                 <li className="border-t border-orange-100 mt-1">
-                                                    <button className="text-red-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors py-3">
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="text-red-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors py-3 w-full text-left"
+                                                    >
                                                         <FaSignOutAlt className="inline mr-2" />
                                                         Logout
                                                     </button>
@@ -168,10 +217,11 @@ function Navbar({ children }) {
                         </div>
                     </div>
                 </header>
+
                 {children}
             </div>
 
-            {/* Enhanced Drawer Menu */}
+            {/* Drawer Menu */}
             <div className="drawer-side z-50">
                 <label htmlFor="navbar-drawer" className="drawer-overlay"></label>
                 <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-gradient-to-b from-white to-orange-50/30 text-gray-900">
@@ -189,11 +239,7 @@ function Navbar({ children }) {
                     </div>
 
                     {/* Mobile Search */}
-                    <form
-                        onSubmit={handleSearch}
-                        className="mb-6 lg:hidden"
-                        role="search"
-                    >
+                    <form onSubmit={handleSearch} className="mb-6 lg:hidden" role="search">
                         <div className="relative group">
                             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
                             <input
@@ -206,7 +252,9 @@ function Navbar({ children }) {
 
                     {/* Main Navigation */}
                     <nav className="flex flex-col gap-2 mb-8">
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">Main Menu</h3>
+                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">
+                            Main Menu
+                        </h3>
                         <Link
                             to="/"
                             className="btn btn-ghost justify-start rounded-xl backdrop-blur-sm bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 border border-orange-200 text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-md group"
@@ -248,7 +296,7 @@ function Navbar({ children }) {
                         </Link>
                     </nav>
 
-                    {/* Promotional Card */}
+                    {/* Promo Card */}
                     <div className="mt-auto p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl border-0 shadow-lg text-white">
                         <h3 className="font-bold text-white mb-2">🎉 New Features!</h3>
                         <p className="text-sm text-white/90 mb-3">
