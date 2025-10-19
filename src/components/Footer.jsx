@@ -14,11 +14,11 @@ import { Link } from "react-router-dom";
 function Footer() {
     return (
         <footer className="mt-auto bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 backdrop-blur-md border-t border-orange-200 shadow-lg">
-            <div className="container mx-auto px-4 py-12">
+            <div className="container mx-auto px-4 py-8 xl:py-12">
                 {/* Main footer content */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 mb-8">
                     {/* Brand Section */}
-                    <div className="space-y-4">
+                    <div className="space-y-4 md:col-span-2 lg:col-span-1">
                         <Link to="/" className="flex items-center gap-3 group">
                             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
                                 <FaUtensils className="w-6 h-6 text-white" />
@@ -37,7 +37,7 @@ function Footer() {
                             recipes, cooking tips, and creating unforgettable
                             meals.
                         </p>
-                        <div className="flex gap-3">
+                        <div className="flex flex-wrap gap-4">
                             <div className="flex items-center gap-1 text-xs text-gray-500">
                                 <FaFire className="text-orange-500" />
                                 <span>Trending Recipes</span>
@@ -84,7 +84,7 @@ function Footer() {
                             </li>
                             <li>
                                 <span
-                                    className="text-gray-600 hover:text-amber-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
+                                    className="text-gray-600 hover:text-emerald-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
                                 >
                                     <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 group-hover:bg-emerald-500 transition-colors duration-300 group-hover:scale-125"></span>
                                     Healthy Options
@@ -140,14 +140,14 @@ function Footer() {
                     </nav>
 
                     {/* Newsletter & Social */}
-                    <aside className="space-y-4">
-                        <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-2">
+                    <aside className="space-y-4 md:col-span-2 lg:col-span-1">
+                        {/* <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-2">
                             <FaEnvelope className="w-4 h-4" />
                             Stay Connected
-                        </h3>
+                        </h3> */}
 
                         {/* Newsletter signup */}
-                        <form
+                        {/* <form
                             className="space-y-3"
                             onSubmit={(e) => e.preventDefault()}
                         >
@@ -158,32 +158,33 @@ function Footer() {
                                     </span>
                                 </label>
 
-                                <div className="flex gap-2">
+                                <div className="flex flex-col lg:flex-row gap-3">
                                     <input
                                         type="email"
                                         placeholder="Your email address"
-                                        onChange={() => {}}
+                                        onChange={() => { }}
                                         className="flex-grow bg-white border-2 border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 py-3 px-4 rounded-xl text-sm shadow-inner hover:border-orange-300"
                                         required
                                         aria-label="Email address"
                                     />
                                     <button
                                         type="submit"
-                                        className="btn bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 text-white p-3 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg shadow-orange-300/40"
+                                        className="btn bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 text-white py-3 px-4 lg:px-3 mr-1 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg shadow-orange-300/40 whitespace-nowrap lg:w-auto w-full flex items-center justify-center gap-2"
                                         aria-label="Subscribe to newsletter"
                                     >
                                         <FaEnvelope className="w-4 h-4" />
+                                        <span className="lg:inline">Subscribe</span>
                                     </button>
                                 </div>
                             </fieldset>
-                        </form>
+                        </form> */}
 
                         {/* Social links */}
                         <div className="space-y-2">
                             <p className="text-sm text-gray-600 font-medium">
                                 Follow us
                             </p>
-                            <div className="flex gap-3">
+                            <div className="flex gap-3 justify-center lg:justify-start">
                                 <a
                                     href="#"
                                     className="p-3 bg-white backdrop-blur-sm rounded-xl border-2 border-orange-200 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
@@ -211,8 +212,8 @@ function Footer() {
                 </div>
 
                 {/* Bottom section */}
-                <div className="w-full border-t border-orange-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 text-sm">
+                <div className="w-full border-t border-orange-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                    <div className="flex items-center justify-center md:justify-start gap-4 text-sm w-full md:w-auto">
                         <p className="flex items-center gap-2 text-gray-600 font-medium">
                             © {new Date().getFullYear()} BiteBot. Crafted with
                             <FaHeart className="inline w-4 h-4 text-red-500 animate-pulse" />
@@ -220,7 +221,7 @@ function Footer() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-6 text-sm">
+                    <div className="flex items-center gap-6 text-sm flex-wrap justify-center w-full md:w-auto">
                         <Link
                             to="/privacy"
                             className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"

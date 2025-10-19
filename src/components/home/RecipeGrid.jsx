@@ -125,15 +125,15 @@ const RecipeGrid = () => {
     ];
 
     return (
-        <section className="container mx-auto px-6 py-16 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/40">
+        <section className="mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/40">
             {/* Header Bar */}
-            <div className="flex items-center justify-between mb-10">
-                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+            <div className="flex items-center justify-between mb-12">
+                <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
                     More Recipes
                 </h2>
                 <button
                     onClick={() => { }}
-                    className="px-5 py-2.5 text-sm font-medium rounded-full border border-orange-200 text-orange-600 hover:bg-orange-100 transition-all duration-200 shadow-sm"
+                    className="px-6 py-3 text-sm font-medium rounded-full border border-orange-200 text-orange-600 hover:bg-orange-50 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                     Browse All →
                 </button>
@@ -143,26 +143,29 @@ const RecipeGrid = () => {
             {recipes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {recipes.map((recipe) => (
-                        <RecipeCard key={recipe.id} recipe={recipe} className="h-full" />
+                        <RecipeCard
+                            key={recipe.id}
+                            recipe={recipe}
+                            className="w-full"
+                        />
                     ))}
                 </div>
             ) : (
                 /* No Results */
                 <div className="text-center py-20">
-                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
                         <span className="text-3xl text-orange-500">🔍</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-800">
+                    <h3 className="text-xl font-semibold mb-3 text-gray-800">
                         No recipes found
                     </h3>
-                    <p className="text-gray-500">
-                        Try browsing our featured categories above.
+                    <p className="text-gray-600 max-w-md mx-auto">
+                        Try browsing our featured categories above or adjusting your search.
                     </p>
                 </div>
             )}
         </section>
-
-    );
+    )
 };
 
 export default RecipeGrid;

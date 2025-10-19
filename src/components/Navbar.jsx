@@ -117,7 +117,7 @@ function Navbar({ children }) {
                                 </div>
 
                                 {/* Right: User / Login */}
-                                <div className="flex items-center gap-3">
+                                <div className="ml-4 flex items-center gap-3">
                                     {isLoggedIn ? (
                                         <div className="dropdown dropdown-end">
                                             <label
@@ -131,7 +131,7 @@ function Navbar({ children }) {
                                                             userData?.profile
                                                                 ?.avatar
                                                                 ?.secure_url ||
-                                                                ""
+                                                            ""
                                                         )}
                                                     />
                                                 </div>
@@ -151,7 +151,7 @@ function Navbar({ children }) {
                                                                             ?.profile
                                                                             ?.avatar
                                                                             ?.secure_url ||
-                                                                            ""
+                                                                        ""
                                                                     )}
                                                                 />
                                                             </div>
@@ -213,7 +213,7 @@ function Navbar({ children }) {
                                     ) : (
                                         <button
                                             onClick={() => navigate("/login")}
-                                            className="btn m-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold shadow-xl shadow-orange-500/40 rounded-2xl backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-1 hover:shadow-orange-500/50 px-6 animate-bounce-gentle group relative overflow-hidden"
+                                            className="btn m-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold shadow-xl shadow-orange-500/40 rounded-2xl backdrop-blur-sm transition-all duration-300 transform hover:shadow-orange-500/50 px-6 animate-bounce-gentle group relative overflow-hidden"
                                         >
                                             <span className="relative z-10 flex items-center gap-2">
                                                 <FaUser className="w-4 h-4" />
@@ -272,63 +272,45 @@ function Navbar({ children }) {
                     </form>
 
                     {/* Main Navigation */}
-                    <nav className="flex flex-col gap-2 mb-8">
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">
-                            Main Menu
-                        </h3>
+                    <nav className="flex flex-col gap-3 mb-8">
+                        {/* Header */}
+                        <div className="px-2">
+                            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                                Main Menu
+                            </h3>
+                        </div>
+
+                        {/* Navigation Links */}
                         <Link
                             to="/"
-                            className="btn btn-ghost justify-start rounded-xl backdrop-blur-sm bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 border border-orange-200 text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-md group"
+                            className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border border-orange-200 text-base-content transition-all duration-300 group shadow-sm"
                         >
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <FaHome className="w-4 h-4 text-white" />
                             </div>
-                            <span className="font-semibold">Home</span>
-                        </Link>
-
-                        <Link
-                            to="/chat"
-                            className="btn btn-ghost justify-start rounded-xl backdrop-blur-sm bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 border border-orange-200 text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-md group"
-                        >
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <FaUtensils className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="font-semibold">Recipe Chat</span>
+                            <span className="font-semibold text-base">Home</span>
                         </Link>
 
                         <Link
                             to="/trending"
-                            className="btn btn-ghost justify-start rounded-xl backdrop-blur-sm bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 border border-orange-200 text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-md group"
+                            className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
                         >
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <FaFire className="w-4 h-4 text-white" />
                             </div>
-                            <span className="font-semibold">Trending</span>
+                            <span className="font-semibold text-base">Trending</span>
                         </Link>
 
                         <Link
                             to="/healthy"
-                            className="btn btn-ghost justify-start rounded-xl backdrop-blur-sm bg-white hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 border border-emerald-200 text-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-md group"
+                            className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 border border-emerald-200 text-base-content transition-all duration-300 group shadow-sm"
                         >
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <FaSeedling className="w-4 h-4 text-white" />
                             </div>
-                            <span className="font-semibold">Healthy</span>
+                            <span className="font-semibold text-base">Healthy</span>
                         </Link>
                     </nav>
-
-                    {/* Promo Card */}
-                    <div className="mt-auto p-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl border-0 shadow-lg text-white">
-                        <h3 className="font-bold text-white mb-2">
-                            🎉 New Features!
-                        </h3>
-                        <p className="text-sm text-white/90 mb-3">
-                            Try our AI recipe generator and meal planner.
-                        </p>
-                        <button className="btn btn-sm bg-white text-orange-600 border-0 hover:bg-orange-50 font-bold w-full">
-                            Explore Now
-                        </button>
-                    </div>
                 </aside>
             </div>
         </div>

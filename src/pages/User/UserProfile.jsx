@@ -30,7 +30,7 @@ function UserProfile({ profileData }) {
 
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10 space-y-8">
                         {/* 🧑‍🍳 Profile Header */}
-                        <div className="card glass border border-orange-100 shadow-lg hover:shadow-orange-300/70 transition-transform hover:-translate-y-1">
+                        <div className="card glass border border-orange-100 shadow-lg hover:shadow-orange-300/70">
                             <div className="card-body flex flex-col md:flex-row gap-6 items-start">
                                 {/* Avatar */}
                                 <div className="avatar">
@@ -88,7 +88,7 @@ function UserProfile({ profileData }) {
                                         {/* Buttons */}
                                         <div className="flex gap-3">
                                             <button
-                                                className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md hover:scale-105 transition-transform"
+                                                className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
                                                 onClick={() =>
                                                     document
                                                         .getElementById(
@@ -116,14 +116,14 @@ function UserProfile({ profileData }) {
                         </div>
 
                         {/* 📊 Profile Stats */}
-                        <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 transition-transform hover:-translate-y-1">
+                        <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60">
                             <div className="card-body">
                                 <ProfileStats />
                             </div>
                         </div>
 
                         {/* 📑 Profile Tabs */}
-                        <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 transition-transform hover:-translate-y-1">
+                        <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60">
                             <div className="card-body">
                                 <ProfileTabs />
                             </div>

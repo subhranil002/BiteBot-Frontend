@@ -17,7 +17,7 @@ const RecipeCard = ({ recipe, className = "" }) => {
 
     return (
         <div
-          className={`relative group cursor-pointer ${className}`}
+          className={`card card-compact group cursor-pointer max-w-sm max-h-[600px] mx-auto ${className}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -79,9 +79,9 @@ const RecipeCard = ({ recipe, className = "" }) => {
             </figure>
       
             {/* Content section */}
-            <div className="flex flex-col flex-grow p-5 md:p-6 justify-between">
+            <div className="card-body flex flex-col flex-grow p-5 md:p-6 justify-between">
               <div className="space-y-3">
-                <h3 className="text-lg font-bold bg-gradient-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent line-clamp-2 group-hover:brightness-110">
+                <h3 className="card-title text-lg font-bold bg-gradient-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent line-clamp-2 group-hover:brightness-110">
                   {recipe.title}
                 </h3>
       
@@ -109,7 +109,7 @@ const RecipeCard = ({ recipe, className = "" }) => {
       
                 {/* Tags */}
                 {recipe.tags && recipe.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="card-actions flex flex-wrap gap-2 mt-2">
                     {recipe.tags.slice(0, 3).map((tag) => (
                       <div
                         key={tag}
@@ -128,7 +128,7 @@ const RecipeCard = ({ recipe, className = "" }) => {
               </div>
       
               {/* Button area */}
-              <div className="pt-4">
+              <div className="card-actions pt-4">
                 <Link
                   to={`/recipe/${recipe.id}`}
                   className={`w-full btn rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl ${

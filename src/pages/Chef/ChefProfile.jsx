@@ -5,6 +5,10 @@ import {
     FaRegComment,
     FaStar,
     FaUtensils,
+    FaGraduationCap,
+    FaBriefcase,
+    FaLink,
+    FaGlobe 
 } from "react-icons/fa";
 
 import RecipeCard from "../../components/recipe/RecipeCard";
@@ -12,6 +16,7 @@ import HomeLayout from "../../layouts/HomeLayout";
 
 const ChefProfile = ({ profileData }) => {
     function modifyCloudinaryURL(url) {
+        console.log(profileData);
         if (url === "" || url === null) return "";
         if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
             return url.replace(
@@ -23,7 +28,6 @@ const ChefProfile = ({ profileData }) => {
     }
 
     const [subscribed] = useState(false);
-
     return (
         <HomeLayout>
             <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50">
@@ -67,6 +71,30 @@ const ChefProfile = ({ profileData }) => {
                                 {profileData?.profile?.bio}
                             </p>
 
+                            {/* Education & Experience */}
+                            <div className="space-y-3">
+                                {/* External Links */}
+                                {profileData?.chefProfile?.externalLinks?.length > 0 && (
+                                    <div className="flex items-center gap-3 flex-wrap">
+                                        <FaLink className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                                        <div className="flex flex-wrap gap-2">
+                                            {profileData.chefProfile.externalLinks.map((link, index) => (
+                                                <a
+                                                    key={index}
+                                                    href={link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="badge badge-outline border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors text-xs"
+                                                >
+                                                    <FaGlobe className="w-3 h-3 mr-1" />
+                                                    {new URL(link).hostname}
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Cuisine */}
                             <div className="flex flex-wrap gap-2">
                                 {profileData?.profile?.cuisine?.map((c, i) => (
@@ -108,12 +136,11 @@ const ChefProfile = ({ profileData }) => {
                         {/* Subscribe / message */}
                         <div className="flex flex-col gap-3">
                             <button
-                                onClick={() => {}}
-                                className={`btn gap-2 ${
-                                    subscribed
+                                onClick={() => { }}
+                                className={`btn gap-2 ${subscribed
                                         ? "btn-outline border-orange-400 text-orange-600"
                                         : "bg-gradient-to-r from-orange-400 to-red-500 text-white"
-                                }`}
+                                    }`}
                             >
                                 <FaHeart />
                                 {subscribed
@@ -146,12 +173,17 @@ const ChefProfile = ({ profileData }) => {
                                         ? "Premium"
                                         : "Free",
                             },
+                            // New Education stat
+                            {
+                                label: "Education",
+                                value: profileData?.chefProfile?.education ? "Certified" : "Self-taught", //rating
+                            },
                         ].map((stat, i) => (
                             <div
                                 key={i}
-                                className="card bg-base-100 p-5 text-center"
+                                className="card bg-base-100 p-5 text-center shadow-sm border border-orange-100"
                             >
-                                <div className="text-2xl font-bold">
+                                <div className="text-2xl font-bold text-gray-800">
                                     {stat.value}
                                 </div>
                                 <div className="text-sm text-gray-500">
@@ -160,6 +192,36 @@ const ChefProfile = ({ profileData }) => {
                             </div>
                         ))}
                     </div>
+
+                    {/* Professional Info Card */}
+                    {( profileData?.chefProfile?.experience) && (
+                        <div className="card bg-base-100 shadow p-6 mb-8 border border-orange-100">
+                            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
+                                <FaBriefcase className="text-orange-500" />
+                                Professional Background
+                            </h3>
+                            <div className="space-y-4">
+                                {profileData?.chefProfile?.education && (
+                                    <div>
+                                        <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                                            <FaGraduationCap className="w-4 h-4 text-orange-500" />
+                                            Education
+                                        </h4>
+                                        <p className="text-gray-600">{profileData.chefProfile.education}</p>
+                                    </div>
+                                )}
+                                {profileData?.chefProfile.experience && (
+                                    <div>
+                                        <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                                            <FaBriefcase className="w-4 h-4 text-orange-500" />
+                                            Experience
+                                        </h4>
+                                        <p className="text-gray-600">{profileData.chefProfile.experience}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Recipes */}
                     <div className="card bg-base-100 shadow p-6">
@@ -212,7 +274,7 @@ const ChefProfile = ({ profileData }) => {
                 </div>
             </div>
         </HomeLayout>
-    );
+    )
 };
 
 export default ChefProfile;
