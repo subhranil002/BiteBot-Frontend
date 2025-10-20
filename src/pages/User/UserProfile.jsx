@@ -102,13 +102,6 @@ function UserProfile({ profileData }) {
                                                     Edit Profile
                                                 </span>
                                             </button>
-
-                                            <button
-                                                className="btn btn-circle btn-outline border-orange-200 text-orange-500 hover:bg-orange-50"
-                                                aria-label="Settings"
-                                            >
-                                                <FaCog className="w-4 h-4" />
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

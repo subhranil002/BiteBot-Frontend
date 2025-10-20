@@ -1,10 +1,13 @@
 import { useState } from "react";
 import {
+  FaArrowRight,
   FaCrown,
+  FaEye,
   FaHeart,
   FaRegClock,
   FaUserMinus,
   FaUsers,
+  FaUtensils,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -127,7 +130,7 @@ function ProfileTabs() {
 
   return (
     <div className="w-full">
-      {/* --- Tabs Navigation --- */}
+      {/* --- Enhanced Tabs Navigation --- */}
       <div className="flex flex-wrap justify-center mb-8 gap-3">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -149,185 +152,299 @@ function ProfileTabs() {
         })}
       </div>
 
+
       {/* --- Tab Contents --- */}
-      <div className="mt-6 space-y-6">
-        {/* Favourites - matches schema field name */}
+      <div className="space-y-8 ">
+        {/* Favourites Tab */}
         {activeTab === "favourites" && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-gray-800">
-              Your Favourite Recipes
-            </h3>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+              <h3 className="text-2xl font-bold text-gray-800">
+                Your Favourite Recipes
+              </h3>
+              {data?.favourites?.length > 0 && (
+                <span className="badge badge-lg bg-orange-500 text-white border-0">
+                  {data.favourites.length}
+                </span>
+              )}
+            </div>
 
             {data?.favourites?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {data.favourites.map((recipe) => (
-                  <RecipeCard
-                    key={recipe._id}
-                    recipe={recipe}
-                    onClick={() => handleRecipeClick(recipe)}
-                  />
+                  <div key={recipe._id} className="group">
+                    <RecipeCard
+                      recipe={recipe}
+                      onClick={() => handleRecipeClick(recipe)}
+                    />
+                  </div>
                 ))}
               </div>
             ) : (
-              <div className="card bg-base-100/80 border border-orange-100 text-center p-12 shadow rounded-2xl">
-                <FaHeart className="w-12 h-12 mx-auto mb-4 text-orange-400" />
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                  No favourites yet
-                </h4>
-                <p className="text-gray-500 mb-4">
-                  Start exploring recipes and add them to your favourites
-                </p>
-                <button
-                  className="btn bg-gradient-to-r from-orange-400 to-red-500 text-white hover:scale-105 transition-transform"
-                  onClick={() => navigate("/")}
-                >
-                  Discover Recipes
-                </button>
+              <div className="card bg-base-100 shadow-xl border border-orange-100">
+                <div className="card-body text-center py-16">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+                    <FaHeart className="w-12 h-12 text-orange-400" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 mb-3">
+                    No favourites yet
+                  </h4>
+                  <p className="text-gray-600 mb-8 max-w-md mx-auto text-lg">
+                    Start exploring amazing recipes and add them to your personal collection
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white gap-2 hover:scale-105 transition-transform"
+                      onClick={() => navigate("/search")}
+                    >
+                      <FaSearch className="w-4 h-4" />
+                      Search Recipes
+                    </button>
+                    <button
+                      className="btn btn-outline border-orange-300 text-orange-600 gap-2"
+                      onClick={() => navigate("/")}
+                    >
+                      <FaHome className="w-4 h-4" />
+                      Browse Home
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Subscribed - matches schema field name */}
+        {/* Subscribed Tab */}
         {activeTab === "subscribed" && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-gray-800">Subscribed</h3>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+              <h3 className="text-2xl font-bold text-gray-800">Subscribed Chefs</h3>
+              {data?.subscribed?.length > 0 && (
+                <span className="badge badge-lg bg-orange-500 text-white border-0">
+                  {data.subscribed.length}
+                </span>
+              )}
+            </div>
 
             {data?.subscribed?.length > 0 ? (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {data.subscribed.map((chef) => (
                   <div
                     key={chef._id}
-                    className="card bg-base-100/80 border border-orange-100 shadow-md rounded-2xl hover:shadow-lg transition-all cursor-pointer"
+                    className="card bg-base-100 shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
                     onClick={() => handleChefClick(chef)}
                   >
-                    <div className="card-body p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-4 flex-1">
-                        <img
-                          src={chef.profile.avatar.secure_url}
-                          alt={chef.profile.name}
-                          className="w-14 h-14 rounded-full object-cover border-2 border-orange-200"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-gray-800">{chef.profile.name}</h4>
+                    <div className="card-body p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="avatar">
+                          <div className="w-16 h-16 rounded-full ring-4 ring-orange-200 ring-offset-2">
+                            <img
+                              src={chef.profile.avatar.secure_url}
+                              alt={chef.profile.name}
+                              className="object-cover"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h4 className="text-lg font-bold text-gray-800 truncate">
+                              {chef.profile.name}
+                            </h4>
                             {chef.isPremium && (
-                              <span className="badge bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-0 flex items-center gap-1">
+                              <span className="badge bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 flex items-center gap-1">
                                 <FaCrown className="w-3 h-3" /> Premium
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-600 line-clamp-1">
+                          
+                          <p className="text-gray-600 line-clamp-2 mb-3 text-sm">
                             {chef.profile.bio}
                           </p>
-                          <p className="text-sm text-gray-500 mt-1">
-                            {chef.recipesCount} recipes • {chef.followers} followers
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            Subscribed since {new Date(chef.subscribedDate).toLocaleDateString()}
-                          </p>
+                          
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-1">
+                              <FaUtensils className="w-4 h-4 text-orange-400" />
+                              <span>{chef.recipesCount} recipes</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <FaUsers className="w-4 h-4 text-orange-400" />
+                              <span>{chef.followers} followers</span>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-2">
+                            <span className="text-xs text-gray-400">
+                              Subscribed since {new Date(chef.subscribedDate).toLocaleDateString()}
+                            </span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex flex-wrap gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          className="btn btn-sm btn-outline border-orange-300 text-orange-600 hover:bg-orange-50"
-                          onClick={() => handleChefClick(chef)}
-                        >
-                          View Profile
-                        </button>
-                        <button
-                          className="btn btn-sm border-red-300 text-red-500 hover:bg-red-50 flex items-center gap-1"
-                          onClick={(e) => handleUnsubscribe(chef._id, e)}
-                        >
-                          <FaUserMinus className="w-4 h-4" /> UnSubscribe
-                        </button>
+                        <div className="flex flex-col gap-2 sm:items-end" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="btn btn-sm btn-outline border-orange-300 text-orange-600 hover:bg-orange-50 gap-2"
+                            onClick={() => handleChefClick(chef)}
+                          >
+                            <FaEye className="w-3 h-3" />
+                            View
+                          </button>
+                          <button
+                            className="btn btn-sm border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-300 gap-2"
+                            onClick={(e) => handleUnsubscribe(chef._id, e)}
+                          >
+                            <FaUserMinus className="w-3 h-3" />
+                            Unsubscribe
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="card bg-base-100/80 border border-orange-100 shadow-md rounded-2xl text-center p-12">
-                <FaUsers className="w-12 h-12 mx-auto mb-4 text-orange-400" />
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                  Not Subscribed anyone yet
-                </h4>
-                <p className="text-gray-500 mb-4">
-                  Follow your favorite chefs to see their latest recipes
-                </p>
-                <button
-                  className="btn bg-gradient-to-r from-orange-400 to-red-500 text-white hover:scale-105 transition-transform"
-                  onClick={() => navigate("/")}
-                >
-                  Discover Chefs
-                </button>
+              <div className="card bg-base-100 shadow-xl border border-orange-100">
+                <div className="card-body text-center py-16">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+                    <FaUsers className="w-12 h-12 text-orange-400" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 mb-3">
+                    Not following any chefs
+                  </h4>
+                  <p className="text-gray-600 mb-8 max-w-md mx-auto text-lg">
+                    Subscribe to your favorite chefs to get access to their exclusive recipes and content
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white gap-2 hover:scale-105 transition-transform"
+                      onClick={() => navigate("/chefs")}
+                    >
+                      <FaSearch className="w-4 h-4" />
+                      Explore Chefs
+                    </button>
+                    <button
+                      className="btn btn-outline border-orange-300 text-orange-600 gap-2"
+                      onClick={() => navigate("/")}
+                    >
+                      <FaHome className="w-4 h-4" />
+                      Browse Home
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Reviews - from your schema */}
+        {/* Reviews Tab */}
         {activeTab === "reviews" && (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold text-gray-800">
-              My Reviews
-            </h3>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+              <h3 className="text-2xl font-bold text-gray-800">My Reviews</h3>
+              {data?.reviewsGiven?.length > 0 && (
+                <span className="badge badge-lg bg-orange-500 text-white border-0">
+                  {data.reviewsGiven.length}
+                </span>
+              )}
+            </div>
 
             {data?.reviewsGiven?.length > 0 ? (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {data.reviewsGiven.map((review, idx) => (
                   <div
                     key={idx}
-                    className="card bg-base-100/80 border border-orange-100 rounded-xl shadow-sm p-5 hover:shadow-md transition-all"
+                    className="card bg-base-100 shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="rating rating-sm">
-                          {[...Array(5)].map((_, i) => (
-                            <input
-                              key={i}
-                              type="radio"
-                              name={`rating-${idx}`}
-                              className="mask mask-star-2 bg-orange-500"
-                              checked={i < review.rating}
-                              readOnly
-                            />
-                          ))}
+                    <div className="card-body p-6">
+                      {/* Header with rating and date */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="rating rating-sm">
+                            {[...Array(5)].map((_, i) => (
+                              <input
+                                key={i}
+                                type="radio"
+                                name={`rating-${idx}`}
+                                className="mask mask-star-2 bg-orange-500"
+                                checked={i < review.rating}
+                                readOnly
+                              />
+                            ))}
+                          </div>
+                          <span className="text-lg font-semibold text-orange-600">
+                            {review.rating}.0
+                          </span>
                         </div>
-                        <span className="text-sm text-gray-500">
-                          {review.rating}/5
+                        <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                          {new Date(review.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
                         </span>
                       </div>
-                      <span className="text-xs text-gray-400">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </span>
+
+                      {/* Review message */}
+                      <div className="mb-6">
+                        <p className="text-gray-700 leading-relaxed text-lg">
+                          "{review.message}"
+                        </p>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-orange-100">
+                        <button
+                          className="btn btn-ghost text-orange-600 gap-2 hover:bg-orange-50 self-start"
+                          onClick={() => navigate(`/recipe/${review.recipeId}`)}
+                        >
+                          View Recipe
+                          <FaArrowRight className="w-3 h-3" />
+                        </button>
+                        
+                        <div className="flex gap-2">
+                          <button className="btn btn-sm btn-outline border-orange-300 text-orange-600 hover:bg-orange-50">
+                            Edit
+                          </button>
+                          <button className="btn btn-sm btn-ghost text-red-600 hover:bg-red-50">
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-gray-700 mb-3">{review.message}</p>
-                    <button
-                      className="btn btn-sm btn-ghost text-orange-600 self-start -ml-2"
-                      onClick={() => navigate(`/recipe/${review.recipeId}`)}
-                    >
-                      View Recipe →
-                    </button>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="card bg-base-100/80 border border-orange-100 text-center p-12 shadow rounded-2xl">
-                <FaRegClock className="w-12 h-12 mx-auto mb-4 text-orange-400" />
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                  No reviews yet
-                </h4>
-                <p className="text-gray-500 mb-4">
-                  Your reviews will appear here once you rate some recipes
-                </p>
-                <button
-                  className="btn bg-gradient-to-r from-orange-400 to-red-500 text-white hover:scale-105 transition-transform"
-                  onClick={() => navigate("/")}
-                >
-                  Explore Recipes
-                </button>
+              <div className="card bg-base-100 shadow-xl border border-orange-100">
+                <div className="card-body text-center py-16">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
+                    <FaRegClock className="w-12 h-12 text-orange-400" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-800 mb-3">
+                    No reviews yet
+                  </h4>
+                  <p className="text-gray-600 mb-8 max-w-md mx-auto text-lg">
+                    Your reviews will appear here once you start rating and reviewing recipes
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white gap-2 hover:scale-105 transition-transform"
+                      onClick={() => navigate("/search")}
+                    >
+                      <FaSearch className="w-4 h-4" />
+                      Find Recipes
+                    </button>
+                    <button
+                      className="btn btn-outline border-orange-300 text-orange-600 gap-2"
+                      onClick={() => navigate("/")}
+                    >
+                      <FaHome className="w-4 h-4" />
+                      Browse Home
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

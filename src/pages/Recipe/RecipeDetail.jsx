@@ -165,36 +165,37 @@ function RecipeDetail() {
                     <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-br from-red-200 to-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse animation-delay-2000"></div>
                 </div>
 
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+                <div className="container mx-auto px-4 py-10 relative z-10">
                     <div className="max-w-6xl mx-auto space-y-10">
                         {/* Hero Section */}
-                        <div className="relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
+                        <div className="hero relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
+                            <div className="hero-overlay bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
                             <img
                                 src={recipe.thumbnail?.secure_url}
                                 alt={recipe.title}
                                 className="w-full h-[280px] sm:h-[400px] lg:h-[500px] object-cover transition-transform duration-700 hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
                             
                             {/* Like Button in Hero */}
                             <button
                                 onClick={handleLike}
-                                className={`absolute top-4 right-4 p-3 rounded-full backdrop-blur-md transition-all duration-300 ${
-                                    isLiked 
-                                        ? 'bg-rose-500 text-white shadow-lg' 
-                                        : 'bg-white/80 text-gray-700 hover:bg-white hover:shadow-md'
+                                className={`absolute top-4 right-4 btn btn-circle ${isLiked 
+                                    ? 'bg-rose-500 text-white border-none' 
+                                    : 'bg-white/80 text-gray-700 border-none hover:bg-white'
                                 }`}
                             >
-                                <FaHeart className={`w-5 h-5 ${isLiked ? 'text-white' : ''}`} />
+                                <FaHeart className="w-5 h-5" />
                             </button>
                             
-                            <div className="absolute bottom-8 left-6 sm:left-10">
-                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
-                                    {recipe.title}
-                                </h1>
-                                <p className="text-sm sm:text-base text-white/90 max-w-lg mt-1">
-                                    {recipe.description}
-                                </p>
+                            <div className="hero-content text-start text-white absolute bottom-8 left-6 sm:left-10">
+                                <div className="max-w-lg">
+                                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
+                                        {recipe.title}
+                                    </h1>
+                                    <p className="text-sm sm:text-base text-white/90 mt-1">
+                                        {recipe.description}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
@@ -203,29 +204,36 @@ function RecipeDetail() {
                             {/* Left (Main content) */}
                             <div className="lg:col-span-2 space-y-8">
                                 {/* Chef Info */}
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white/60 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-100 hover:shadow-orange-200/60 transition-transform hover:-translate-y-1">
-                                    <div className="flex items-center gap-4 mb-4 sm:mb-0">
-                                        <img
-                                            src={chef.profile?.avatar?.secure_url}
-                                            alt={chef.profile?.name}
-                                            className="w-14 h-14 rounded-full border-2 border-orange-200 object-cover"
-                                        />
-                                        <div>
-                                            <Link
-                                                to={`/profile/${chef._id}`}
-                                                className="font-semibold text-gray-800 hover:text-orange-500 transition-colors"
-                                            >
-                                                {chef.profile?.name}
-                                            </Link>
-                                            <div className="flex items-center gap-1 text-sm text-gray-500">
-                                                <FaStar className="text-yellow-400" /> {recipe.averageRating} •{" "}
-                                                {recipe.reviewCount} reviews
+                                <div className="card bg-base-100 shadow-md border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
+                                    <div className="card-body">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <div className="avatar">
+                                                    <div className="w-14 h-14 rounded-full border-2 border-orange-200">
+                                                        <img
+                                                            src={chef.profile?.avatar?.secure_url}
+                                                            alt={chef.profile?.name}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Link
+                                                        to={`/profile/${chef._id}`}
+                                                        className="card-title link link-hover text-orange-600"
+                                                    >
+                                                        {chef.profile?.name}
+                                                    </Link>
+                                                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                                                        <FaStar className="text-yellow-400" /> {recipe.averageRating} •{" "}
+                                                        {recipe.reviewCount} reviews
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <button className="btn btn-outline border-orange-300 text-orange-600 hover:bg-orange-50">
+                                                <FaHeart className="text-orange-500" /> Subscribe
+                                            </button>
                                         </div>
                                     </div>
-                                    <button className="btn btn-ghost border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 ">
-                                        <FaHeart className="mr-2 text-orange-500" /> Subscribe
-                                    </button>
                                 </div>
 
                                 {/* Stats */}
@@ -235,109 +243,121 @@ function RecipeDetail() {
                                         { icon: <FaClock />, label: "Total Time", value: `${recipe.totalCookingTime} min` },
                                         { icon: <FaHeart />, label: "Likes", value: recipe.likes?.length || 0 },
                                     ].map((item, i) => (
-                                        <div
-                                            key={i}
-                                            className="p-4 text-center bg-white/70 backdrop-blur-md border border-orange-100 rounded-2xl shadow-sm shadow-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1"
-                                        >
-                                            <div className="text-orange-500 mx-auto h-6 w-6 mb-1">{item.icon}</div>
-                                            <div className="font-semibold text-gray-700">{item.value}</div>
-                                            <div className="text-sm text-gray-500">{item.label}</div>
+                                        <div key={i} className="card bg-base-100 shadow-sm border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
+                                            <div className="card-body items-center text-center p-4">
+                                                <div className="text-orange-500 text-xl mb-1">{item.icon}</div>
+                                                <div className="card-title text-gray-700">{item.value}</div>
+                                                <div className="text-sm text-gray-500">{item.label}</div>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Dietary Labels */}
                                 {recipe.dietaryLabels?.length > 0 && (
-                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-4 rounded-2xl shadow-sm">
-                                        <h3 className="text-lg font-semibold mb-2 text-gray-800">Dietary Information</h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {recipe.dietaryLabels.map((label, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="badge badge-outline border-green-400 text-green-600"
-                                                >
-                                                    {label}
-                                                </span>
-                                            ))}
+                                    <div className="card bg-base-100 shadow-sm border border-orange-100">
+                                        <div className="card-body">
+                                            <h3 className="card-title text-gray-800">Dietary Information</h3>
+                                            <div className="flex flex-wrap gap-2">
+                                                {recipe.dietaryLabels.map((label, index) => (
+                                                    <div key={index} className="badge badge-outline border-green-400 text-green-600">
+                                                        {label}
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Ingredients */}
-                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/40">
-                                    <h3 className="text-xl font-bold mb-3 text-gray-800">Ingredients</h3>
+                                <div className="card bg-base-100 shadow-lg border border-orange-100">
+                                    <div className="card-body">
+                                        <h3 className="card-title text-gray-800">Ingredients</h3>
 
-                                    <p className="text-sm text-gray-500 mb-4">
-                                        Estimated cost: ${totalCost?.toFixed(2) ?? "0.00"}
-                                        {costPerServing > 0 && ` ($${costPerServing?.toFixed(2)} per serving)`}
-                                    </p>
+                                        <p className="text-sm text-gray-500">
+                                            Estimated cost: ${totalCost?.toFixed(2) ?? "0.00"}
+                                            {costPerServing > 0 && ` ($${costPerServing?.toFixed(2)} per serving)`}
+                                        </p>
 
-                                    <div className="divide-y divide-orange-100">
-                                        {recipe.ingredients.map((ing, index) => (
-                                            <div
-                                                key={index}
-                                                className="grid grid-cols-3 gap-4 py-2 text-gray-700"
-                                            >
-                                                <span className="font-medium">{ing.name}</span>
-                                                <span className="text-gray-600 text-sm">
-                                                    {ing.quantity} {ing.unit}
-                                                </span>
-                                                <span className="text-sm text-gray-500 text-right">
-                                                    ${((ing.quantity || 0) * (ing.marketPrice || 0)).toFixed(2)}
-                                                </span>
-                                            </div>
-                                        ))}
+                                        <div className="overflow-x-auto">
+                                            <table className="table table-zebra">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ingredient</th>
+                                                        <th>Quantity</th>
+                                                        <th className="text-right">Cost</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {recipe.ingredients.map((ing, index) => (
+                                                        <tr key={index}>
+                                                            <td className="font-medium">{ing.name}</td>
+                                                            <td className="text-gray-600">
+                                                                {ing.quantity} {ing.unit}
+                                                            </td>
+                                                            <td className="text-right text-gray-500">
+                                                                ${((ing.quantity || 0) * (ing.marketPrice || 0)).toFixed(2)}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Instructions with alternating text and images */}
-                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/40">
-                                    <h3 className="text-xl font-bold mb-6 text-gray-800">Instructions</h3>
-                                    <div className="space-y-8">
-                                        {recipe.steps.map((step, i) => (
-                                            <div key={i} className="space-y-4">
-                                                {/* Instruction Text */}
-                                                <div className="flex items-start gap-4">
-                                                    <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
-                                                        {step.stepNo}
+                                {/* Instructions */}
+                                <div className="card bg-base-100 shadow-lg border border-orange-100">
+                                    <div className="card-body">
+                                        <h3 className="card-title text-gray-800">Instructions</h3>
+                                        <div className="space-y-8">
+                                            {recipe.steps.map((step, i) => (
+                                                <div key={i} className="space-y-4">
+                                                    {/* Instruction Text */}
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
+                                                            {step.stepNo}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <p className="text-gray-700 leading-relaxed text-lg">{step.instruction}</p>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex-1">
-                                                        <p className="text-gray-700 leading-relaxed text-lg">{step.instruction}</p>
-                                                    </div>
+                                                    
+                                                    {/* Step Image */}
+                                                    {step.imageUrl?.secure_url && (
+                                                        <div className="w-full">
+                                                            <img 
+                                                                src={step.imageUrl.secure_url} 
+                                                                alt={`Step ${step.stepNo}`}
+                                                                className="rounded-lg shadow-md w-full max-h-96 object-cover"
+                                                            />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                
-                                                {/* Step Image */}
-                                                {step.imageUrl?.secure_url && (
-                                                    <div className="w-full">
-                                                        <img 
-                                                            src={step.imageUrl.secure_url} 
-                                                            alt={`Step ${step.stepNo}`}
-                                                            className="rounded-lg shadow-md w-full max-h-96 object-cover"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* External Media Links */}
                                 {recipe.externalMediaLinks?.length > 0 && (
-                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/40">
-                                        <h3 className="text-xl font-bold mb-4 text-gray-800">Related Media</h3>
-                                        <div className="space-y-2">
-                                            {recipe.externalMediaLinks.map((link, index) => (
-                                                <a
-                                                    key={index}
-                                                    href={link.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="block p-3 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
-                                                >
-                                                    <span className="font-medium text-orange-600">{link.name}</span>
-                                                    <span className="text-sm text-gray-500 ml-2">→</span>
-                                                </a>
-                                            ))}
+                                    <div className="card bg-base-100 shadow-lg border border-orange-100">
+                                        <div className="card-body">
+                                            <h3 className="card-title text-gray-800">Related Media</h3>
+                                            <div className="space-y-2">
+                                                {recipe.externalMediaLinks.map((link, index) => (
+                                                    <a
+                                                        key={index}
+                                                        href={link.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="block p-3 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors"
+                                                    >
+                                                        <span className="font-medium text-orange-600">{link.name}</span>
+                                                        <span className="text-sm text-gray-500 ml-2">→</span>
+                                                    </a>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -346,79 +366,72 @@ function RecipeDetail() {
                             {/* Sidebar */}
                             <div className="space-y-6">
                                 {/* Rating & Reviews */}
-                                <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50 text-center">
-                                    <div className="flex justify-center gap-1 mb-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <FaStar
-                                                key={i}
-                                                className={`text-xl ${i < Math.floor(recipe.averageRating)
-                                                        ? "text-yellow-400"
-                                                        : "text-gray-300"
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <div className="text-2xl font-bold text-gray-700">{recipe.averageRating}</div>
-                                    <p className="text-sm text-gray-500">
-                                        Based on {recipe.reviewCount} reviews
-                                    </p>
-                                    <div className="mt-3 text-sm text-gray-600">
-                                        {recipe.likes?.length || 0} likes
+                                <div className="card bg-base-100 shadow-md border border-orange-100">
+                                    <div className="card-body text-center">
+                                        <div className="rating rating-lg rating-half justify-center mb-2">
+                                            {[...Array(5)].map((_, i) => (
+                                                <input
+                                                    key={i}
+                                                    type="radio"
+                                                    name="rating-10"
+                                                    className="bg-yellow-400 mask mask-star-2 mask-half-1"
+                                                    checked={i < Math.floor(recipe.averageRating)}
+                                                    readOnly
+                                                />
+                                            ))}
+                                        </div>
+                                        <div className="text-2xl font-bold text-gray-700">{recipe.averageRating}</div>
+                                        <p className="text-sm text-gray-500">
+                                            Based on {recipe.reviewCount} reviews
+                                        </p>
+                                        <div className="mt-3 text-sm text-gray-600">
+                                            {recipe.likes?.length || 0} likes
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Tags */}
-                                {/* {recipe.tags?.length > 0 && (
-                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50">
-                                        <h4 className="text-lg font-bold text-gray-800 mb-4">Tags</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {recipe.tags.map((tag, index) => (
-                                                <span
-                                                    key={index}
-                                                    className="badge badge-outline border-blue-300 text-blue-600"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
-
                                 {/* Reviews Preview */}
                                 {recipe.reviews?.length > 0 && (
-                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50">
-                                        <h4 className="text-lg font-bold text-gray-800 mb-4">Recent Reviews</h4>
-                                        <div className="space-y-4 max-h-80 overflow-y-auto">
-                                            {recipe.reviews.slice(0, 3).map((review, index) => (
-                                                <div key={index} className="border-b border-orange-100 pb-3 last:border-0">
-                                                    <div className="flex items-center gap-1 mb-1">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <FaStar
-                                                                key={i}
-                                                                className={`w-3 h-3 ${i < review.rating ? "text-yellow-400" : "text-gray-300"}`}
-                                                            />
-                                                        ))}
+                                    <div className="card bg-base-100 shadow-md border border-orange-100">
+                                        <div className="card-body">
+                                            <h4 className="card-title text-gray-800">Recent Reviews</h4>
+                                            <div className="space-y-4 max-h-80 overflow-y-auto">
+                                                {recipe.reviews.slice(0, 3).map((review, index) => (
+                                                    <div key={index} className="border-b border-orange-100 pb-3 last:border-0">
+                                                        <div className="rating rating-xs mb-1">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <input
+                                                                    key={i}
+                                                                    type="radio"
+                                                                    className="mask mask-star-2 bg-yellow-400"
+                                                                    checked={i < review.rating}
+                                                                    readOnly
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <p className="text-sm text-gray-700">{review.message}</p>
+                                                        <p className="text-xs text-gray-500 mt-1">
+                                                            {new Date(review.createdAt).toLocaleDateString()}
+                                                        </p>
                                                     </div>
-                                                    <p className="text-sm text-gray-700">{review.message}</p>
-                                                    <p className="text-xs text-gray-500 mt-1">
-                                                        {new Date(review.createdAt).toLocaleDateString()}
-                                                    </p>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
 
                                 {/* Related Recipes */}
                                 {relatedRecipes.length > 0 && (
-                                    <div className="bg-white/70 backdrop-blur-md border border-orange-100 p-6 rounded-2xl shadow-md shadow-orange-200/50">
-                                        <h4 className="text-lg font-bold text-gray-800 mb-4">
-                                            More {recipe.cuisine} Recipes
-                                        </h4>
-                                        <div className="space-y-4">
-                                            {relatedRecipes.map((r) => (
-                                                <RecipeCard key={r._id} recipe={r} compact />
-                                            ))}
+                                    <div className="card bg-base-100 shadow-md border border-orange-100">
+                                        <div className="card-body">
+                                            <h4 className="card-title text-gray-800">
+                                                More {recipe.cuisine} Recipes
+                                            </h4>
+                                            <div className="space-y-4">
+                                                {relatedRecipes.map((r) => (
+                                                    <RecipeCard key={r._id} recipe={r} compact />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
