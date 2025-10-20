@@ -20,7 +20,7 @@ function Profile() {
                 setCurrUser(res.data);
             })();
         }
-    }, []);
+    }, [id]);
 
     if (currUser?.role === "USER") {
         return <UserProfile profileData={currUser} />;

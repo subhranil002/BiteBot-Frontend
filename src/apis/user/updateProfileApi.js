@@ -4,7 +4,7 @@ import axiosInstance from "../../configs/axiosConfig";
 
 
 export default async function updateProfileApi(data) {
-    const res = axiosInstance.patch("/user/update", data);
+    const res = axiosInstance.put("/user/update", data);
     toast.promise(res, {
         loading: "Updating profile...",
         success: (data) => {

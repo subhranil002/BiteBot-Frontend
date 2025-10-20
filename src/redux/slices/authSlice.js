@@ -58,7 +58,7 @@ export const registerUser = createAsyncThunk(
     async (data, thunkAPI) => {
         try {
             await registerApi(data);
-            if (data.avatar) {
+            if (data?.avatar?.length) {
                 const avatar = new FormData();
                 avatar.append("avatar", data.avatar[0]);
                 await changeAvatarApi(avatar);
