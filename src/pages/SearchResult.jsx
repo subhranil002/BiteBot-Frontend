@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaStar, FaFilter, FaSearch, FaTimes, FaSlidersH, FaDollarSign } from "react-icons/fa";
+import { FaStar, FaFilter, FaSearch, FaSlidersH, FaDollarSign, FaChevronDown } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 
 import RecipeCard from "../components/recipe/RecipeCard";
@@ -11,35 +11,99 @@ const DEFAULT_FILTERS = {
   maxPrice: 500,
   cuisine: "",
   rating: 0,
-  vegetarianOnly: false,
+  // vegetarianOnly: false,
+  dietaryPreferences: [], // Added dietary preferences array
 };
 
 function SearchResults() {
   const location = useLocation();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [sortBy, setSortBy] = useState("relevance");
+
+  // State for search parameters and temporary filters
+  const [searchParams, setSearchParams] = useState({
+    searchTerm: "",
+    filters: DEFAULT_FILTERS,
+    sortBy: "relevance",
+  });
+
+  // Temporary filters that are applied only when user clicks "Apply"
+  const [tempFilters, setTempFilters] = useState(DEFAULT_FILTERS);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
   // Extract query from URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    setSearchTerm(params.get("q")?.toLowerCase() || "");
+    setSearchParams(prev => ({
+      ...prev,
+      searchTerm: params.get("q")?.toLowerCase() || ""
+    }));
   }, [location.search]);
 
-  // Calculate active filters count
+  // Initialize temp filters when component mounts or search changes
   useEffect(() => {
+    setTempFilters(searchParams.filters);
+  }, [searchParams.filters]);
+
+  // Computed values - no need for separate state
+  const activeFiltersCount = useMemo(() => {
+    const { filters } = searchParams;
     let count = 0;
     if (filters.minPrice > DEFAULT_FILTERS.minPrice || filters.maxPrice < DEFAULT_FILTERS.maxPrice) count++;
     if (filters.cuisine) count++;
     if (filters.rating > 0) count++;
-    if (filters.vegetarianOnly) count++;
-    setActiveFiltersCount(count);
-  }, [filters]);
+    // if (filters.vegetarianOnly) count++;
+    if (filters.dietaryPreferences.length > 0) count++;
+    return count;
+  }, [searchParams.filters]);
+
+  // Available cuisines from recipes data
+  const availableCuisines = [
+    "indian", "italian", "chinese", "mexican", "thai", "japanese",
+    "french", "mediterranean", "american", "korean", "vietnamese",
+    "middle-eastern", "british", "spanish", "german", "greek",
+  ];
+
+  const dietaryPreferences = [
+    "vegetarian", "vegan", "keto", "paleo", "gluten-free", "dairy-free",
+    "low-carb", "high-protein", "sugar-free", "organic", "raw", "mediterranean", "low-fat",
+  ];
+
+  // Toggle dietary preference in temp filters
+  const toggleDietaryPreference = (preference) => {
+    setTempFilters(prev => {
+      const currentPreferences = prev.dietaryPreferences;
+      if (currentPreferences.includes(preference)) {
+        return {
+          ...prev,
+          dietaryPreferences: currentPreferences.filter(p => p !== preference)
+        };
+      } else {
+        return {
+          ...prev,
+          dietaryPreferences: [...currentPreferences, preference]
+        };
+      }
+    });
+  };
+
+  // Apply filters when user clicks apply button
+  const applyFilters = () => {
+    setSearchParams(prev => ({
+      ...prev,
+      filters: { ...tempFilters }
+    }));
+    setMobileFiltersOpen(false);
+  };
+
+  // Reset temp filters to current applied filters
+  const cancelFilters = () => {
+    setTempFilters(searchParams.filters);
+    setMobileFiltersOpen(false);
+  };
 
   // Derived filtered + sorted recipes
   const filteredRecipes = useMemo(() => {
+    const { searchTerm, filters, sortBy } = searchParams;
+
     let results = recipesData.filter((recipe) => {
       const price = recipe.price || 100;
       const meetsSearch =
@@ -56,8 +120,17 @@ function SearchResults() {
         !filters.vegetarianOnly ||
         recipe.tags?.includes("Vegetarian") ||
         recipe.tags?.includes("Vegan");
+      
+      // Dietary preferences filter
+      const meetsDietaryPreferences = 
+        filters.dietaryPreferences.length === 0 ||
+        filters.dietaryPreferences.some(pref => 
+          recipe.tags?.some(tag => 
+            tag.toLowerCase().includes(pref.toLowerCase())
+          )
+        );
 
-      return meetsSearch && meetsCuisine && meetsPrice && meetsRating && meetsVeg;
+      return meetsSearch && meetsCuisine && meetsPrice && meetsRating && meetsVeg && meetsDietaryPreferences;
     });
 
     // Sorting
@@ -72,150 +145,338 @@ function SearchResults() {
     }
 
     return results;
-  }, [searchTerm, filters, sortBy]);
+  }, [searchParams]);
 
-  // Helper to update filters
-  const updateFilter = (key, value) =>
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  // Unified update functions
+  const updateSearchParam = (key, value) => {
+    setSearchParams(prev => ({ ...prev, [key]: value }));
+  };
+
+  const updateTempFilter = (key, value) => {
+    setTempFilters(prev => ({ ...prev, [key]: value }));
+  };
 
   const clearAllFilters = () => {
-    setFilters(DEFAULT_FILTERS);
+    setTempFilters(DEFAULT_FILTERS);
+    setSearchParams(prev => ({
+      ...prev,
+      filters: DEFAULT_FILTERS
+    }));
     setMobileFiltersOpen(false);
   };
 
-  // Available cuisines from recipes data
-  const availableCuisines = useMemo(() => {
-    const cuisines = [...new Set(recipesData.map(recipe => recipe.cuisine).filter(Boolean))];
-    return cuisines.sort();
-  }, []);
+  const removeFilter = (filterKey, resetValue = "") => {
+    setSearchParams(prev => ({
+      ...prev,
+      filters: { ...prev.filters, [filterKey]: resetValue }
+    }));
+  };
 
-  const FilterSidebar = () => (
-    <div className="card bg-base-100 shadow-xl border border-orange-100 h-fit sticky top-24">
-      <div className="card-body p-6">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="card-title text-gray-800">
-            <FaFilter className="text-orange-500" />
-            Filters
-          </h3>
-          {activeFiltersCount > 0 && (
-            <span className="badge badge-primary">{activeFiltersCount}</span>
-          )}
-        </div>
+  const removeDietaryPreference = (preference) => {
+    setSearchParams(prev => ({
+      ...prev,
+      filters: {
+        ...prev.filters,
+        dietaryPreferences: prev.filters.dietaryPreferences.filter(p => p !== preference)
+      }
+    }));
+  };
+
+  // Filter Sidebar Component
+  const FilterSidebar = ({ mobile = false }) => (
+    <div className={`bg-base-100 ${mobile ? '' : 'card shadow-xl border border-orange-100 h-fit sticky top-24'}`}>
+      <div className={`${mobile ? 'p-4 space-y-4' : 'card-body p-4 sm:p-6'}`}>
+        {!mobile && (
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="card-title text-gray-800 text-lg">
+              <FaFilter className="text-orange-500" />
+              Filters
+            </h3>
+            {activeFiltersCount > 0 && (
+              <span className="badge badge-primary badge-sm">{activeFiltersCount}</span>
+            )}
+          </div>
+        )}
 
         {/* Price Filter */}
-        <div className="mb-6">
-          <h4 className="font-semibold text-gray-700 mb-3 flex items-center gap-2">
+        <div className="space-y-3">
+          <h4 className="font-semibold text-gray-700 flex items-center gap-2 text-sm">
             <FaDollarSign className="w-3 h-3 text-orange-500" />
             Price Range
           </h4>
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-2">
             <input
               type="number"
               className="input input-bordered input-sm w-20 border-orange-200"
               placeholder="Min"
-              value={filters.minPrice}
-              onChange={(e) => updateFilter("minPrice", Number(e.target.value))}
+              value={tempFilters.minPrice}
+              onChange={(e) => updateTempFilter("minPrice", Number(e.target.value))}
             />
             <span className="text-gray-400">-</span>
             <input
               type="number"
               className="input input-bordered input-sm w-20 border-orange-200"
               placeholder="Max"
-              value={filters.maxPrice}
-              onChange={(e) => updateFilter("maxPrice", Number(e.target.value))}
+              value={tempFilters.maxPrice}
+              onChange={(e) => updateTempFilter("maxPrice", Number(e.target.value))}
             />
           </div>
           <input
             type="range"
             min="0"
             max="500"
-            value={filters.maxPrice}
-            onChange={(e) => updateFilter("maxPrice", Number(e.target.value))}
+            value={tempFilters.maxPrice}
+            onChange={(e) => updateTempFilter("maxPrice", Number(e.target.value))}
             className="range range-warning range-xs"
           />
         </div>
 
-        {/* Cuisine Filter */}
-        <div className="mb-6">
-          <h4 className="font-semibold text-gray-700 mb-3">Cuisine Type</h4>
-          <select
-            className="select select-bordered w-full border-orange-200"
-            value={filters.cuisine}
-            onChange={(e) => updateFilter("cuisine", e.target.value)}
-          >
-            <option value="">All Cuisines</option>
-            {availableCuisines.map((cuisine) => (
-              <option key={cuisine} value={cuisine}>
-                {cuisine}
-              </option>
-            ))}
-          </select>
-        </div>
-
         {/* Rating Filter */}
-        <div className="mb-6">
-          <h4 className="font-semibold text-gray-700 mb-3">Minimum Rating</h4>
+        <div className="space-y-3">
+          <h4 className="font-semibold text-gray-700 text-sm">Minimum Rating</h4>
           <div className="space-y-2">
             {[4, 3, 2, 1].map((stars) => (
-              <label key={stars} className="flex items-center gap-3 cursor-pointer hover:bg-orange-50 p-2 rounded-lg transition-colors">
+              <label key={stars} className="flex items-center gap-2 cursor-pointer hover:bg-orange-50 p-2 rounded transition-colors">
                 <input
                   type="radio"
                   name="rating"
-                  className="radio radio-warning"
-                  checked={filters.rating === stars}
-                  onChange={() => updateFilter("rating", stars)}
+                  className="radio radio-warning radio-sm"
+                  checked={tempFilters.rating === stars}
+                  onChange={() => updateTempFilter("rating", stars)}
                 />
                 <div className="flex items-center gap-2">
                   <div className="flex text-amber-400">
                     {Array.from({ length: 5 }, (_, i) => (
                       <FaStar
                         key={i}
-                        className={`w-4 h-4 ${i < stars ? "text-amber-400" : "text-gray-300"}`}
+                        className={`w-3 h-3 ${i < stars ? "text-amber-400" : "text-gray-300"}`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">& up</span>
+                  <span className="text-xs text-gray-600">& up</span>
                 </div>
               </label>
             ))}
-            <label className="flex items-center gap-3 cursor-pointer hover:bg-orange-50 p-2 rounded-lg transition-colors">
+            <label className="flex items-center gap-2 cursor-pointer hover:bg-orange-50 p-2 rounded transition-colors">
               <input
                 type="radio"
                 name="rating"
-                className="radio radio-warning"
-                checked={filters.rating === 0}
-                onChange={() => updateFilter("rating", 0)}
+                className="radio radio-warning radio-sm"
+                checked={tempFilters.rating === 0}
+                onChange={() => updateTempFilter("rating", 0)}
               />
-              <span className="text-sm text-gray-600">Any Rating</span>
+              <span className="text-xs text-gray-600">Any Rating</span>
             </label>
           </div>
         </div>
 
-        {/* Vegetarian Filter */}
-        <div className="mb-6">
-          <label className="flex items-center gap-3 cursor-pointer hover:bg-orange-50 p-2 rounded-lg transition-colors">
-            <input
-              type="checkbox"
-              className="checkbox checkbox-success"
-              checked={filters.vegetarianOnly}
-              onChange={(e) => updateFilter("vegetarianOnly", e.target.checked)}
-            />
-            <span className="text-gray-700 font-medium">Vegetarian Only</span>
-          </label>
+        {/* Cuisine Filter */}
+        <div className="space-y-3">
+          <h4 className="font-semibold text-gray-700 text-sm">Cuisine Type</h4>
+          <div className="dropdown dropdown-bottom w-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-outline btn-sm w-full justify-between border-orange-200 text-gray-700 hover:bg-orange-50 hover:border-orange-300"
+            >
+              <span className="truncate">
+                {tempFilters.cuisine
+                  ? tempFilters.cuisine.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                  : "All Cuisines"
+                }
+              </span>
+              <FaChevronDown className="w-3 h-3 text-orange-500" />
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-full max-h-60 overflow-y-auto z-50 border border-orange-200"
+            >
+              <li>
+                <button
+                  onClick={() => updateTempFilter("cuisine", "")}
+                  className={`${!tempFilters.cuisine ? 'bg-orange-50 text-orange-600' : ''}`}
+                >
+                  All Cuisines
+                </button>
+              </li>
+              {availableCuisines.map((cuisine) => (
+                <li key={cuisine}>
+                  <button
+                    onClick={() => updateTempFilter("cuisine", cuisine)}
+                    className={`${tempFilters.cuisine === cuisine ? 'bg-orange-50 text-orange-600' : ''}`}
+                  >
+                    {cuisine.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="flex gap-2">
+        {/* Vegetarian Filter */}
+        {/* <div className="form-control">
+          <label className="label cursor-pointer justify-start gap-3">
+            <input
+              type="checkbox"
+              className="checkbox checkbox-warning"
+              // checked={tempFilters.vegetarianOnly}
+              onChange={(e) => updateTempFilter("vegetarianOnly", e.target.checked)}
+            />
+            <span className="label-text text-gray-700 font-medium">Vegetarian Only</span>
+          </label>
+        </div> */}
+
+        {/* Dietary Preferences - Now Selectable */}
+        <div className="space-y-3">
+          <h4 className="font-semibold text-gray-700 text-sm">Dietary Preferences</h4>
+          <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-1">
+            {dietaryPreferences.map((pref) => (
+              <label 
+                key={pref} 
+                className={`flex items-center gap-2 text-sm cursor-pointer transition-all ${
+                  tempFilters.dietaryPreferences.includes(pref) 
+                    ? 'bg-orange-100 text-orange-700 border-orange-300' 
+                    : 'text-gray-700 border-gray-300'
+                } border rounded-lg px-3 py-2 hover:bg-orange-50 hover:border-orange-300`}
+              >
+                <input 
+                  type="checkbox" 
+                  value={pref} 
+                  checked={tempFilters.dietaryPreferences.includes(pref)}
+                  onChange={() => toggleDietaryPreference(pref)}
+                  className="checkbox checkbox-warning checkbox-xs" 
+                />
+                <span className="capitalize whitespace-nowrap">{pref}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className={`flex gap-2 pt-4 ${mobile ? '' : 'border-t border-orange-100'}`}>
           <button
             onClick={clearAllFilters}
-            className="btn btn-outline border-orange-300 text-orange-600 flex-1"
+            className="btn btn-outline btn-sm border-orange-300 text-orange-600 flex-1"
           >
             Clear All
           </button>
+          {mobile ? (
+            <>
+              <button
+                onClick={cancelFilters}
+                className="btn btn-outline btn-sm border-gray-300 text-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={applyFilters}
+                className="btn btn-primary btn-sm bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white"
+              >
+                Apply
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={applyFilters}
+              className="btn btn-primary btn-sm bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white flex-1"
+            >
+              Apply Filters
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Active Filters Component
+  const ActiveFilters = () => {
+    if (activeFiltersCount === 0) return null;
+
+    const { filters } = searchParams;
+
+    return (
+      <div className="card bg-orange-50 border border-orange-200 mb-6">
+        <div className="card-body py-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <span className="text-sm font-medium text-orange-800 whitespace-nowrap">
+              Active filters:
+            </span>
+            <div className="flex flex-wrap gap-2 flex-1">
+              {filters.minPrice > DEFAULT_FILTERS.minPrice && (
+                <div className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  Min ${filters.minPrice}
+                  <button onClick={() => removeFilter("minPrice", DEFAULT_FILTERS.minPrice)}>×</button>
+                </div>
+              )}
+              {filters.maxPrice < DEFAULT_FILTERS.maxPrice && (
+                <div className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  Max ${filters.maxPrice}
+                  <button onClick={() => removeFilter("maxPrice", DEFAULT_FILTERS.maxPrice)}>×</button>
+                </div>
+              )}
+              {filters.cuisine && (
+                <div className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  {filters.cuisine}
+                  <button onClick={() => removeFilter("cuisine", "")}>×</button>
+                </div>
+              )}
+              {filters.rating > 0 && (
+                <div className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  {filters.rating}+ Stars
+                  <button onClick={() => removeFilter("rating", 0)}>×</button>
+                </div>
+              )}
+              {/* {filters.vegetarianOnly && (
+                <div className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  Vegetarian
+                  <button onClick={() => removeFilter("vegetarianOnly", false)}>×</button>
+                </div>
+              )} */}
+              {filters.dietaryPreferences.map((pref) => (
+                <div key={pref} className="badge badge-outline badge-sm border-orange-300 text-orange-600 gap-1">
+                  {pref}
+                  <button onClick={() => removeDietaryPreference(pref)}>×</button>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={clearAllFilters}
+              className="text-sm text-orange-600 hover:text-orange-700 font-medium whitespace-nowrap"
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Empty State Component
+  const EmptyState = () => (
+    <div className="card bg-base-100 shadow-xl border border-orange-100">
+      <div className="card-body text-center py-12 sm:py-16">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 text-orange-300">
+          <svg fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">No recipes found</h3>
+        <p className="text-gray-600 mb-6 max-w-md mx-auto">
+          No recipes match your search for <span className="font-semibold">"{searchParams.searchTerm}"</span>.
+          Try adjusting your filters or search term.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={() => setMobileFiltersOpen(false)}
-            className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white md:hidden"
+            onClick={clearAllFilters}
+            className="btn btn-outline border-orange-300 text-orange-600 btn-sm sm:btn-md"
           >
-            Apply
+            Clear All Filters
+          </button>
+          <button
+            onClick={() => window.history.back()}
+            className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white btn-sm sm:btn-md"
+          >
+            Back to Search
           </button>
         </div>
       </div>
@@ -224,88 +485,69 @@ function SearchResults() {
 
   return (
     <HomeLayout>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-red-50 py-4 md:py-8 px-4 md:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-red-50 py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-8">
         <div className="container mx-auto max-w-7xl">
-          {/* Mobile Filter Trigger */}
+          {/* Mobile Filter Collapse */}
           <div className="md:hidden mb-4">
-            <button
-              onClick={() => setMobileFiltersOpen(true)}
-              className="btn btn-primary w-full bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white gap-2"
-            >
-              <FaSlidersH className="w-4 h-4" />
-              Filters {activeFiltersCount > 0 && `(${activeFiltersCount})`}
-            </button>
+            <div className="collapse collapse-arrow bg-base-100 border border-orange-200 rounded-2xl shadow-lg">
+              <input
+                type="checkbox"
+                checked={mobileFiltersOpen}
+                onChange={(e) => setMobileFiltersOpen(e.target.checked)}
+              />
+              <div className="collapse-title text-lg font-bold text-gray-800 flex items-center justify-between pr-8">
+                <div className="flex items-center gap-3">
+                  <FaSlidersH className="text-orange-500" />
+                  <span>Filters</span>
+                  {activeFiltersCount > 0 && (
+                    <span className="badge badge-primary badge-sm">{activeFiltersCount}</span>
+                  )}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <FilterSidebar mobile={true} />
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-4 sm:gap-6 md:gap-8">
             {/* Desktop Sidebar */}
             <div className="hidden md:block">
               <FilterSidebar />
             </div>
 
-            {/* Mobile Drawer */}
-            <div className={`drawer drawer-end md:hidden ${mobileFiltersOpen ? 'drawer-open' : ''}`}>
-              <input 
-                id="filter-drawer" 
-                type="checkbox" 
-                className="drawer-toggle" 
-                checked={mobileFiltersOpen}
-                onChange={() => {}} 
-              />
-              <div className="drawer-content">
-                {/* This is the main content that stays visible */}
-              </div>
-              <div className="drawer-side z-50">
-                <label 
-                  htmlFor="filter-drawer" 
-                  className="drawer-overlay"
-                  onClick={() => setMobileFiltersOpen(false)}
-                ></label>
-                <div className="bg-base-100 w-80 min-h-full p-4 overflow-y-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-800">Filters</h2>
-                    <button 
-                      onClick={() => setMobileFiltersOpen(false)}
-                      className="btn btn-ghost btn-circle"
-                    >
-                      <FaTimes className="w-5 h-5" />
-                    </button>
-                  </div>
-                  <FilterSidebar />
-                </div>
-              </div>
-            </div>
-
             {/* Main Results Area */}
             <main className="min-h-screen">
               {/* Header + Sort */}
-              <div className="card bg-base-100 shadow-sm border border-orange-100 mb-6">
-                <div className="card-body p-4 md:p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div className="flex-1">
-                      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                        <FaSearch className="inline w-5 h-5 text-orange-500 mr-2" />
+              <div className="card bg-base-100 shadow-sm border border-orange-100 mb-4 sm:mb-6">
+                <div className="card-body p-4 sm:p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 truncate">
+                        <FaSearch className="inline w-4 h-4 sm:w-5 sm:h-5 text-orange-500 mr-2" />
                         Results for{" "}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-500">
-                          "{searchTerm}"
+                          "{searchParams.searchTerm}"
                         </span>
                       </h1>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 text-sm sm:text-base">
                         Found <span className="font-semibold text-orange-600">{filteredRecipes.length}</span> recipes
                         {activeFiltersCount > 0 && (
-                          <span className="text-sm text-gray-500 ml-2">
+                          <span className="text-xs sm:text-sm text-gray-500 ml-2">
                             ({activeFiltersCount} filter{activeFiltersCount !== 1 ? 's' : ''} applied)
                           </span>
                         )}
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-gray-600 font-medium hidden sm:block">Sort by:</span>
+                    <div className="flex items-center gap-2 sm:gap-3 w-full lg:w-auto">
+                      <span className="text-gray-600 font-medium text-sm sm:text-base hidden sm:block whitespace-nowrap">
+                        Sort by:
+                      </span>
                       <select
-                        className="select select-bordered border-orange-200 text-gray-700 w-full lg:w-auto"
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
+                        className="select select-bordered select-sm sm:select-md border-orange-200 text-gray-700 w-full lg:w-auto flex-1"
+                        value={searchParams.sortBy}
+                        onChange={(e) => updateSearchParam("sortBy", e.target.value)}
                       >
                         <option value="relevance">Relevance</option>
                         <option value="rating">Highest Rated</option>
@@ -316,114 +558,43 @@ function SearchResults() {
                 </div>
               </div>
 
-              {/* Active Filters Bar */}
-              {activeFiltersCount > 0 && (
-                <div className="card bg-orange-50 border border-orange-200 mb-6">
-                  <div className="card-body py-3">
-                    <div className="flex items-center flex-wrap gap-2">
-                      <span className="text-sm font-medium text-orange-800">Active filters:</span>
-                      {filters.minPrice > DEFAULT_FILTERS.minPrice && (
-                        <div className="badge badge-outline border-orange-300 text-orange-600 gap-1">
-                          Min ${filters.minPrice}
-                          <button onClick={() => updateFilter("minPrice", DEFAULT_FILTERS.minPrice)}>×</button>
-                        </div>
-                      )}
-                      {filters.maxPrice < DEFAULT_FILTERS.maxPrice && (
-                        <div className="badge badge-outline border-orange-300 text-orange-600 gap-1">
-                          Max ${filters.maxPrice}
-                          <button onClick={() => updateFilter("maxPrice", DEFAULT_FILTERS.maxPrice)}>×</button>
-                        </div>
-                      )}
-                      {filters.cuisine && (
-                        <div className="badge badge-outline border-orange-300 text-orange-600 gap-1">
-                          {filters.cuisine}
-                          <button onClick={() => updateFilter("cuisine", "")}>×</button>
-                        </div>
-                      )}
-                      {filters.rating > 0 && (
-                        <div className="badge badge-outline border-orange-300 text-orange-600 gap-1">
-                          {filters.rating}+ Stars
-                          <button onClick={() => updateFilter("rating", 0)}>×</button>
-                        </div>
-                      )}
-                      {filters.vegetarianOnly && (
-                        <div className="badge badge-outline border-orange-300 text-orange-600 gap-1">
-                          Vegetarian
-                          <button onClick={() => updateFilter("vegetarianOnly", false)}>×</button>
-                        </div>
-                      )}
-                      <button 
-                        onClick={clearAllFilters}
-                        className="text-sm text-orange-600 hover:text-orange-700 font-medium ml-auto"
-                      >
-                        Clear all
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Active Filters */}
+              <ActiveFilters />
 
               {/* Results Grid */}
               {filteredRecipes.length === 0 ? (
-                <div className="card bg-base-100 shadow-xl border border-orange-100">
-                  <div className="card-body text-center py-16">
-                    <div className="w-32 h-32 mx-auto mb-6 text-orange-300">
-                      <svg fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">No recipes found</h3>
-                    <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                      No recipes match your search for <span className="font-semibold">"{searchTerm}"</span>. 
-                      Try adjusting your filters or search term.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <button
-                        onClick={clearAllFilters}
-                        className="btn btn-outline border-orange-300 text-orange-600"
-                      >
-                        Clear All Filters
-                      </button>
-                      <button
-                        onClick={() => window.history.back()}
-                        className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white"
-                      >
-                        Back to Search
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <EmptyState />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {filteredRecipes.map((recipe) => (
-                    <RecipeCard
-                      key={recipe.id}
-                      recipe={{
-                        id: recipe.id,
-                        title: recipe.name,
-                        description: recipe.description,
-                        heroImage: recipe.image,
-                        servings: recipe.servings || 2,
-                        cuisine: recipe.cuisine || "Indian",
-                        prepMinutes: recipe.prepMinutes || 10,
-                        cookMinutes: recipe.cookMinutes || 20,
-                        tags: recipe.tags || ["Spicy", "Vegetarian"],
-                        rating: recipe.rating,
-                        isTrending: recipe.isTrending || false,
-                        isPremium: recipe.isPremium || false,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredRecipes.map((recipe) => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipe={{
+                          id: recipe.id,
+                          title: recipe.name,
+                          description: recipe.description,
+                          heroImage: recipe.image,
+                          servings: recipe.servings || 2,
+                          cuisine: recipe.cuisine || "Indian",
+                          prepMinutes: recipe.prepMinutes || 10,
+                          cookMinutes: recipe.cookMinutes || 20,
+                          tags: recipe.tags || ["Spicy", "Vegetarian"],
+                          rating: recipe.rating,
+                          isTrending: recipe.isTrending || false,
+                          isPremium: recipe.isPremium || false,
+                        }}
+                      />
+                    ))}
+                  </div>
 
-              {/* Results Count Footer */}
-              {filteredRecipes.length > 0 && (
-                <div className="mt-8 text-center">
-                  <p className="text-gray-600">
-                    Showing {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''}
-                  </p>
-                </div>
+                  {/* Results Count Footer */}
+                  <div className="mt-6 sm:mt-8 text-center">
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Showing {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </>
               )}
             </main>
           </div>

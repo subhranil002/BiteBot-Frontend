@@ -1,38 +1,34 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  FaPaperPlane,
-  FaRobot,
-  FaSearch,
-  FaUser,
-  FaUtensils,
-} from "react-icons/fa";
+import { FaPaperPlane, FaRobot, FaUser } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
-
 import generateResponseApi from "../../apis/chatbot/generateResponseApi";
 import HomeLayout from "../../layouts/HomeLayout";
+import Navbar from "../../components/Navbar";
 
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       id: uuidv4(),
       type: "assistant",
-      content:
-        "Hello! I'm BiteBot 🤖\nI can help you find amazing recipes based on ingredients you have or what you're craving! What would you like to cook today?",
+      content: "Hey! I'm **BiteBot** — your smart recipe assistant.\nTell me what you have in the fridge or what you're craving!",
       recipes: [],
       timestamp: new Date(),
     },
   ]);
+
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const messagesContainerRef = useRef(null);
+  const messagesEndRef = useRef(null);
+
+  const quickSuggestions = [
+    "Quick vegetarian dinner",
+    "Healthy lunch ideas",
+    "Desserts under 15 mins",
+    "What can I make with rice and eggs?",
+  ];
 
   useEffect(() => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: "smooth",
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
   const toInputItems = (msgs) =>
@@ -40,25 +36,12 @@ const ChatbotPage = () => {
       type: "message",
       role: m.type === "assistant" ? "assistant" : "user",
       content: [
-        {
-          type: m.type === "assistant" ? "output_text" : "input_text",
-          text: String(m.content ?? ""),
-        },
+        { type: m.type === "assistant" ? "output_text" : "input_text", text: String(m.content) },
       ],
     }));
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
-
-    setIsLoading(true);
-
-    const chatHistory = toInputItems(messages);
-    const newUserItem = {
-      type: "message",
-      role: "user",
-      content: [{ type: "input_text", text: inputMessage }],
-    };
-    chatHistory.push(newUserItem);
 
     const userMessage = {
       id: uuidv4(),
@@ -67,17 +50,22 @@ const ChatbotPage = () => {
       timestamp: new Date(),
       recipes: [],
     };
+
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
+    setIsLoading(true);
 
+    const chatHistory = toInputItems([...messages, userMessage]);
     const response = await generateResponseApi(chatHistory);
+
     const botMessage = {
       id: uuidv4(),
       type: "assistant",
-      content: response?.data?.reply ?? "Sorry, I couldn't find an answer.",
+      content: response?.data?.reply ?? "Hmm, I couldn't think of anything. Try again!",
       recipes: response?.data?.recipes ?? [],
       timestamp: new Date(),
     };
+
     setMessages((prev) => [...prev, botMessage]);
     setIsLoading(false);
   };
@@ -89,223 +77,170 @@ const ChatbotPage = () => {
     }
   };
 
-  const quickSuggestions = [
-    "What can I make with chicken and rice?",
-    "Show me quick vegetarian recipes",
-    "I have eggs, cheese, and bread",
-    "Healthy dinner ideas",
-  ];
-
   return (
-    <HomeLayout>
-      <div className="min-h-screen bg-gradient-to-br from-base-100 via-orange-50 to-amber-50">
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Sidebar - Quick Suggestions */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="card bg-base-100 shadow-sm">
-                <div className="card-body p-6">
-                  <h3 className="card-title text-lg flex items-center gap-2">
-                    <FaSearch className="text-orange-500" />
-                    Quick Suggestions
-                  </h3>
-                  <div className="space-y-3 mt-4">
-                    {quickSuggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setInputMessage(suggestion)}
-                        className="btn btn-outline btn-sm justify-start text-left h-auto py-3 px-4 normal-case font-normal hover:bg-orange-50 hover:border-orange-300"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
+    <>
+      <Navbar />
+  
+      <div className="min-h-80 bg-gradient-to-br from-orange-50 via-white to-amber-50 flex flex-col">
+        {/* Header */}
+        <header className="text-center py-8">
+          <h1 className="text-3xl font-bold text-gray-800 flex items-center justify-center gap-2">
+            <FaRobot className="text-orange-500" />
+            BiteBot
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">Your minimalist recipe AI</p>
+        </header>
+  
+        {/* Chat Container */}
+        <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-[13rem] pt-4">
+          <div className="space-y-6">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`flex gap-3 max-w-[80%] ${
+                    msg.type === "user" ? "flex-row-reverse" : ""
+                  }`}
+                >
+                  {/* Avatar */}
+                  <div className="flex-shrink-0">
+                    <div
+                      className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${
+                        msg.type === "user"
+                          ? "bg-gradient-to-br from-orange-500 to-amber-600"
+                          : "bg-gradient-to-br from-gray-600 to-gray-800"
+                      }`}
+                    >
+                      {msg.type === "user" ? <FaUser /> : <FaRobot />}
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div className="card bg-base-100 shadow-sm">
-                <div className="card-body p-6">
-                  <h3 className="card-title text-lg flex items-center gap-2">
-                    <FaUtensils className="text-amber-500" />
-                    Tips
-                  </h3>
-                  <ul className="mt-3 space-y-2 text-sm text-gray-600">
-                    <li>• List ingredients you have</li>
-                    <li>• Mention dietary preferences</li>
-                    <li>• Ask for quick or healthy options</li>
-                    <li>• Specify cuisine types</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Chat Area */}
-            <div className="lg:col-span-3">
-              <div className="card bg-base-100 shadow-lg">
-                <div className="card-body p-0">
-                  {/* Messages Container */}
-                  <div
-                    ref={messagesContainerRef}
-                    className="h-[60vh] overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-base-100 to-base-200"
-                  >
-                    {messages.map((message) => (
-                      <div key={message.id} className="space-y-2">
-                        {/* Message Row */}
-                        <div
-                          className={`chat ${
-                            message.type === "user" ? "chat-end" : "chat-start"
-                          }`}
-                        >
-                          <div className="chat-image avatar">
-                            <div
-                              className={`w-10 rounded-full ${
-                                message.type === "user"
-                                  ? "bg-primary text-primary-content"
-                                  : "bg-gradient-to-r from-orange-500 to-red-500 text-white"
-                              }`}
-                            >
-                              {message.type === "user" ? (
-                                <FaUser className="w-5 h-5" />
-                              ) : (
-                                <FaRobot className="w-5 h-5" />
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="chat-header mb-1">
-                            {message.type === "user" ? "You" : "BiteBot"}
-                            <time className="text-xs opacity-50 ml-2">
-                              {message.timestamp.toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </time>
-                          </div>
-
+  
+                  {/* Message Bubble */}
+                  <div>
+                    <div
+                      className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${
+                        msg.type === "user"
+                          ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white"
+                          : "bg-white text-gray-800 border border-gray-200"
+                      }`}
+                    >
+                      {msg.content}
+                    </div>
+  
+                    {/* Recipes Grid */}
+                    {msg.recipes?.length > 0 && (
+                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {msg.recipes.map((recipe) => (
                           <div
-                            className={`chat-bubble ${
-                              message.type === "user"
-                                ? "chat-bubble-primary"
-                                : "bg-gradient-to-r from-orange-100 to-amber-100 text-gray-800 border border-orange-200"
-                            }`}
+                            key={recipe._id}
+                            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100"
                           >
-                            {/* Render multiline content properly */}
-                            {String(message.content)
-                              .split("\n")
-                              .map((line, i) => (
-                                <p key={i} className="mb-0">
-                                  {line}
-                                </p>
-                              ))}
-                          </div>
-                        </div>
-
-                        {/* Recipe Cards as a separate chat row */}
-                        {message.recipes && message.recipes.length > 0 && (
-                          <div
-                            className={`chat ${
-                              message.type === "user"
-                                ? "chat-end"
-                                : "chat-start"
-                            }`}
-                            key={`${message.id}-recipes`}
-                          >
-                            {/* Use a transparent bubble to anchor grid where a message would be */}
-                            <div className="chat-bubble p-0 bg-transparent border-0 shadow-none">
-                              <div className="mt-2 w-full">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                  {message.recipes.map((recipe) => (
-                                    <div
-                                      key={recipe._id}
-                                      className="card card-compact bg-base-100 shadow-md border border-base-300 hover:shadow-lg transition-shadow duration-300"
-                                      style={{ minWidth: 220 }}
-                                    >
-                                      <figure className="h-32">
-                                        <img
-                                          src={recipe.thumbnail?.secure_url}
-                                          alt={recipe.title}
-                                          className="w-full h-full object-cover"
-                                        />
-                                      </figure>
-                                      <div className="card-body p-4">
-                                        <h3 className="card-title text-sm font-semibold line-clamp-2">
-                                          {recipe.title}
-                                        </h3>
-                                        <div className="card-actions justify-between items-center mt-2">
-                                          <span className="badge badge-outline badge-sm">
-                                            {recipe.cuisine}
-                                          </span>
-                                          <button className="btn btn-primary btn-sm">
-                                            View Recipe
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
+                            <img
+                              src={recipe.thumbnail?.secure_url}
+                              alt={recipe.title}
+                              className="w-full h-32 object-cover"
+                            />
+                            <div className="p-3">
+                              <h3 className="font-medium text-gray-800 text-sm line-clamp-1">
+                                {recipe.title}
+                              </h3>
+                              <div className="flex justify-between items-center mt-2">
+                                <span className="text-xs text-orange-600 font-medium">
+                                  {recipe.cuisine}
+                                </span>
+                                <button className="text-xs px-3 py-1 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition">
+                                  View
+                                </button>
                               </div>
                             </div>
                           </div>
-                        )}
-                      </div>
-                    ))}
-
-                    {isLoading && (
-                      <div className="chat chat-start">
-                        <div className="chat-image avatar">
-                          <div className="w-10 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white">
-                            <FaRobot className="w-5 h-5" />
-                          </div>
-                        </div>
-                        <div className="chat-header mb-1">BiteBot</div>
-                        <div className="chat-bubble bg-gradient-to-r from-orange-100 to-amber-100 text-gray-800 border border-orange-200">
-                          <span className="loading loading-dots loading-sm"></span>
-                          Searching for recipes...
-                        </div>
+                        ))}
                       </div>
                     )}
                   </div>
-
-                  {/* Input Area */}
-                  <div className="p-6 border-t border-base-300 bg-base-100">
-                    <div className="flex gap-3">
-                      <div className="flex-1">
-                        <textarea
-                          value={inputMessage}
-                          onChange={(e) => setInputMessage(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          placeholder="Tell me what ingredients you have or what you're craving..."
-                          className="textarea textarea-bordered w-full h-20 resize-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                          disabled={isLoading}
-                        />
-                      </div>
-                      <button
-                        onClick={handleSendMessage}
-                        disabled={!inputMessage.trim() || isLoading}
-                        className="btn btn-primary btn-lg h-20 px-6 self-end transition-all duration-300 transform hover:scale-105 disabled:transform-none"
-                      >
-                        {isLoading ? (
-                          <span className="loading loading-spinner loading-sm"></span>
-                        ) : (
-                          <FaPaperPlane className="w-5 h-5" />
-                        )}
-                      </button>
+                </div>
+              </div>
+            ))}
+  
+            {/* Loading Indicator */}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white">
+                    <FaRobot />
+                  </div>
+                  <div className="bg-white px-4 py-3 rounded-2xl shadow-sm border border-gray-200 flex items-center gap-2">
+                    <div className="flex space-x-1">
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"></span>
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce delay-100"></span>
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce delay-200"></span>
                     </div>
-                    <div className="flex justify-between items-center mt-3 text-sm text-gray-500">
-                      <span>Press Enter to send</span>
-                      <span>
-                        BiteBot may produce inaccurate information about recipes
-                      </span>
-                    </div>
+                    <span className="text-sm text-gray-600">Cooking up ideas...</span>
                   </div>
                 </div>
               </div>
+            )}
+  
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+  
+        {/* Floating Input */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-200 px-4 py-4">
+          <div className="max-w-4xl mx-auto">
+            {/* Quick Suggestions */}
+            <div className="flex flex-wrap gap-2 mb-3 justify-center">
+              {quickSuggestions.map((suggestion, i) => (
+                <button
+                  key={i}
+                  onClick={() => setInputMessage(suggestion)}
+                  className="text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full hover:bg-orange-100 hover:text-orange-600 transition"
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
+  
+            {/* Input + Send */}
+            <div className="flex gap-3 items-end">
+              <textarea
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask for a recipe or list ingredients..."
+                className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-shadow"
+                rows={1}
+                disabled={isLoading}
+                style={{ fieldSizing: "content", maxHeight: "120px" }}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isLoading}
+                className={`p-3 rounded-full transition-all ${
+                  inputMessage.trim() && !isLoading
+                    ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <FaPaperPlane className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+  
+            <p className="text-xs text-gray-400 text-center mt-2">
+              Press <kbd className="kbd kbd-xs">Enter</kbd> to send • BiteBot may suggest creatively
+            </p>
           </div>
         </div>
       </div>
-    </HomeLayout>
+    </>
   );
+  
 };
 
 export default ChatbotPage;

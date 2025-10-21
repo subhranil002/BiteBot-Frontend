@@ -6,7 +6,6 @@ const HARD_CODED_INITIAL = {
     profile: {
         name: "John Doe",
         bio: "Food enthusiast exploring Indian and fusion cuisines.",
-        location: "Kolkata, India",
         avatar: {
             secure_url:
                 "https://images.unsplash.com/photo-1603415526960-f7e0328b36f0?w=800&q=60",
@@ -40,7 +39,6 @@ function EditProfileDialog() {
     const [formData, setFormData] = useState({
         name: HARD_CODED_INITIAL.profile.name,
         bio: HARD_CODED_INITIAL.profile.bio,
-        location: HARD_CODED_INITIAL.profile.location,
         avatar: HARD_CODED_INITIAL.profile.avatar?.secure_url || "",
         dietary: HARD_CODED_INITIAL.profile.dietary || [],
         allergens: HARD_CODED_INITIAL.profile.allergens || [],
@@ -206,7 +204,7 @@ function EditProfileDialog() {
                     </div>
 
                     {/* Basic Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                         {/* Display Name */}
                         <div className="form-control w-full">
                             <label className="label" htmlFor="name">
@@ -223,24 +221,6 @@ function EditProfileDialog() {
                                 }
                                 placeholder="Enter your display name"
                                 required
-                            />
-                        </div>
-
-                        {/* Location */}
-                        <div className="form-control w-full">
-                            <label className="label" htmlFor="location">
-                                <span className="label-text font-medium text-gray-700">
-                                    Location
-                                </span>
-                            </label>
-                            <input
-                                id="location"
-                                className="input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                                value={formData.location}
-                                onChange={(e) =>
-                                    handleChange("location", e.target.value)
-                                }
-                                placeholder="Your location"
                             />
                         </div>
                     </div>
