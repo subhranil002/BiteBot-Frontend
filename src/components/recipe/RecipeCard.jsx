@@ -64,7 +64,7 @@ const RecipeCard = ({ recipe, className = "" }) => {
                   e.stopPropagation();
                   setIsFav(!isFav);
                 }}
-                className={`absolute top-4 right-4 w-10 h-10 rounded-full border transition-all duration-300 hover:scale-110 backdrop-blur-md ${
+                className={`absolute top-4 right-4 btn btn-circle rounded-full border transition-all duration-300 hover:scale-110 backdrop-blur-md ${
                   isFav
                     ? "bg-gradient-to-br from-rose-500 to-red-400 text-white border-red-300 shadow-lg"
                     : "bg-white/80 border-orange-100 text-orange-500 hover:bg-orange-50"

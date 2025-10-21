@@ -49,7 +49,6 @@ const MOCK_USER = {
                 },
                 description: "Grilled paneer cubes simmered in rich, spiced tomato gravy.",
                 isPremium: true,
-                isTrending: true,
                 servings: 4,
                 cuisine: "Indian",
                 tags: ["Spicy", "Vegetarian", "Dinner"],
@@ -67,7 +66,6 @@ const MOCK_USER = {
                 },
                 description: "Decadent molten chocolate cake served warm with vanilla ice cream.",
                 isPremium: false,
-                isTrending: false,
                 servings: 2,
                 cuisine: "French",
                 tags: ["Dessert", "Chocolate", "Sweet"],
@@ -83,9 +81,8 @@ const MOCK_USER = {
                 thumbnail: {
                     secure_url: "https://images.unsplash.com/photo-1627308595121-8879f36a1eeb?w=800&q=60"
                 },
-                description: "Refreshing mango yogurt drink perfect for summer.",
+                description: "Refreshing and sweet mango yogurt drink perfect for summer.",
                 isPremium: false,
-                isTrending: true,
                 servings: 2,
                 cuisine: "Indian",
                 tags: ["Drink", "Vegetarian", "Cooling"],
@@ -130,19 +127,11 @@ const ChefDashboard = () => {
     const { chefProfile, profile } = userData;
 
     const stats = {
-        totalViews: chefProfile.recipes.reduce((sum, r) => sum + (r.views || 0), 0),
+        totalLikes: chefProfile.recipes.reduce((sum, r) => sum + (r.views || 0), 0),
         subscribers: userData.subscribers || 0,
         monthlyEarnings: Math.round(chefProfile.subscriptionPrice * userData.subscribers),
-        engagementRate: 87.5, // Percentage
         totalRecipes: chefProfile.recipes.length,
         averageRating: chefProfile.averageRating
-    };
-
-    const growthMetrics = {
-        subscribers: "+12% this month",
-        views: "+8% this week",
-        earnings: "+15% this month",
-        engagement: "+5% this month"
     };
 
     return (
@@ -165,7 +154,7 @@ const ChefDashboard = () => {
                                             {profile.name}
                                         </h1>
                                         <p className="text-gray-600 mt-2">{profile.bio}</p>
-                                        
+
                                         {/* Cuisine Tags */}
                                         <div className="flex flex-wrap gap-2 mt-4">
                                             {profile.cuisine?.map((cuisine, index) => (
@@ -173,26 +162,6 @@ const ChefDashboard = () => {
                                                     {cuisine}
                                                 </div>
                                             ))}
-                                        </div>
-
-                                        {/* Stats Row */}
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-orange-600">{stats.totalRecipes}</div>
-                                                <div className="text-sm text-gray-500">Recipes</div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-orange-600">{stats.averageRating}</div>
-                                                <div className="text-sm text-gray-500">Rating</div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-orange-600">{stats.subscribers}</div>
-                                                <div className="text-sm text-gray-500">Subscribers</div>
-                                            </div>
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-orange-600">${chefProfile.subscriptionPrice}</div>
-                                                <div className="text-sm text-gray-500">Monthly</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -204,23 +173,19 @@ const ChefDashboard = () => {
                             <div className="card-body">
                                 <h3 className="card-title text-gray-800">Quick Actions</h3>
                                 <div className="space-y-3">
-                                    <button 
+                                    <button
                                         className="btn btn-neutral w-full gap-2"
                                         onClick={() => navigate("/recipe/add")}
                                     >
                                         <FaPlus className="w-4 h-4" />
                                         Add New Recipe
                                     </button>
-                                    <button 
+                                    <button
                                         className="btn btn-outline border-orange-300 text-orange-600 w-full gap-2"
                                         onClick={() => navigate(`/profile/${userData._id}`)}
                                     >
                                         <FaEye className="w-4 h-4" />
                                         View Public Profile
-                                    </button>
-                                    <button className="btn btn-ghost w-full gap-2">
-                                        <FaChartBar className="w-4 h-4" />
-                                        Detailed Analytics
                                     </button>
                                 </div>
                             </div>
@@ -231,31 +196,26 @@ const ChefDashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
                             {
-                                label: "Total Views",
-                                icon: FaEye,
-                                value: stats.totalViews.toLocaleString(),
-                                growth: growthMetrics.views,
-                                color: "text-blue-500"
+                                label: "Total Likes",
+                                icon: FaHeart,
+                                value: stats.totalLikes.toLocaleString(), color: "text-blue-500"
                             },
                             {
                                 label: "Subscribers",
                                 icon: FaUsers,
                                 value: stats.subscribers.toLocaleString(),
-                                growth: growthMetrics.subscribers,
                                 color: "text-green-500"
                             },
                             {
                                 label: "Monthly Earnings",
                                 icon: FaDollarSign,
                                 value: `$${stats.monthlyEarnings.toLocaleString()}`,
-                                growth: growthMetrics.earnings,
                                 color: "text-emerald-500"
                             },
                             {
-                                label: "Engagement Rate",
-                                icon: FaChartLine,
-                                value: `${stats.engagementRate}%`,
-                                growth: growthMetrics.engagement,
+                                label: "Average Rating",
+                                icon: FaStar,
+                                value: `${stats.averageRating}/5`,
                                 color: "text-purple-500"
                             },
                         ].map(({ label, icon: Icon, value, growth, color }) => (
@@ -280,15 +240,11 @@ const ChefDashboard = () => {
                     <div className="space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-800">Your Recipes</h2>
+                                <h2 className="text-2xl font-bold text-gray-800">Your Top Recipes</h2>
                                 <p className="text-gray-600">Manage and track your recipe performance</p>
                             </div>
                             <div className="flex gap-2">
-                                <button className="btn btn-outline border-orange-300 text-orange-600 gap-2">
-                                    <FaChartBar className="w-4 h-4" />
-                                    Analytics
-                                </button>
-                                <button 
+                                <button
                                     className="btn btn-neutral gap-2"
                                     onClick={() => navigate("/recipe/add")}
                                 >
@@ -306,9 +262,10 @@ const ChefDashboard = () => {
                                             <RecipeCard recipe={recipe} />
                                             <div className="p-4 border-t border-orange-100">
                                                 <div className="flex items-center justify-between text-sm mb-3">
-                                                    <div className="flex items-center gap-1">
-                                                        <FaEye className="w-4 h-4 text-gray-400" />
-                                                        <span className="font-medium">{recipe.views.toLocaleString()}</span>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className={`badge ${recipe.isPremium ? 'badge-primary' : 'badge-ghost'}`}>
+                                                            {recipe.isPremium ? 'Premium' : 'Free'}
+                                                        </span>
                                                     </div>
                                                     <div className="flex items-center gap-1">
                                                         <FaHeart className="w-4 h-4 text-rose-400" />
@@ -318,14 +275,6 @@ const ChefDashboard = () => {
                                                         <FaStar className="w-4 h-4 text-yellow-400" />
                                                         <span className="font-medium">{recipe.averageRating}</span>
                                                     </div>
-                                                </div>
-                                                <div className="flex items-center justify-between">
-                                                    <span className={`badge ${recipe.isPremium ? 'badge-primary' : 'badge-ghost'}`}>
-                                                        {recipe.isPremium ? 'Premium' : 'Free'}
-                                                    </span>
-                                                    {recipe.isTrending && (
-                                                        <span className="badge badge-secondary">Trending</span>
-                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -350,36 +299,6 @@ const ChefDashboard = () => {
 
                     {/* Additional Info Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-                        {/* Professional Background */}
-                        {/* <div className="card bg-base-100 shadow-xl border border-orange-100">
-                            <div className="card-body">
-                                <h3 className="card-title text-gray-800">
-                                    <FaBriefcase className="text-orange-500" />
-                                    Professional Background
-                                </h3>
-                                <div className="space-y-4">
-                                    {chefProfile.education && (
-                                        <div>
-                                            <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
-                                                <FaGraduationCap className="w-4 h-4 text-orange-500" />
-                                                Education
-                                            </h4>
-                                            <p className="text-gray-600">{chefProfile.education}</p>
-                                        </div>
-                                    )}
-                                    {chefProfile.experience && (
-                                        <div>
-                                            <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
-                                                <FaBriefcase className="w-4 h-4 text-orange-500" />
-                                                Experience
-                                            </h4>
-                                            <p className="text-gray-600">{chefProfile.experience}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div> */}
-
                         {/* Recent Reviews */}
                         <div className="card bg-base-100 shadow-xl border border-orange-100">
                             <div className="card-body">
