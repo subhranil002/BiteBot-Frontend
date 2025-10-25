@@ -21,10 +21,10 @@ const ChatbotPage = () => {
   const messagesEndRef = useRef(null);
 
   const quickSuggestions = [
-    "Search Italian chicken recipes",
-    "Find vegan Mexican recipes",
-    "Search dessert recipes with chocolate",
-    "Find recipes that I can make with rice and eggs?",
+    "Search indian chicken recipes",
+    "Find veg high protein recipes",
+    "Search punjabi recipes",
+    "Find recipes that I can make with eggs?",
   ];
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const ChatbotPage = () => {
       content: [
         {
           type: m.type === "assistant" ? "output_text" : "input_text",
-          text: "Search for recipes for this query:" + String(m.content),
+          text: String(m.content),
         },
       ],
     }));
