@@ -16,8 +16,9 @@ function RecipeCarousels() {
       tags: ["vegetarian", "gluten-free", "spicy"],
       cuisine: "Indian",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r2",
@@ -31,8 +32,9 @@ function RecipeCarousels() {
       tags: ["premium", "contains-dairy", "luxury"],
       cuisine: "Italian",
       isPremium: true,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r3",
@@ -46,8 +48,9 @@ function RecipeCarousels() {
       tags: ["vegetarian", "healthy", "gluten-free", "fresh"],
       cuisine: "Mediterranean",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r4",
@@ -61,8 +64,9 @@ function RecipeCarousels() {
       tags: ["pescatarian", "quick"],
       cuisine: "Mediterranean",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r5",
@@ -76,8 +80,9 @@ function RecipeCarousels() {
       tags: ["vegetarian", "quick"],
       cuisine: "American",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r6",
@@ -91,8 +96,9 @@ function RecipeCarousels() {
       tags: ["premium", "high-protein"],
       cuisine: "French",
       isPremium: true,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r7",
@@ -106,8 +112,9 @@ function RecipeCarousels() {
       tags: ["vegan", "gluten-free", "healthy"],
       cuisine: "Fusion",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
     {
       id: "r8",
@@ -121,8 +128,9 @@ function RecipeCarousels() {
       tags: ["spicy", "vegetarian"],
       cuisine: "Korean",
       isPremium: false,
-      heroImage:
-        "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      thumbnail: {
+        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      }
     },
   ];
 
