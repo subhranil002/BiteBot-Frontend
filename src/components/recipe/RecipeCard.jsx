@@ -17,7 +17,7 @@ const RecipeCard = ({ recipe }) => {
     userData?.favourites?.find((fav) => fav._id === recipe._id)
   );
   const navigate = useNavigate();
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(true);
 
   const toggleFav = () => {
     setIsFav(!isFav);
@@ -39,8 +39,6 @@ const RecipeCard = ({ recipe }) => {
         return;
       }
     }
-
-    setUnlocked(true);
   }, []);
 
   const handleRecipeViewButton = () => {

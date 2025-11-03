@@ -1,5 +1,6 @@
 import { AiFillStar } from "react-icons/ai";
 import { FaBolt, FaFire, FaGem, FaUser } from "react-icons/fa";
+
 import RecipeCarousel from "../recipe/RecipeCarousel";
 
 function RecipeCarousels() {

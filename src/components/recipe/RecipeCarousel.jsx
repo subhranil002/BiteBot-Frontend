@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 import RecipeCard from "./RecipeCard";
 
 const RecipeCarousel = ({ title, recipes, onRecipeClick, className = "" }) => {
