@@ -15,6 +15,8 @@ import RecipeDetail from "../pages/Recipe/RecipeDetail";
 import SearchResults from "../pages/SearchResult";
 import SignUp from "../pages/Signup";
 import { getProfile } from "../redux/slices/authSlice";
+import ContactUs from "../pages/ContactUs";
+import Favorites from "../pages/Favourites";
 
 function Router() {
   const dispatch = useDispatch();
@@ -47,6 +49,8 @@ function Router() {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/recipe/add" element={<AddRecipe />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/profile/:id/favorites" element={<Favorites />} />
       </Route>
       <Route element={<ChefOnly />}>
         <Route path="/dashboard" element={<ChefDashboard />} />

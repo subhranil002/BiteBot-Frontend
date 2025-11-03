@@ -1,4 +1,5 @@
 import "./index.css";
+import "leaflet/dist/leaflet.css";
 
 import { Analytics } from "@vercel/analytics/react";
 import { createRoot } from "react-dom/client";
