@@ -7,6 +7,7 @@ import {
     FaSearch,
     FaSeedling,
     FaSignOutAlt,
+    FaTachometerAlt,
     FaUser,
     FaUtensils,
 } from "react-icons/fa";
@@ -19,7 +20,8 @@ function Navbar({ children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState("");
-    const { userData, isLoggedIn } = useSelector((state) => state.auth);
+    const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
+    console.log(role);
 
     const handleSearch = (e) => {
         e?.preventDefault();
@@ -181,6 +183,17 @@ function Navbar({ children }) {
                                                         My Profile
                                                     </Link>
                                                 </li>
+                                                {role === "CHEF" && (
+                                                    <li>
+                                                        <Link
+                                                            to="/dashboard"
+                                                            className="rounded-lg hover:bg-orange-50 transition-colors py-3"
+                                                        >
+                                                            <FaTachometerAlt className="text-orange-500" />{" "}
+                                                            Dashboard
+                                                        </Link>
+                                                    </li>
+                                                )}
                                                 <li>
                                                     <Link
                                                         to="/chat"
