@@ -1,60 +1,94 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaClock, FaHeart, FaStar, FaUsers } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import getRecipeByIdApi from "../../apis/recipe/getRecipeByIdApi";
-// import RecipeCard from "../../components/recipe/RecipeCard";
 import HomeLayout from "../../layouts/HomeLayout";
+import { getRecipeById, resetRecipe } from "../../redux/slices/recipeSlice";
 
 function RecipeDetail() {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState();
-  const [chef, setChef] = useState();
-  const [isLiked, setIsLiked] = useState(false);
-  const [cost, setCost] = useState({
-    total: 0,
-    perServing: 0,
+  const { recipe, chef, error } = useSelector((state) => state.recipe);
+  const { userData } = useSelector((state) => state.auth);
+  const [isFav, setIsFav] = useState(
+    userData?.favourites?.find((fav) => fav === id)
+  );
+  const [cost, setCost] = useState({ total: 0, perServing: 0 });
+  const [stats, setStats] = useState({
+    averageRating: 0,
+    reviewCount: 0,
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!id) navigate("/");
-    (async () => {
-      const res = await getRecipeByIdApi(id);
-      setRecipe(res.data);
-      setChef(res.data.chefId);
-    })();
+    if (!id) {
+      navigate("/");
+      return;
+    }
+    dispatch(getRecipeById(id));
+    return () => {
+      dispatch(resetRecipe());
+    };
   }, [id]);
 
   useEffect(() => {
-    const totalCost = recipe?.ingredients.reduce((sum, ing) => {
-      return sum + Number(ing.quantity) * Number(ing.marketPrice || 0);
+    if (error) {
+      toast.error(error?.message || "Something went wrong");
+      if (error?.data) {
+        toast.error("Please subscribe to this chef to unlock recipe");
+        navigate(`/profile/${error.data}`);
+      }
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (!recipe?.ingredients) return;
+    const totalCost = recipe.ingredients.reduce((sum, ing) => {
+      const qty = Number(ing?.quantity) || 0;
+      const price = Number(ing?.marketPrice) || 0;
+      return sum + qty * price;
     }, 0);
-    const costPerServing = recipe?.servings
-      ? totalCost / recipe.servings
-      : totalCost;
-    setCost({
-      total: totalCost,
-      perServing: costPerServing,
-    });
+    const costPerServing =
+      recipe?.servings && recipe.servings > 0
+        ? totalCost / recipe.servings
+        : totalCost;
+    setCost({ total: totalCost, perServing: costPerServing });
+    const reviews = recipe?.reviews || [];
+    const count = reviews.length;
+    const avg =
+      count > 0
+        ? reviews.reduce((s, r) => s + (Number(r?.rating) || 0), 0) / count
+        : 0;
+    setStats({ averageRating: Number(avg.toFixed(1)), reviewCount: count });
   }, [recipe]);
 
-  const handleLike = () => {
-    setIsLiked((s) => !s);
-  };
-
-  console.log(recipe);
+  const handleLike = () => setIsFav((s) => !s);
 
   if (!recipe) return "Loading...";
+
+  const statTabs = [
+    {
+      icon: <FaUsers />,
+      label: "Servings",
+      value: recipe.servings,
+    },
+    {
+      icon: <FaClock />,
+      label: "Total Time",
+      value: `${recipe.totalCookingTime} min`,
+    },
+    {
+      icon: <FaHeart />,
+      label: "Likes",
+      value: recipe.likeCount?.length || 0,
+    },
+  ];
 
   return (
     <HomeLayout>
       <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-to-br from-orange-200 to-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-br from-red-200 to-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse animation-delay-2000"></div>
-        </div>
-
         <div className="container mx-auto px-4 py-10 relative z-10">
           <div className="max-w-6xl mx-auto space-y-10">
             {/* Hero Section */}
@@ -70,7 +104,7 @@ function RecipeDetail() {
               <button
                 onClick={handleLike}
                 className={`absolute top-4 right-4 btn btn-circle ${
-                  isLiked
+                  isFav
                     ? "bg-rose-500 text-white border-none"
                     : "bg-white/80 text-gray-700 border-none hover:bg-white"
                 }`}
@@ -78,12 +112,12 @@ function RecipeDetail() {
                 <FaHeart className="w-5 h-5" />
               </button>
 
-              <div className="hero-content text-start text-white absolute bottom-8 left-6 sm:left-10">
+              <div className="hero-content text-start bg-black text-white absolute bottom-8 left-6 sm:left-10">
                 <div className="max-w-lg">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent drop-shadow-lg">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold">
                     {recipe.title}
                   </h1>
-                  <p className="text-sm sm:text-base text-white/90 mt-1">
+                  <p className="text-sm sm:text-base mt-1">
                     {recipe.description}
                   </p>
                 </div>
@@ -102,26 +136,28 @@ function RecipeDetail() {
                         <div className="avatar">
                           <div className="w-14 h-14 rounded-full border-2 border-orange-200">
                             <img
-                              src={chef.profile?.avatar?.secure_url}
-                              alt={chef.profile?.name}
+                              src={chef?.profile?.avatar?.secure_url}
+                              alt={chef?.profile?.name || "Chef"}
                             />
                           </div>
                         </div>
                         <div>
                           <Link
-                            to={`/profile/${chef._id}`}
+                            to={`/profile/${chef?._id ?? ""}`}
                             className="card-title link link-hover text-orange-600"
                           >
-                            {chef.profile?.name}
+                            {chef?.profile?.name || "Chef"}
                           </Link>
                           <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <FaStar className="text-yellow-400" />{" "}
-                            {recipe.averageRating} • {recipe.reviewCount}{" "}
-                            reviews
+                            <FaStar className="text-yellow-400" />
+                            {stats.averageRating} • {stats.reviewCount} reviews
                           </div>
                         </div>
                       </div>
-                      <button className="btn btn-outline border-orange-300 text-orange-600 hover:bg-orange-50">
+                      <button
+                        className="btn btn-outline border-orange-300 text-orange-600 hover:bg-orange-50"
+                        onClick={() => navigate(`/profile/${chef?._id ?? ""}`)}
+                      >
                         <FaHeart className="text-orange-500" /> Subscribe
                       </button>
                     </div>
@@ -130,23 +166,7 @@ function RecipeDetail() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {[
-                    {
-                      icon: <FaUsers />,
-                      label: "Servings",
-                      value: recipe.servings,
-                    },
-                    {
-                      icon: <FaClock />,
-                      label: "Total Time",
-                      value: `${recipe.totalCookingTime} min`,
-                    },
-                    {
-                      icon: <FaHeart />,
-                      label: "Likes",
-                      value: recipe.likes?.length || 0,
-                    },
-                  ].map((item, i) => (
+                  {statTabs.map((item, i) => (
                     <div
                       key={i}
                       className="card bg-base-100 shadow-sm border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1"
@@ -217,7 +237,8 @@ function RecipeDetail() {
                               <td className="text-right text-gray-500">
                                 $
                                 {(
-                                  (ing.quantity || 0) * (ing.marketPrice || 0)
+                                  (Number(ing.quantity) || 0) *
+                                  (Number(ing.marketPrice) || 0)
                                 ).toFixed(2)}
                               </td>
                             </tr>
@@ -262,6 +283,76 @@ function RecipeDetail() {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Rating & Reviews */}
+                <div className="card bg-base-100 shadow-md border border-orange-100">
+                  <div className="card-body text-center">
+                    {/* Simple stars display to avoid radio/checked issues */}
+                    <div className="flex justify-center gap-1 mb-2 text-yellow-400">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <FaStar
+                          key={i}
+                          className={
+                            i < Math.round(stats.averageRating)
+                              ? "opacity-100"
+                              : "opacity-30"
+                          }
+                        />
+                      ))}
+                    </div>
+                    <div className="text-2xl font-bold text-gray-700">
+                      {stats.averageRating}
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      Based on {stats.reviewCount} reviews
+                    </p>
+                  </div>
+                </div>
+
+                {/* Reviews Preview */}
+                {recipe.reviews?.length > 0 && (
+                  <div className="card bg-base-100 shadow-md border border-orange-100">
+                    <div className="card-body">
+                      <h4 className="card-title text-gray-800">
+                        Recent Reviews
+                      </h4>
+                      <div className="space-y-4 max-h-80 overflow-y-auto">
+                        {recipe.reviews.slice(0, 3).map((review, index) => (
+                          <div
+                            key={index}
+                            className="border-b border-orange-100 pb-3 last:border-0"
+                          >
+                            <div className="flex items-center gap-1 text-yellow-400 mb-1">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <FaStar
+                                  key={i}
+                                  className={
+                                    i < (Number(review?.rating) || 0)
+                                      ? "opacity-100"
+                                      : "opacity-30"
+                                  }
+                                />
+                              ))}
+                            </div>
+                            <p className="text-sm text-gray-700">
+                              {review.message}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {review.createdAt
+                                ? new Date(
+                                    review.createdAt
+                                  ).toLocaleDateString()
+                                : ""}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* External Media Links */}
                 {recipe.externalMediaLinks?.length > 0 && (
@@ -286,73 +377,6 @@ function RecipeDetail() {
                               →
                             </span>
                           </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Rating & Reviews */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body text-center">
-                    <div className="rating rating-lg rating-half justify-center mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <input
-                          key={i}
-                          type="radio"
-                          name="rating-10"
-                          className="bg-yellow-400 mask mask-star-2 mask-half-1"
-                          checked={i < Math.floor(recipe.averageRating)}
-                          readOnly
-                        />
-                      ))}
-                    </div>
-                    <div className="text-2xl font-bold text-gray-700">
-                      {recipe.averageRating}
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Based on {recipe.reviewCount} reviews
-                    </p>
-                    <div className="mt-3 text-sm text-gray-600">
-                      {recipe.likes?.length || 0} likes
-                    </div>
-                  </div>
-                </div>
-
-                {/* Reviews Preview */}
-                {recipe.reviews?.length > 0 && (
-                  <div className="card bg-base-100 shadow-md border border-orange-100">
-                    <div className="card-body">
-                      <h4 className="card-title text-gray-800">
-                        Recent Reviews
-                      </h4>
-                      <div className="space-y-4 max-h-80 overflow-y-auto">
-                        {recipe.reviews.slice(0, 3).map((review, index) => (
-                          <div
-                            key={index}
-                            className="border-b border-orange-100 pb-3 last:border-0"
-                          >
-                            <div className="rating rating-xs mb-1">
-                              {[...Array(5)].map((_, i) => (
-                                <input
-                                  key={i}
-                                  type="radio"
-                                  className="mask mask-star-2 bg-yellow-400"
-                                  checked={i < review.rating}
-                                  readOnly
-                                />
-                              ))}
-                            </div>
-                            <p className="text-sm text-gray-700">
-                              {review.message}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </p>
-                          </div>
                         ))}
                       </div>
                     </div>

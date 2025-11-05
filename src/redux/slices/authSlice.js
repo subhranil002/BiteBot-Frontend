@@ -6,7 +6,6 @@ import getProfileApi from "../../apis/user/getProfileApi";
 import loginApi from "../../apis/user/loginApi";
 import logoutApi from "../../apis/user/logoutApi";
 import registerApi from "../../apis/user/registerApi";
-import updateProfileApi from "../../apis/user/updateProfileApi";
 
 const authStorage = {
     get: (key, defaultValue) => {
@@ -94,22 +93,6 @@ export const getProfile = createAsyncThunk("auth/getProfile", async () => {
     }
 });
 
-export const updateProfile = createAsyncThunk(
-    "auth/updateProfile",
-    async (data, thunkAPI) => {
-        try {
-            if (data?.avatar) {
-                const avatar = new FormData();
-                avatar.append("avatar", data.avatar);
-                await changeAvatarApi(avatar);
-            }
-            return await updateProfileApi(data);
-        } catch (error) {
-            return thunkAPI.rejectWithValue(handleError(error));
-        }
-    }
-);
-
 const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -139,14 +122,6 @@ const authSlice = createSlice({
                 authStorage.clear();
             })
             .addCase(getProfile.fulfilled, (state, action) => {
-                state.isLoggedIn = action.payload?.success;
-                state.role = action.payload?.data?.role;
-                state.userData = action.payload?.data;
-                authStorage.set("isLoggedIn", action.payload?.success);
-                authStorage.set("role", action.payload?.data?.role);
-                authStorage.set("userData", action.payload?.data);
-            })
-            .addCase(updateProfile.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload?.success;
                 state.role = action.payload?.data?.role;
                 state.userData = action.payload?.data;

@@ -47,7 +47,7 @@ function Router() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/profile/:id/favorites" element={<Favorites />} />
+        <Route path="/profile/:id/favourites" element={<Favorites />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/recipe/add" element={<AddRecipe />} />
         <Route path="/contact" element={<ContactUs />} />

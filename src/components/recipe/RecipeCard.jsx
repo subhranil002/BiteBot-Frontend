@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 const RecipeCard = ({ recipe }) => {
   const { userData } = useSelector((state) => state.auth);
   const [isFav, setIsFav] = useState(
-    userData?.favourites?.find((fav) => fav._id === recipe._id)
+    userData?.favourites?.find((fav) => fav === recipe._id)
   );
   const navigate = useNavigate();
   const [unlocked, setUnlocked] = useState(true);

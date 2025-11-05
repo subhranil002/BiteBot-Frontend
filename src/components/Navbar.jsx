@@ -177,7 +177,7 @@ function Navbar({ children }) {
                         </li>
                         <li>
                           <Link
-                            to={`/profile/${userData?._id}/favorites`}
+                            to={`/profile/${userData?._id}/favourites`}
                             className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                           >
                             <FaHeart className="text-rose-500" /> My Favorites

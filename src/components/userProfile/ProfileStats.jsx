@@ -15,7 +15,7 @@ function ProfileStats({ profileData }) {
 
   const statItems = [
     {
-      id: "favorites",
+      id: "favourites",
       icon: FaHeart,
       label: "Favorites",
       value: profileData?.favourites?.length ?? 0,

@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import RecipeCard from "../../components/recipe/RecipeCard";
 import HomeLayout from "../../layouts/HomeLayout";
 
-function Favorites() {
+function Favourites() {
   const { userData } = useSelector((state) => state.auth);
 
-  const favorites = userData?.favourites;
+  const favourites = userData?.favourites;
 
   return (
     <HomeLayout>
@@ -17,7 +17,7 @@ function Favorites() {
         <div className="text-center px-6 space-y-4 mb-12">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
             <span className="bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
-              Your Favorites
+              Your Favourites
             </span>
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap">
@@ -26,15 +26,15 @@ function Favorites() {
           </p>
         </div>
 
-        {/* Favorites Section */}
-        {favorites && favorites.length > 0 ? (
+        {/* Favourites Section */}
+        {favourites && favourites.length > 0 ? (
           <div className="container mx-auto sm:px-6 lg:px-8">
             <div
               className="
                 flex flex-wrap
               "
             >
-              {favorites.map((recipe) => (
+              {favourites.map((recipe) => (
                 <RecipeCard key={recipe._id} recipe={recipe} />
               ))}
             </div>
@@ -47,7 +47,7 @@ function Favorites() {
             </div>
 
             <h3 className="text-2xl font-bold text-gray-800">
-              No Favorites Yet
+              No Favourites Yet
             </h3>
 
             <p className="text-gray-600 max-w-md flex flex-wrap justify-center items-center gap-1">
@@ -74,4 +74,4 @@ function Favorites() {
   );
 }
 
-export default Favorites;
+export default Favourites;
