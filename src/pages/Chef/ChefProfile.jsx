@@ -247,7 +247,7 @@ const ChefProfile = ({ profileData }) => {
                 Recipes by {profileData?.profile?.name}
               </h3>
               {profileData?.chefProfile?.recipes?.length ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-wrap">
                   {profileData?.chefProfile?.recipes.map((recipe) => (
                     <RecipeCard key={recipe._id} recipe={recipe} />
                   ))}

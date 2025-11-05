@@ -3,23 +3,19 @@ import {
   FaArrowRight,
   FaCrown,
   FaEye,
-  FaHeart,
   FaRegClock,
   FaUserMinus,
   FaUsers,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-import RecipeCard from "../recipe/RecipeCard";
-
 function ProfileTabs({ profileData }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("favourites");
+  const [activeTab, setActiveTab] = useState("subscribed");
 
   const handleUnsubscribe = () => {};
 
   const tabs = [
-    { key: "favourites", label: "Favourites", icon: FaHeart },
     { key: "subscribed", label: "Subscribed", icon: FaUsers },
     { key: "reviews", label: "Reviews Given", icon: FaRegClock },
   ];
@@ -53,32 +49,6 @@ function ProfileTabs({ profileData }) {
 
       {/* --- Tab Contents --- */}
       <div className="space-y-8 ">
-        {/* Favourites Tab */}
-        {activeTab === "favourites" && (
-          <div className="space-y-6">
-            {profileData?.favourites?.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {profileData.favourites.map((recipe) => (
-                  <div key={recipe._id} className="group">
-                    <RecipeCard recipe={recipe} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="card bg-base-100 shadow-xl border border-orange-100">
-                <div className="card-body text-center py-16">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-50 flex items-center justify-center">
-                    <FaHeart className="w-12 h-12 text-orange-400" />
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-800 mb-3">
-                    No favourites yet
-                  </h4>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* Subscribed Tab */}
         {activeTab === "subscribed" && (
           <div className="space-y-6">

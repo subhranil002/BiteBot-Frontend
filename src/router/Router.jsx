@@ -7,6 +7,7 @@ import RequireAuth from "../components/auth/RequireAuth";
 import Chat from "../pages/Chatbot/Chat";
 import AddRecipe from "../pages/Chef/AddRecipe";
 import ChefDashboard from "../pages/Chef/ChefDashboard";
+import ContactUs from "../pages/ContactUs";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
@@ -14,9 +15,8 @@ import Profile from "../pages/Profile";
 import RecipeDetail from "../pages/Recipe/RecipeDetail";
 import SearchResults from "../pages/SearchResult";
 import SignUp from "../pages/Signup";
+import Favorites from "../pages/User/Favourites";
 import { getProfile } from "../redux/slices/authSlice";
-import ContactUs from "../pages/ContactUs";
-import Favorites from "../pages/Favourites";
 
 function Router() {
   const dispatch = useDispatch();
@@ -47,10 +47,10 @@ function Router() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile/:id/favorites" element={<Favorites />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/recipe/add" element={<AddRecipe />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/profile/:id/favorites" element={<Favorites />} />
       </Route>
       <Route element={<ChefOnly />}>
         <Route path="/dashboard" element={<ChefDashboard />} />

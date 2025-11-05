@@ -18,8 +18,9 @@ function RecipeCarousels() {
       cuisine: "Indian",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r2",
@@ -34,8 +35,9 @@ function RecipeCarousels() {
       cuisine: "Italian",
       isPremium: true,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r3",
@@ -50,8 +52,9 @@ function RecipeCarousels() {
       cuisine: "Mediterranean",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r4",
@@ -66,8 +69,9 @@ function RecipeCarousels() {
       cuisine: "Mediterranean",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r5",
@@ -82,8 +86,9 @@ function RecipeCarousels() {
       cuisine: "American",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r6",
@@ -98,8 +103,9 @@ function RecipeCarousels() {
       cuisine: "French",
       isPremium: true,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r7",
@@ -114,8 +120,9 @@ function RecipeCarousels() {
       cuisine: "Fusion",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
     {
       id: "r8",
@@ -130,8 +137,9 @@ function RecipeCarousels() {
       cuisine: "Korean",
       isPremium: false,
       thumbnail: {
-        secure_url:"https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
-      }
+        secure_url:
+          "https://thehappyfoodie.co.uk/wp-content/uploads/2023/06/106_SpicyButterTomatoWhiteFish1-1229x1536.jpg",
+      },
     },
   ];
 
@@ -144,9 +152,7 @@ function RecipeCarousels() {
     const forYou = [...merged].slice(0, 8);
     const premium = merged.filter((r) => r.isPremium).slice(0, 8);
     const quickEasy = merged
-      .filter(
-        (r) => (r.tags || []).includes("quick") || getTotalTime(r) <= 30
-      )
+      .filter((r) => (r.tags || []).includes("quick") || getTotalTime(r) <= 30)
       .slice(0, 8);
 
     return { trending, newest, forYou, premium, quickEasy };
@@ -155,84 +161,108 @@ function RecipeCarousels() {
   const data = buildFromRawJson();
 
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
+    <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
       {/* Trending */}
       {data.trending && (
         <section className="space-y-6">
-          <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
-            <FaFire className="text-orange-500 drop-shadow-sm" />
-            <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-              Trending Now
-            </span>
-          </h2>
-          <div className="px-1 sm:px-2">
-            <RecipeCarousel recipes={data.trending} onRecipeClick={() => {}} />
+          <div className="sm:px-2">
+            <RecipeCarousel
+              title={
+                <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-2 sm:px-2">
+                  <FaFire className="text-orange-500 drop-shadow-sm" />
+                  <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                    Trending Now
+                  </span>
+                </h2>
+              }
+              recipes={data.trending}
+              onRecipeClick={() => {}}
+            />
           </div>
         </section>
       )}
-  
+
       {/* New Recipes */}
       {data.newest && (
         <section className="space-y-6">
-          <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
-            <AiFillStar className="text-yellow-500 drop-shadow-sm" />
-            <span className="bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
-              Fresh & New
-            </span>
-          </h2>
           <div className="px-1 sm:px-2">
-            <RecipeCarousel recipes={data.newest} onRecipeClick={() => {}} />
+            <RecipeCarousel
+              title={
+                <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
+                  <AiFillStar className="text-yellow-500 drop-shadow-sm" />
+                  <span className="bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
+                    Fresh & New
+                  </span>
+                </h2>
+              }
+              recipes={data.newest}
+              onRecipeClick={() => {}}
+            />
           </div>
         </section>
       )}
-  
+
       {/* For You */}
       {data.forYou && (
         <section className="space-y-6">
-          <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
-            <FaUser className="text-orange-500 drop-shadow-sm" />
-            <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
-              Recommended for You
-            </span>
-          </h2>
           <div className="px-1 sm:px-2">
-            <RecipeCarousel recipes={data.forYou} onRecipeClick={() => {}} />
+            <RecipeCarousel
+              title={
+                <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
+                  <FaUser className="text-orange-500 drop-shadow-sm" />
+                  <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+                    Recommended for You
+                  </span>
+                </h2>
+              }
+              recipes={data.forYou}
+              onRecipeClick={() => {}}
+            />
           </div>
         </section>
       )}
-  
+
       {/* Quick & Easy */}
       {data.quickEasy && (
         <section className="space-y-6">
-          <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
-            <FaBolt className="text-orange-500 drop-shadow-sm" />
-            <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
-              Quick & Easy
-            </span>
-          </h2>
           <div className="px-1 sm:px-2">
-            <RecipeCarousel recipes={data.quickEasy} onRecipeClick={() => {}} />
+            <RecipeCarousel
+              title={
+                <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
+                  <FaBolt className="text-orange-500 drop-shadow-sm" />
+                  <span className="bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+                    Quick & Easy
+                  </span>
+                </h2>
+              }
+              recipes={data.quickEasy}
+              onRecipeClick={() => {}}
+            />
           </div>
         </section>
       )}
-  
+
       {/* Premium */}
       {data.premium && (
         <section className="space-y-6">
-          <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
-            <FaGem className="text-yellow-500 drop-shadow-sm" />
-            <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              Premium Picks
-            </span>
-          </h2>
           <div className="px-1 sm:px-2">
-            <RecipeCarousel recipes={data.premium} onRecipeClick={() => {}} />
+            <RecipeCarousel
+              title={
+                <h2 className="flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 px-1 sm:px-2">
+                  <FaGem className="text-yellow-500 drop-shadow-sm" />
+                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                    Premium Picks
+                  </span>
+                </h2>
+              }
+              recipes={data.premium}
+              onRecipeClick={() => {}}
+            />
           </div>
         </section>
       )}
     </div>
   );
-  
 }
 
 export default RecipeCarousels;

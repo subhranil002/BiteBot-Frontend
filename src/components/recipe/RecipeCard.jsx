@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   FaBolt,
-  FaFire,
   FaHeart,
   FaLock,
   FaUsers,
@@ -45,15 +44,13 @@ const RecipeCard = ({ recipe }) => {
     if (unlocked) {
       navigate(`/recipe/${recipe._id}`);
     } else {
-      toast.error("Please subscribe to this chef to view recipe");
+      toast.error("Please subscribe to this chef to unlock recipe");
       navigate(`/profile/${recipe.chefId}`);
     }
   };
 
   return (
-    <div className="card card-compact group cursor-pointer max-w-sm max-h-[600px] mx-auto">
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-100 via-amber-100 to-rose-100 rounded-3xl blur-xl transition-all duration-500"></div>
-
+    <div className="card card-compact group w-[350px] h-[500px] p-5">
       {/* Main card container */}
       <div className="relative bg-base-100 border border-orange-100/60 rounded-3xl shadow-lg overflow-hidden transition-all duration-500 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:border-orange-200 flex flex-col h-full">
         {/* Image section */}
@@ -63,7 +60,6 @@ const RecipeCard = ({ recipe }) => {
             alt={recipe.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-
           {/* Premium badge */}
           {recipe.isPremium && (
             <div className="absolute top-4 left-4">
@@ -72,16 +68,6 @@ const RecipeCard = ({ recipe }) => {
               </div>
             </div>
           )}
-
-          {/* Trending badge */}
-          {recipe.isTrending && (
-            <div className="absolute top-4 left-4">
-              <div className="badge bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold border-0 shadow-md backdrop-blur-sm">
-                <FaFire className="w-3 h-3 mr-1" /> TRENDING
-              </div>
-            </div>
-          )}
-
           {/* Favorite button */}
           <button
             onClick={() => toggleFav()}
@@ -98,7 +84,6 @@ const RecipeCard = ({ recipe }) => {
             />
           </button>
         </figure>
-
         {/* Content section */}
         <div className="card-body flex flex-col flex-grow p-5 md:p-6 justify-between">
           <div className="space-y-3">

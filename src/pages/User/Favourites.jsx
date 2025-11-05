@@ -1,13 +1,14 @@
 import { FaHeart, FaUtensils } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import RecipeCard from "../components/recipe/RecipeCard";
-import HomeLayout from "../layouts/HomeLayout";
 import { Link } from "react-router-dom";
+
+import RecipeCard from "../../components/recipe/RecipeCard";
+import HomeLayout from "../../layouts/HomeLayout";
 
 function Favorites() {
   const { userData } = useSelector((state) => state.auth);
 
-  const favorites = userData?.favourites
+  const favorites = userData?.favourites;
 
   return (
     <HomeLayout>
@@ -27,32 +28,14 @@ function Favorites() {
 
         {/* Favorites Section */}
         {favorites && favorites.length > 0 ? (
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Section Heading */}
-            <div className="flex items-center gap-3 mb-8">
-              <FaHeart className="text-orange-500 text-2xl" />
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800">
-                Saved Recipes
-              </h2>
-            </div>
-
+          <div className="container mx-auto sm:px-6 lg:px-8">
             <div
               className="
-                flex flex-wrap justify-start gap-8
+                flex flex-wrap
               "
             >
               {favorites.map((recipe) => (
-                <div
-                  key={recipe._id}
-                  className="
-                    flex justify-center
-                    w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.33%-1rem)] xl:w-[calc(25%-1rem)]
-                    max-w-[320px]
-                    h-[560px]
-                  "
-                >
-                  <RecipeCard recipe={recipe} />
-                </div>
+                <RecipeCard key={recipe._id} recipe={recipe} />
               ))}
             </div>
           </div>
@@ -68,7 +51,7 @@ function Favorites() {
             </h3>
 
             <p className="text-gray-600 max-w-md flex flex-wrap justify-center items-center gap-1">
-              You haven’t saved any recipes yet. Explore and tap the
+              You haven&apos;t saved any recipes yet. Explore and tap the
               <FaHeart className="text-pink-500 inline-block mx-1" />
               to save your favorite dishes!
             </p>
