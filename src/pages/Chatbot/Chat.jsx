@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { FaPaperPlane, FaRobot, FaUser, FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaPaperPlane, FaRobot, FaUser } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import generateResponseApi from "../../apis/chatbot/generateResponseApi";
 
 const ChatbotPage = () => {
+  const { userData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [messages, setMessages] = useState([
     {
@@ -25,7 +27,7 @@ const ChatbotPage = () => {
   const quickSuggestions = [
     "Search indian chicken recipes",
     "Find veg high protein recipes",
-    "Search punjabi recipes",
+    "Search italian recipes",
     "Find recipes that I can make with eggs?",
   ];
 
@@ -33,21 +35,9 @@ const ChatbotPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  const toInputItems = (msgs) =>
-    msgs.map((m) => ({
-      type: "message",
-      role: m.type === "assistant" ? "assistant" : "user",
-      content: [
-        {
-          type: m.type === "assistant" ? "output_text" : "input_text",
-          text: String(m.content),
-        },
-      ],
-    }));
-
-
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
+    setIsLoading(true);
 
     const userMessage = {
       id: uuidv4(),
@@ -56,14 +46,10 @@ const ChatbotPage = () => {
       timestamp: new Date(),
       recipes: [],
     };
-
-    setMessages((prev) => [...prev, userMessage]);
+    
     setInputMessage("");
-    setIsLoading(true);
-
-    const chatHistory = toInputItems([...messages, userMessage]);
-    const response = await generateResponseApi(chatHistory);
-    console.log(response?.data?.recipes.isPremium)
+    setMessages((prev) => [...prev, userMessage]);
+    const response = await generateResponseApi(userMessage.content);
 
     const botMessage = {
       id: uuidv4(),
@@ -86,6 +72,17 @@ const ChatbotPage = () => {
     }
   };
 
+  function modifyCloudinaryURL(url) {
+    if (url === "" || url === null) return "";
+    if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
+      return url.replace(
+        "/upload/",
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+      );
+    }
+    return url;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex flex-col">
       {/* Header with Back Button */}
@@ -105,12 +102,14 @@ const ChatbotPage = () => {
             <FaRobot className="text-orange-500" />
             BiteBot
           </h1>
-          <p className="text-sm text-gray-500 mt-1">Discover. Cook. Impress. Repeat</p>
-        <span className="badge badge-sm badge-warning align-middle mr-1 bg-orange-500 text-white">BETA</span>
+          <p className="text-sm text-gray-500 mt-1">
+            Discover. Cook. Impress. Repeat
+          </p>
+          <span className="badge badge-sm badge-warning align-middle mr-1 bg-orange-500 text-white">
+            BETA
+          </span>
         </div>
       </header>
-
-
 
       {/* Chat Container */}
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-[14rem] pt-4">
@@ -118,32 +117,46 @@ const ChatbotPage = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
-                }`}
+              className={`flex ${
+                msg.type === "user" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
-                className={`flex gap-3 max-w-[80%] ${msg.type === "user" ? "flex-row-reverse" : ""
-                  }`}
+                className={`flex gap-3 max-w-[80%] ${
+                  msg.type === "user" ? "flex-row-reverse" : ""
+                }`}
               >
                 {/* Avatar */}
                 <div className="flex-shrink-0">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${msg.type === "user"
-                      ? "bg-gradient-to-br from-orange-500 to-amber-600"
-                      : "bg-gradient-to-br from-gray-600 to-gray-800"
-                      }`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${
+                      msg.type === "user"
+                        ? "bg-gradient-to-br from-orange-500 to-amber-600"
+                        : "bg-gradient-to-br from-gray-600 to-gray-800"
+                    }`}
                   >
-                    {msg.type === "user" ? <FaUser /> : <FaRobot />}
+                    {msg.type === "user" ? (
+                      <img
+                        src={modifyCloudinaryURL(
+                          userData?.profile?.avatar?.secure_url
+                        )}
+                        alt="user avatar"
+                        className="w-9 h-9 rounded-full object-cover"
+                      />
+                    ) : (
+                      <FaRobot />
+                    )}
                   </div>
                 </div>
 
                 {/* Message Bubble */}
                 <div>
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${msg.type === "user"
-                      ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white"
-                      : "bg-white text-gray-800 border border-gray-200"
-                      }`}
+                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${
+                      msg.type === "user"
+                        ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white"
+                        : "bg-white text-gray-800 border border-gray-200"
+                    }`}
                   >
                     {msg.content}
                   </div>
@@ -152,21 +165,11 @@ const ChatbotPage = () => {
                   {msg.recipes?.length > 0 && (
                     <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {msg.recipes.map((recipe) => {
-                        const isPremium = recipe.isPremium || recipe.premium || false;
                         return (
                           <div
                             key={recipe._id}
                             className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative"
                           >
-                            {/* Premium Badge */}
-                            {isPremium && (
-                              <div className="absolute top-2 right-2 z-10">
-                                <span className="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
-                                  PREMIUM
-                                </span>
-                              </div>
-                            )}
-
                             <img
                               src={recipe.thumbnail?.secure_url}
                               alt={recipe.title}
@@ -181,13 +184,12 @@ const ChatbotPage = () => {
                                   {recipe.cuisine}
                                 </span>
                                 <button
-                                  onClick={() => navigate(`/recipe/${recipe._id}`)}
-                                  className={`text-xs px-3 py-1 rounded-full hover:scale-105 transition-transform ${isPremium
-                                    ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700"
-                                    : "bg-orange-500 text-white hover:bg-orange-600 cursor-pointer"
-                                    }`}
+                                  onClick={() =>
+                                    navigate(`/recipe/${recipe._id}`)
+                                  }
+                                  className="not-[]:text-xs px-3 py-1 rounded-full hover:scale-105 transition-transform bg-orange-500 text-white hover:bg-orange-600 cursor-pointer"
                                 >
-                                  {isPremium ? "Unlock" : "View"}
+                                  View
                                 </button>
                               </div>
                             </div>
@@ -257,10 +259,11 @@ const ChatbotPage = () => {
             <button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isLoading}
-              className={`p-3 rounded-full transition-all ${inputMessage.trim() && !isLoading
-                ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
+              className={`p-3 rounded-full transition-all ${
+                inputMessage.trim() && !isLoading
+                  ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -270,9 +273,9 @@ const ChatbotPage = () => {
             </button>
           </div>
 
-            
           <p className="text-xs text-gray-400 text-center mt-2">
-            Press <kbd className="kbd kbd-xs">Enter</kbd> to send • BiteBot may occasionally provide inaccurate information
+            Press <kbd className="kbd kbd-xs">Enter</kbd> to send • BiteBot may
+            occasionally provide inaccurate information
           </p>
         </div>
       </div>
