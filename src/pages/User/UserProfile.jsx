@@ -4,8 +4,11 @@ import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
+import { useSelector } from "react-redux";
 
 function UserProfile({ profileData }) {
+  const { userData } = useSelector((state) => state.auth);
+
   function modifyCloudinaryURL(url) {
     if (url === "" || url === null) return "";
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
@@ -17,9 +20,11 @@ function UserProfile({ profileData }) {
     return url;
   }
 
+  const isOwnProfile = userData?._id === profileData?._id;
+
   return (
     <>
-      <EditProfileDialog profileData={profileData} />
+      {isOwnProfile && <EditProfileDialog profileData={profileData} />}
       <HomeLayout>
         <div className="relative min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
           {/* ✨ Ambient blobs */}
@@ -80,7 +85,8 @@ function UserProfile({ profileData }) {
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex gap-3">
+                    {isOwnProfile && (
+                    <div className="flex justify-center md:justify-end w-full md:w-auto mt-4 md:mt-0">
                       <button
                         className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
                         onClick={() =>
@@ -91,6 +97,7 @@ function UserProfile({ profileData }) {
                         <span className="hidden sm:inline">Edit Profile</span>
                       </button>
                     </div>
+                    )}
                   </div>
                 </div>
               </div>

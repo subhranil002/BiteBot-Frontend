@@ -111,21 +111,20 @@ function RecipeDetail() {
               <button
                 onClick={() => toggleFav()}
                 disabled={loading}
-                className={`absolute top-4 right-4 btn btn-circle ${
-                  isFav
+                className={`absolute top-4 right-4 btn btn-circle ${isFav
                     ? "bg-rose-500 text-white border-none"
                     : "bg-white/80 text-gray-700 border-none hover:bg-white"
-                }`}
+                  }`}
               >
                 <FaHeart className="w-5 h-5" />
               </button>
 
-              <div className="hero-content text-start bg-black text-white absolute bottom-8 left-6 sm:left-10">
-                <div className="max-w-lg">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold">
+              <div className="hero-content text-start absolute bottom-6 left-4 sm:bottom-10 sm:left-10 bg-gradient-to-t from-black/80 via-black/60 to-transparent text-white p-5 sm:p-6 rounded-xl max-w-lg shadow-lg backdrop-blur-sm">
+                <div>
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight drop-shadow-md">
                     {recipe.title}
                   </h1>
-                  <p className="text-sm sm:text-base mt-1">
+                  <p className="text-sm sm:text-base mt-2 text-gray-100">
                     {recipe.description}
                   </p>
                 </div>
@@ -221,9 +220,9 @@ function RecipeDetail() {
                     <h3 className="card-title text-gray-800">Ingredients</h3>
 
                     <p className="text-sm text-gray-500">
-                      Estimated cost: ${cost?.total?.toFixed(2) ?? "0.00"}
+                      Estimated cost: ₹{cost?.total?.toFixed(2) ?? "0.00"}
                       {cost?.perServing > 0 &&
-                        ` ($${cost?.perServing?.toFixed(2)} per serving)`}
+                        ` (₹${cost?.perServing?.toFixed(2)} per serving)`}
                     </p>
 
                     <div className="overflow-x-auto">
@@ -243,7 +242,7 @@ function RecipeDetail() {
                                 {ing.quantity} {ing.unit}
                               </td>
                               <td className="text-right text-gray-500">
-                                $
+                                ₹
                                 {(
                                   (Number(ing.quantity) || 0) *
                                   (Number(ing.marketPrice) || 0)
@@ -351,8 +350,8 @@ function RecipeDetail() {
                             <p className="text-xs text-gray-500 mt-1">
                               {review.createdAt
                                 ? new Date(
-                                    review.createdAt
-                                  ).toLocaleDateString()
+                                  review.createdAt
+                                ).toLocaleDateString()
                                 : ""}
                             </p>
                           </div>

@@ -1,10 +1,11 @@
 // import { useState } from "react";
 import {
   FaBars,
+  FaEnvelope,
   FaFire,
   FaHeart,
   FaHome,
-//   FaSearch,
+  //   FaSearch,
   FaSeedling,
   FaSignOutAlt,
   FaTachometerAlt,
@@ -19,14 +20,14 @@ import { logout } from "../redux/slices/authSlice";
 function Navbar({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-//   const [searchTerm, setSearchTerm] = useState("");
+  //   const [searchTerm, setSearchTerm] = useState("");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
 
-//   const handleSearch = (e) => {
-//     e?.preventDefault();
-//     if (!searchTerm.trim()) return;
-//     navigate(`/search?q=${searchTerm.trim()}`);
-//   };
+  //   const handleSearch = (e) => {
+  //     e?.preventDefault();
+  //     if (!searchTerm.trim()) return;
+  //     navigate(`/search?q=${searchTerm.trim()}`);
+  //   };
 
   const handleLogout = async () => {
     const res = await dispatch(logout());
@@ -281,13 +282,15 @@ function Navbar({ children }) {
             </Link>
 
             <Link
-              to="/healthy"
-              className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 border border-emerald-200 text-base-content transition-all duration-300 group shadow-sm"
+              to="/contact"
+              className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                <FaSeedling className="w-4 h-4 text-white" />
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                <FaEnvelope className="w-5 h-5 text-white group-hover:text-yellow-100 transition-colors duration-300" />
               </div>
-              <span className="font-semibold text-base">Healthy</span>
+              <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">
+                Contact Us
+              </span>
             </Link>
           </nav>
         </aside>

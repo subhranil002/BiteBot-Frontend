@@ -1,11 +1,8 @@
 import {
     FaCookie,
-    FaEnvelope,
-    FaFire,
     FaGithub,
     FaHeart,
     FaInstagram,
-    FaSeedling,
     FaTwitter,
     FaUtensils,
 } from "react-icons/fa";
@@ -37,16 +34,6 @@ function Footer() {
                             recipes, cooking tips, and creating unforgettable
                             meals.
                         </p>
-                        <div className="flex flex-wrap gap-4">
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                                <FaFire className="text-orange-500" />
-                                <span>Trending Recipes</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                                <FaSeedling className="text-emerald-500" />
-                                <span>Healthy Options</span>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Quick Links Section */}
@@ -82,14 +69,6 @@ function Footer() {
                                     Trending Recipes
                                 </span>
                             </li>
-                            <li>
-                                <span
-                                    className="text-gray-600 hover:text-emerald-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
-                                >
-                                    <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 group-hover:bg-emerald-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Healthy Options
-                                </span>
-                            </li>
                         </ul>
                     </nav>
 
@@ -111,15 +90,6 @@ function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    to="/contact"
-                                    className="text-gray-600 hover:text-teal-600 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-teal-400 rounded-full mr-3 group-hover:bg-teal-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Support
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
                                     to="/privacy"
                                     className="text-gray-600 hover:text-violet-600 transition-all duration-300 flex items-center group font-medium"
                                 >
@@ -129,62 +99,24 @@ function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    to="/terms"
+                                    to="/contact"
                                     className="text-gray-600 hover:text-indigo-600 transition-all duration-300 flex items-center group font-medium"
                                 >
                                     <span className="w-2 h-2 bg-indigo-400 rounded-full mr-3 group-hover:bg-indigo-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Terms of Service
+                                    Contact Us
                                 </Link>
                             </li>
                         </ul>
                     </nav>
 
-                    {/* Newsletter & Social */}
+                    {/* Social */}
                     <aside className="space-y-4 md:col-span-2 lg:col-span-1">
-                        {/* <h3 className="text-lg font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent flex items-center gap-2">
-                            <FaEnvelope className="w-4 h-4" />
-                            Stay Connected
-                        </h3> */}
-
-                        {/* Newsletter signup */}
-                        {/* <form
-                            className="space-y-3"
-                            onSubmit={(e) => e.preventDefault()}
-                        >
-                            <fieldset className="w-full">
-                                <label className="label p-0 mb-2">
-                                    <span className="label-text text-sm text-gray-600 font-medium">
-                                        Get weekly recipe inspiration
-                                    </span>
-                                </label>
-
-                                <div className="flex flex-col lg:flex-row gap-3">
-                                    <input
-                                        type="email"
-                                        placeholder="Your email address"
-                                        onChange={() => { }}
-                                        className="flex-grow bg-white border-2 border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none transition-all duration-300 text-gray-800 placeholder-gray-400 py-3 px-4 rounded-xl text-sm shadow-inner hover:border-orange-300"
-                                        required
-                                        aria-label="Email address"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="btn bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 border-0 text-white py-3 px-4 lg:px-3 mr-1 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg shadow-orange-300/40 whitespace-nowrap lg:w-auto w-full flex items-center justify-center gap-2"
-                                        aria-label="Subscribe to newsletter"
-                                    >
-                                        <FaEnvelope className="w-4 h-4" />
-                                        <span className="lg:inline">Subscribe</span>
-                                    </button>
-                                </div>
-                            </fieldset>
-                        </form> */}
-
                         {/* Social links */}
-                        <div className="space-y-2">
-                            <p className="text-sm text-gray-600 font-medium">
+                        <div className="space-y-2 flex flex-col  ">
+                            <p className="text-sm text-gray-600 font-medium text-center">
                                 Follow us
                             </p>
-                            <div className="flex gap-3 justify-center lg:justify-start">
+                            <div className="flex gap-3 justify-center">
                                 <a
                                     href="#"
                                     className="p-3 bg-white backdrop-blur-sm rounded-xl border-2 border-orange-200 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
@@ -212,34 +144,13 @@ function Footer() {
                 </div>
 
                 {/* Bottom section */}
-                <div className="w-full border-t border-orange-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+                <div className="w-full border-t border-orange-200 pt-6 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
                     <div className="flex items-center justify-center md:justify-start gap-4 text-sm w-full md:w-auto">
                         <p className="flex items-center gap-2 text-gray-600 font-medium">
                             © {new Date().getFullYear()} BiteBot. Crafted with
                             <FaHeart className="inline w-4 h-4 text-red-500 animate-pulse" />
                             for food lovers
                         </p>
-                    </div>
-
-                    <div className="flex items-center gap-6 text-sm flex-wrap justify-center w-full md:w-auto">
-                        <Link
-                            to="/privacy"
-                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
-                        >
-                            Privacy
-                        </Link>
-                        <Link
-                            to="/terms"
-                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
-                        >
-                            Terms
-                        </Link>
-                        <Link
-                            to="/contact"
-                            className="text-gray-500 hover:text-orange-600 transition-colors duration-300 font-medium"
-                        >
-                            Contact
-                        </Link>
                     </div>
                 </div>
 

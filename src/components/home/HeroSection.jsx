@@ -1,4 +1,4 @@
-import { FaComments, FaHeart, FaSearch } from "react-icons/fa";
+import { FaComments, FaHeart, FaSearch, FaRupeeSign } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => (
@@ -86,11 +86,15 @@ const HeroSection = () => (
                   </div>
                 </div>
               </div>
-              <div className="flex justify-end items-center gap-2 text-sm mt-2">
-                <span className="font-bold text-orange-600">$14.75</span>
+              <div className="flex justify-end items-center gap-3 text-sm mt-2">
+                <span className="flex items-center font-bold text-orange-600 gap-1">
+                  <FaRupeeSign className="text-base" />
+                  500
+                </span>
                 <span className="text-gray-400">•</span>
                 <span className="text-amber-600">320 calories</span>
               </div>
+
             </div>
           </div>
         </div>

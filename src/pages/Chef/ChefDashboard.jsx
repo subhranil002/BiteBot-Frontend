@@ -45,7 +45,7 @@ const MOCK_USER = {
                 _id: "r101",
                 title: "Paneer Tikka Masala",
                 thumbnail: {
-                    secure_url: "https://images.unsplash.com/photo-1626082927389-6f8a2a3cfcb9f?w=800&q=60"
+                    secure_url: "https://recipes.timesofindia.com/thumb/54408184.cms?imgsize=148310&width=800&height=800"
                 },
                 description: "Grilled paneer cubes simmered in rich, spiced tomato gravy.",
                 isPremium: true,
@@ -62,9 +62,9 @@ const MOCK_USER = {
                 _id: "r102",
                 title: "Chocolate Lava Cake",
                 thumbnail: {
-                    secure_url: "https://images.unsplash.com/photo-1601972599720-b7a2a2d42a4?w=800&q=60"
+                    secure_url: "https://tse2.mm.bing.net/th/id/OIP.mD9uvqMGLhaAxor-MWFSiQHaKX?rs=1&pid=ImgDetMain&o=7&rm=3"
                 },
-                description: "Decadent molten chocolate cake served warm with vanilla ice cream.",
+                description: " vanilla ice cream.",
                 isPremium: false,
                 servings: 2,
                 cuisine: "French",
@@ -79,7 +79,7 @@ const MOCK_USER = {
                 _id: "r103",
                 title: "Mango Lassi Smoothie",
                 thumbnail: {
-                    secure_url: "https://images.unsplash.com/photo-1627308595121-8879f36a1eeb?w=800&q=60"
+                    secure_url: "https://tse2.mm.bing.net/th/id/OIP.rQSjsk71q8SFuYx22ioqNwHaIo?rs=1&pid=ImgDetMain&o=7&rm=3"
                 },
                 description: "Refreshing and sweet mango yogurt drink perfect for summer.",
                 isPremium: false,
@@ -237,15 +237,15 @@ const ChefDashboard = () => {
                     </div>
 
                     {/* Recipes Section */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div>
+                            <div className="text-center sm:text-left">
                                 <h2 className="text-2xl font-bold text-gray-800">Your Top Recipes</h2>
                                 <p className="text-gray-600">Manage and track your recipe performance</p>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex justify-center sm:justify-end">
                                 <button
-                                    className="btn btn-neutral gap-2"
+                                    className="btn btn-neutral w-full sm:w-auto gap-2"
                                     onClick={() => navigate("/recipe/add")}
                                 >
                                     <FaPlus className="w-4 h-4" />
@@ -255,26 +255,32 @@ const ChefDashboard = () => {
                         </div>
 
                         {chefProfile.recipes.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="flex flex-wrap justify-center gap-6 ">
                                 {chefProfile.recipes.map((recipe) => (
-                                    <div key={recipe._id} className="card pt-3 bg-base-100 shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-300 group">
-                                        <div className="card-body p-0">
+                                    <div
+                                        key={recipe._id}
+                                        className="w-full sm:w-[48%] lg:w-[30%] flex flex-col items-center"
+                                    >
+                                        {/* Fix overflow and center the card */}
+                                        <div className="w-full flex justify-center overflow-hidden">
                                             <RecipeCard recipe={recipe} />
-                                            <div className="p-4 border-t border-orange-100">
-                                                <div className="flex items-center justify-between text-sm mb-3">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className={`badge ${recipe.isPremium ? 'badge-primary' : 'badge-ghost'}`}>
-                                                            {recipe.isPremium ? 'Premium' : 'Free'}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <FaHeart className="w-4 h-4 text-rose-400" />
-                                                        <span className="font-medium">{recipe.likes}</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <FaStar className="w-4 h-4 text-yellow-400" />
-                                                        <span className="font-medium">{recipe.averageRating}</span>
-                                                    </div>
+                                        </div>
+
+                                        {/* Footer area */}
+                                        <div className="w-full p-4 border-t border-orange-100 mt-4 bg-base-100 shadow-sm rounded-lg">
+                                            <div className="flex justify-between text-sm">
+                                                <span
+                                                    className={`badge ${recipe.isPremium ? "badge-primary" : "badge-ghost"}`}
+                                                >
+                                                    {recipe.isPremium ? "Premium" : "Free"}
+                                                </span>
+                                                <div className="flex items-center gap-1">
+                                                    <FaHeart className="w-4 h-4 text-rose-400" />
+                                                    <span className="font-medium">{recipe.likes}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <FaStar className="w-4 h-4 text-yellow-400" />
+                                                    <span className="font-medium">{recipe.averageRating}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -285,7 +291,9 @@ const ChefDashboard = () => {
                             <div className="card bg-base-100 shadow-xl text-center py-12">
                                 <FaUtensils className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                                 <h3 className="text-xl font-bold text-gray-700 mb-2">No recipes yet</h3>
-                                <p className="text-gray-500 mb-6">Start creating amazing recipes to build your subscriber base</p>
+                                <p className="text-gray-500 mb-6">
+                                    Start creating amazing recipes to build your subscriber base
+                                </p>
                                 <button
                                     className="btn btn-primary gap-2"
                                     onClick={() => navigate("/recipe/add")}
@@ -295,7 +303,9 @@ const ChefDashboard = () => {
                                 </button>
                             </div>
                         )}
+
                     </div>
+
 
                     {/* Additional Info Section */}
                     <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
