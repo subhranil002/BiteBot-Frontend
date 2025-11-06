@@ -52,7 +52,7 @@ const RecipeCarousel = ({ title, recipes }) => {
       {/* Carousel */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto scroll-smooth w-screen"
+        className="flex overflow-x-auto scroll-smooth"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",

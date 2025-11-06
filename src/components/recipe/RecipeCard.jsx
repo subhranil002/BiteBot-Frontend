@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  FaBolt,
-  FaHeart,
-  FaLock,
-  FaUsers,
-  FaUtensils,
-} from "react-icons/fa";
+import { FaBolt, FaHeart, FaLock, FaUsers, FaUtensils } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
 
 const RecipeCard = ({ recipe }) => {
   const { userData } = useSelector((state) => state.auth);
@@ -17,9 +13,13 @@ const RecipeCard = ({ recipe }) => {
   );
   const navigate = useNavigate();
   const [unlocked, setUnlocked] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const toggleFav = () => {
+  const toggleFav = async () => {
+    setLoading(true);
+    await favouriteToggleApi(recipe._id);
     setIsFav(!isFav);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -71,6 +71,7 @@ const RecipeCard = ({ recipe }) => {
           {/* Favorite button */}
           <button
             onClick={() => toggleFav()}
+            disabled={loading}
             className={`absolute top-4 right-4 btn btn-circle rounded-full border transition-all duration-300 hover:scale-110 backdrop-blur-md ${
               isFav
                 ? "bg-gradient-to-br from-rose-500 to-red-400 text-white border-red-300 shadow-lg"

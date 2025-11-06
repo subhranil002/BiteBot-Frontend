@@ -1,14 +1,20 @@
+import { useEffect, useState } from "react";
 import { FaHeart, FaUtensils } from "react-icons/fa";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import getFavouritesApi from "../../apis/user/getFavouritesApi";
 import RecipeCard from "../../components/recipe/RecipeCard";
 import HomeLayout from "../../layouts/HomeLayout";
 
 function Favourites() {
-  const { userData } = useSelector((state) => state.auth);
+  const [favourites, setFavourites] = useState([]);
 
-  const favourites = userData?.favourites;
+  useEffect(() => {
+    (async () => {
+      const res = await getFavouritesApi();
+      setFavourites(res.data);
+    })();
+  }, []);
 
   return (
     <HomeLayout>
@@ -28,10 +34,10 @@ function Favourites() {
 
         {/* Favourites Section */}
         {favourites && favourites.length > 0 ? (
-          <div className="container mx-auto sm:px-6 lg:px-8">
+          <div className="container mx-auto sm:px-6 lg:px-8 flex justify-center">
             <div
               className="
-                flex flex-wrap
+                grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
               "
             >
               {favourites.map((recipe) => (

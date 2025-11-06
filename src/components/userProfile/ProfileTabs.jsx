@@ -13,8 +13,6 @@ function ProfileTabs({ profileData }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("subscribed");
 
-  const handleUnsubscribe = () => {};
-
   const tabs = [
     { key: "subscribed", label: "Subscribed", icon: FaUsers },
     { key: "reviews", label: "Reviews Given", icon: FaRegClock },
@@ -98,7 +96,7 @@ function ProfileTabs({ profileData }) {
                           </button>
                           <button
                             className="btn btn-sm border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-300 gap-2"
-                            onClick={() => handleUnsubscribe(chef._id)}
+                            onClick={() => navigate(`/profile/${chef._id}`)}
                           >
                             <FaUserMinus className="w-3 h-3" />
                             Unsubscribe

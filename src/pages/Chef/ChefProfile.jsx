@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaBriefcase,
   FaCalendarAlt,
@@ -10,14 +11,17 @@ import {
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
+import subscribeApi from "../../apis/user/subscribeApi";
+import unsubscribeApi from "../../apis/user/unsubscribeApi";
 import RecipeCard from "../../components/recipe/RecipeCard";
 import HomeLayout from "../../layouts/HomeLayout";
 
 const ChefProfile = ({ profileData }) => {
   const { userData } = useSelector((state) => state.auth);
-  const subscribed = userData?.profile?.subscribed?.filter(
-    (chef) => chef._id === profileData._id
+  const [subscribed, setSubscribed] = useState(
+    userData?.profile?.subscribed?.some((chef) => chef._id === profileData._id)
   );
+  const [loading, setLoading] = useState(false);
 
   const getAverageRating = () => {
     const recipes = profileData?.chefProfile?.recipes;
@@ -66,6 +70,22 @@ const ChefProfile = ({ profileData }) => {
     }
     return url;
   }
+
+  const subscribeToggle = async () => {
+    setLoading(true);
+    if (!subscribed) {
+      const res = await subscribeApi(profileData._id);
+      if (res.success) {
+        setSubscribed(!subscribed);
+      }
+    } else {
+      const res = await unsubscribeApi(profileData._id);
+      if (res.success) {
+        setSubscribed(!subscribed);
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <HomeLayout>
@@ -168,22 +188,24 @@ const ChefProfile = ({ profileData }) => {
             </div>
 
             {/* Subscribe / message */}
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => {}}
-                disabled={subscribed?.length === 0}
-                className={`btn gap-2 ${
-                  subscribed?.length > 0
-                    ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
-                    : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
-                }`}
-              >
-                <FaHeart />
-                {subscribed?.length > 0
-                  ? "Subscribed"
-                  : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
-              </button>
-            </div>
+            {userData?._id !== profileData?._id && (
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => subscribeToggle()}
+                  disabled={loading}
+                  className={`btn gap-2 ${
+                    subscribed
+                      ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
+                      : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
+                  }`}
+                >
+                  <FaHeart />
+                  {subscribed
+                    ? "Subscribed"
+                    : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Stats */}
@@ -241,15 +263,17 @@ const ChefProfile = ({ profileData }) => {
 
           {/* Recipes */}
           <div className="card bg-base-100 shadow">
-            <div className="card-body">
-              <h3 className="card-title text-gray-800">
+            <div className="card-body p-0">
+              <h3 className="card-title text-gray-800 pt-5 pl-5">
                 <FaUtensils className="text-orange-500" />
                 Recipes by {profileData?.profile?.name}
               </h3>
               {profileData?.chefProfile?.recipes?.length ? (
-                <div className="flex flex-wrap">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {profileData?.chefProfile?.recipes.map((recipe) => (
-                    <RecipeCard key={recipe._id} recipe={recipe} />
+                    <div className="flex justify-center">
+                      <RecipeCard key={recipe._id} recipe={recipe} />
+                    </div>
                   ))}
                 </div>
               ) : (

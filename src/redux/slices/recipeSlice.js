@@ -20,7 +20,7 @@ export const getRecipeById = createAsyncThunk(
 );
 
 const recipeSlice = createSlice({
-  name: "auth",
+  name: "recipe",
   initialState,
   reducers: {
     resetRecipe: (state) => {

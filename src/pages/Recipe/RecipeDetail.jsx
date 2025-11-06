@@ -4,6 +4,7 @@ import { FaClock, FaHeart, FaStar, FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
 import HomeLayout from "../../layouts/HomeLayout";
 import { getRecipeById, resetRecipe } from "../../redux/slices/recipeSlice";
 
@@ -21,6 +22,7 @@ function RecipeDetail() {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -64,7 +66,12 @@ function RecipeDetail() {
     setStats({ averageRating: Number(avg.toFixed(1)), reviewCount: count });
   }, [recipe]);
 
-  const handleLike = () => setIsFav((s) => !s);
+  const toggleFav = async () => {
+    setLoading(true);
+    await favouriteToggleApi(recipe._id);
+    setIsFav(!isFav);
+    setLoading(false);
+  };
 
   if (!recipe) return "Loading...";
 
@@ -102,7 +109,8 @@ function RecipeDetail() {
 
               {/* Like Button in Hero */}
               <button
-                onClick={handleLike}
+                onClick={() => toggleFav()}
+                disabled={loading}
                 className={`absolute top-4 right-4 btn btn-circle ${
                   isFav
                     ? "bg-rose-500 text-white border-none"
