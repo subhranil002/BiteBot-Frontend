@@ -1,25 +1,29 @@
 // import { useState } from "react";
 import {
   FaBars,
+  FaBolt,
+  FaCrown,
   FaEnvelope,
   FaFire,
   FaHeart,
   FaHome,
   //   FaSearch,
-  FaSeedling,
   FaSignOutAlt,
   FaTachometerAlt,
   FaUser,
   FaUtensils,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "../redux/slices/authSlice";
+import { GiHerbsBundle } from "react-icons/gi";
 
 function Navbar({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   //   const [searchTerm, setSearchTerm] = useState("");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
 
@@ -29,10 +33,18 @@ function Navbar({ children }) {
   //     navigate(`/search?q=${searchTerm.trim()}`);
   //   };
 
+  const handleScroll = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const handleLogout = async () => {
     const res = await dispatch(logout());
     if (res?.payload?.success) navigate("/login");
   };
+
 
   function modifyCloudinaryURL(url) {
     if (url === "" || url === null) return "";
@@ -78,7 +90,7 @@ function Navbar({ children }) {
                           BiteBot
                         </span>
                         <span className="text-xs text-gray-600 font-normal">
-                          Taste the Difference
+                          Discover. Cook. Impress. Repeat
                         </span>
                       </div>
                     </div>
@@ -216,25 +228,37 @@ function Navbar({ children }) {
         {children}
       </div>
 
-      {/* Drawer Menu */}
       <div className="drawer-side z-50">
         <label htmlFor="navbar-drawer" className="drawer-overlay"></label>
-        <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-gradient-to-b from-white to-orange-50/30 text-gray-900">
-          {/* Drawer Header */}
-          <div className="flex items-center gap-3 mb-8 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-200">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
-              <FaUtensils className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="font-bold text-xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                BiteBot
-              </h2>
-              <p className="text-xs text-gray-600">Culinary Companion</p>
-            </div>
-          </div>
+        <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-gradient-to-b from-white to-orange-50/30 text-gray-900 flex flex-col justify-between">
 
-          {/* Mobile Search */}
-          {/* <form
+          {/* Drawer Header */}
+          <div>
+            <div className="flex items-center gap-3 mb-8 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-200">
+              <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 border-2 border-orange-500">
+                <img
+                  src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
+                  alt="Bite Bot"
+                />
+              </div>
+              <div>
+                <h2 className="font-bold text-xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                  BiteBot
+                </h2>
+                <p className="text-xs text-gray-600">Discover. Cook. Impress. Repeat</p>
+              </div>
+            </div>
+
+            {/* Main Navigation */}
+            <nav className="flex flex-col gap-3 mb-8">
+              <div className="px-2">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                  Main Menu
+                </h3>
+              </div>
+
+              {/* Mobile Search */}
+              {/* <form
             onSubmit={handleSearch}
             className="mb-6 lg:hidden"
             role="search"
@@ -251,50 +275,102 @@ function Navbar({ children }) {
             </div>
           </form> */}
 
-          {/* Main Navigation */}
-          <nav className="flex flex-col gap-3 mb-8">
-            {/* Header */}
-            <div className="px-2">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                Main Menu
-              </h3>
-            </div>
+              {/* Navigation Links */}
+              <Link
+                to="/"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border border-orange-200 text-base-content transition-all duration-300 group shadow-sm"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                  <FaHome className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-base">Home</span>
+              </Link>
+              {isHome && (
+                <>
+                  <button
+                    onClick={() => handleScroll("trending")}
+                    className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                      <FaFire className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-semibold text-base">Trending</span>
+                  </button>
 
-            {/* Navigation Links */}
-            <Link
-              to="/"
-              className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border border-orange-200 text-base-content transition-all duration-300 group shadow-sm"
-            >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                <FaHome className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-base">Home</span>
-            </Link>
+                  {/* 🌿 Fresh & New */}
+                  <button
+                    onClick={() => handleScroll("fresh")}
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                      <GiHerbsBundle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">
+                      Fresh & New
+                    </span>
+                  </button>
 
-            <Link
-              to="/trending"
-              className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
-            >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                <FaFire className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-base">Trending</span>
-            </Link>
+                  {/* 👤 Recommended */}
+                  <button
+                    onClick={() => handleScroll("for-you")}
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 border border-pink-200 text-base-content transition-all duration-300 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                      <FaUser className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-semibold text-base group-hover:text-pink-700 transition-colors duration-300">
+                      Recommended for You
+                    </span>
+                  </button>
 
+                  {/* ⚡ Quick & Easy */}
+                  <button
+                    onClick={() => handleScroll("quick")}
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 border border-green-200 text-base-content transition-all duration-300 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                      <FaBolt className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-semibold text-base group-hover:text-green-700 transition-colors duration-300">
+                      Quick & Easy
+                    </span>
+                  </button>
+
+                  {/* 👑 Premium Picks */}
+                  <button
+                    onClick={() => handleScroll("premium")}
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-amber-50 border border-yellow-200 text-base-content transition-all duration-300 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                      <FaCrown className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="font-semibold text-base group-hover:text-yellow-700 transition-colors duration-300">
+                      Premium Picks
+                    </span>
+                  </button>
+                </>
+              )}
+            </nav>
+          </div>
+
+          {/* Contact Us */}
+          <div className="border-t border-orange-200 pt-4 mt-auto">
             <Link
               to="/contact"
-              className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
+              className="btn btn-ghost btn-lg w-full justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
             >
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                <FaEnvelope className="w-5 h-5 text-white group-hover:text-yellow-100 transition-colors duration-300" />
+                <FaEnvelope className="w-5 h-5 text-white" />
               </div>
               <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">
                 Contact Us
               </span>
             </Link>
-          </nav>
+          </div>
         </aside>
       </div>
+
     </div>
   );
 }

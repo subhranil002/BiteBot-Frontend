@@ -45,7 +45,7 @@ function RecipeCarousels() {
     <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
       {/* For You */}
       {recommendedForYou && (
-        <section className="space-y-6">
+        <section className="space-y-6" id="for-you">
           <div className="px-1 sm:px-2">
             <RecipeCarousel
               title={
@@ -65,7 +65,7 @@ function RecipeCarousels() {
 
       {/* Trending */}
       {trendingNow && (
-        <section className="space-y-6">
+        <section className="space-y-6" id="trending">
           <div className="sm:px-2">
             <RecipeCarousel
               title={
@@ -85,7 +85,7 @@ function RecipeCarousels() {
 
       {/* New Recipes */}
       {freshAndNew && (
-        <section className="space-y-6">
+        <section className="space-y-6" id="fresh">
           <div className="px-1 sm:px-2">
             <RecipeCarousel
               title={
@@ -105,7 +105,7 @@ function RecipeCarousels() {
 
       {/* Quick & Easy */}
       {quickAndEasy && (
-        <section className="space-y-6">
+        <section className="space-y-6" id="quick">
           <div className="px-1 sm:px-2">
             <RecipeCarousel
               title={
@@ -125,7 +125,7 @@ function RecipeCarousels() {
 
       {/* Premium */}
       {premiumPicks && (
-        <section className="space-y-6">
+        <section className="space-y-6" id="premium">
           <div className="px-1 sm:px-2">
             <RecipeCarousel
               title={

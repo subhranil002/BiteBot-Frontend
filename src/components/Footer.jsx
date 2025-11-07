@@ -17,15 +17,19 @@ function Footer() {
                     {/* Brand Section */}
                     <div className="space-y-4 md:col-span-2 lg:col-span-1">
                         <Link to="/" className="flex items-center gap-3 group">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-                                <FaUtensils className="w-6 h-6 text-white" />
+                            <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 border-2 border-orange-500">
+                                <img
+                                    src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
+                                    alt="Bite Bot"
+                                />
                             </div>
+
                             <div>
                                 <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                                     BiteBot
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                    Taste the Difference
+                                    Discover. Cook. Impress. Repeat
                                 </p>
                             </div>
                         </Link>

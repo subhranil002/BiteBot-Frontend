@@ -112,23 +112,29 @@ function RecipeDetail() {
                 onClick={() => toggleFav()}
                 disabled={loading}
                 className={`absolute top-4 right-4 btn btn-circle ${isFav
-                    ? "bg-rose-500 text-white border-none"
-                    : "bg-white/80 text-gray-700 border-none hover:bg-white"
+                  ? "bg-rose-500 text-white border-none"
+                  : "bg-white/80 text-gray-700 border-none hover:bg-white"
                   }`}
               >
                 <FaHeart className="w-5 h-5" />
               </button>
 
-              <div className="hero-content text-start absolute bottom-6 left-4 sm:bottom-10 sm:left-10 bg-gradient-to-t from-black/80 via-black/60 to-transparent text-white p-5 sm:p-6 rounded-xl max-w-lg shadow-lg backdrop-blur-sm">
-                <div>
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight drop-shadow-md">
+              <div className="absolute inset-x-0 bottom-0 px-4 sm:px-10 pb-6 sm:pb-10">
+                <div className="bg-gradient-to-t from-black/85 via-black/60 to-transparent text-white p-4 sm:p-6 rounded-2xl max-w-3xl mx-auto sm:mx-0 shadow-lg backdrop-blur-sm">
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight drop-shadow-md mb-2">
                     {recipe.title}
                   </h1>
-                  <p className="text-sm sm:text-base mt-2 text-gray-100">
-                    {recipe.description}
-                  </p>
+
+                  {/* Scrollable description area */}
+                  <div className="max-h-[50px] sm:max-h-[100px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
+                    <p className="text-xs sm:text-base text-gray-100 whitespace-pre-line">
+                      {recipe.description}
+                    </p>
+                  </div>
                 </div>
               </div>
+
+
             </div>
 
             {/* Main Grid */}
