@@ -9,7 +9,7 @@ import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
 const RecipeCard = ({ recipe }) => {
   const { userData } = useSelector((state) => state.auth);
   const [isFav, setIsFav] = useState(
-    userData?.favourites?.find((fav) => fav === recipe._id)
+    userData?.favourites?.find((fav) => fav.toString() === recipe._id.toString())
   );
   const navigate = useNavigate();
   const [unlocked, setUnlocked] = useState(true);
@@ -17,20 +17,20 @@ const RecipeCard = ({ recipe }) => {
 
   const toggleFav = async () => {
     setLoading(true);
-    await favouriteToggleApi(recipe._id);
+    await favouriteToggleApi(recipe._id.toString());
     setIsFav(!isFav);
     setLoading(false);
   };
 
   useEffect(() => {
     if (userData?.role === "CHEF") {
-      if (recipe.chefId !== userData._id) {
+      if (recipe.chefId.toString() !== userData._id.toString()) {
         setIsFav(false);
         return;
       }
     } else if (recipe.isPremium) {
       const isSubscribed = userData?.profile?.subscribed?.some(
-        (sub) => sub._id === recipe.chefId
+        (sub) => sub._id.toString() === recipe.chefId.toString()
       );
 
       if (!isSubscribed) {
@@ -42,10 +42,10 @@ const RecipeCard = ({ recipe }) => {
 
   const handleRecipeViewButton = () => {
     if (unlocked) {
-      navigate(`/recipe/${recipe._id}`);
+      navigate(`/recipe/${recipe._id.toString()}`);
     } else {
       toast.error("Please subscribe to this chef to unlock recipe");
-      navigate(`/profile/${recipe.chefId}`);
+      navigate(`/profile/${recipe.chefId.toString()}`);
     }
   };
 

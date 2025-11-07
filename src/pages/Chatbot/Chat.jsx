@@ -167,7 +167,7 @@ const ChatbotPage = () => {
                       {msg.recipes.map((recipe) => {
                         return (
                           <div
-                            key={recipe._id}
+                            key={recipe._id.toString()}
                             className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 relative"
                           >
                             <img
@@ -185,7 +185,7 @@ const ChatbotPage = () => {
                                 </span>
                                 <button
                                   onClick={() =>
-                                    navigate(`/recipe/${recipe._id}`)
+                                    navigate(`/recipe/${recipe._id.toString()}`)
                                   }
                                   className="not-[]:text-xs px-3 py-1 rounded-full hover:scale-105 transition-transform bg-orange-500 text-white hover:bg-orange-600 cursor-pointer"
                                 >

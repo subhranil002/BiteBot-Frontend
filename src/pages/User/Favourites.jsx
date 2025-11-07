@@ -41,7 +41,7 @@ function Favourites() {
               "
             >
               {favourites.map((recipe) => (
-                <RecipeCard key={recipe._id} recipe={recipe} />
+                <RecipeCard key={recipe._id.toString()} recipe={recipe} />
               ))}
             </div>
           </div>

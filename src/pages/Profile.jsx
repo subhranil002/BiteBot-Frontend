@@ -14,7 +14,7 @@ function Profile() {
 
   useEffect(() => {
     setLoading(true);
-    if (userData._id === id) {
+    if (userData._id.toString() === id) {
       setCurrUser(userData);
       setLoading(false);
     } else {

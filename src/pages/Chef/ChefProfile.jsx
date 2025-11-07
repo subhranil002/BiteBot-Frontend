@@ -15,19 +15,19 @@ import { useSelector } from "react-redux";
 import subscribeApi from "../../apis/user/subscribeApi";
 import unsubscribeApi from "../../apis/user/unsubscribeApi";
 import RecipeCard from "../../components/recipe/RecipeCard";
-import HomeLayout from "../../layouts/HomeLayout";
 import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
+import HomeLayout from "../../layouts/HomeLayout";
 
 const ChefProfile = ({ profileData }) => {
   const { userData } = useSelector((state) => state.auth);
   console.log(profileData);
 
-  const isOwnProfile = userData?._id === profileData?._id;
+  const isOwnProfile = userData?._id.toString() === profileData?._id.toString();
 
   const [subscribed, setSubscribed] = useState(
-    userData?.profile?.subscribed?.some((chef) => chef._id === profileData._id)
+    userData?.profile?.subscribed?.some((chef) => chef._id.toString() === profileData._id.toString())
   );
   const [loading, setLoading] = useState(false);
 
@@ -82,12 +82,12 @@ const ChefProfile = ({ profileData }) => {
   const subscribeToggle = async () => {
     setLoading(true);
     if (!subscribed) {
-      const res = await subscribeApi(profileData._id);
+      const res = await subscribeApi(profileData._id.toString());
       if (res.success) {
         setSubscribed(!subscribed);
       }
     } else {
-      const res = await unsubscribeApi(profileData._id);
+      const res = await unsubscribeApi(profileData._id.toString());
       if (res.success) {
         setSubscribed(!subscribed);
       }
@@ -292,7 +292,7 @@ const ChefProfile = ({ profileData }) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {profileData?.chefProfile?.recipes.map((recipe) => (
                       <div className="flex justify-center">
-                        <RecipeCard key={recipe._id} recipe={recipe} />
+                        <RecipeCard key={recipe._id.toString()} recipe={recipe} />
                       </div>
                     ))}
                   </div>
@@ -311,7 +311,7 @@ const ChefProfile = ({ profileData }) => {
                 <div className="space-y-4">
                   {profileData?.chefProfile?.reviews.slice(0, 3).map((rev) => (
                     <div
-                      key={rev._id}
+                      key={rev._id.toString()}
                       className="border-b border-orange-50 pb-3 last:border-b-0"
                     >
                       <div className="flex items-center gap-2">

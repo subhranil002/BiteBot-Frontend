@@ -20,7 +20,7 @@ function UserProfile({ profileData }) {
     return url;
   }
 
-  const isOwnProfile = userData?._id === profileData?._id;
+  const isOwnProfile = userData?._id.toString() === profileData?._id.toString();
 
   return (
     <>
@@ -86,17 +86,17 @@ function UserProfile({ profileData }) {
 
                     {/* Buttons */}
                     {isOwnProfile && (
-                    <div className="flex justify-center md:justify-end w-full md:w-auto mt-4 md:mt-0">
-                      <button
-                        className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
-                        onClick={() =>
-                          document.getElementById("edit-profile")?.showModal()
-                        }
-                      >
-                        <FaEdit className="w-4 h-4" />
-                        <span className="hidden sm:inline">Edit Profile</span>
-                      </button>
-                    </div>
+                      <div className="flex justify-center md:justify-end w-full md:w-auto mt-4 md:mt-0">
+                        <button
+                          className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
+                          onClick={() =>
+                            document.getElementById("edit-profile")?.showModal()
+                          }
+                        >
+                          <FaEdit className="w-4 h-4" />
+                          <span className="hidden sm:inline">Edit Profile</span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>

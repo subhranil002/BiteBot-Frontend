@@ -13,11 +13,11 @@ import {
   FaUser,
   FaUtensils,
 } from "react-icons/fa";
+import { GiHerbsBundle } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "../redux/slices/authSlice";
-import { GiHerbsBundle } from "react-icons/gi";
 
 function Navbar({ children }) {
   const navigate = useNavigate();
@@ -44,7 +44,6 @@ function Navbar({ children }) {
     const res = await dispatch(logout());
     if (res?.payload?.success) navigate("/login");
   };
-
 
   function modifyCloudinaryURL(url) {
     if (url === "" || url === null) return "";
@@ -162,7 +161,7 @@ function Navbar({ children }) {
                         </li>
                         <li>
                           <Link
-                            to={`/profile/${userData?._id}`}
+                            to={`/profile/${userData?._id.toString()}`}
                             className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                           >
                             <FaUser className="text-orange-500" /> My Profile
@@ -190,7 +189,7 @@ function Navbar({ children }) {
                         </li>
                         <li>
                           <Link
-                            to={`/profile/${userData?._id}/favourites`}
+                            to={`/profile/${userData?._id.toString()}/favourites`}
                             className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                           >
                             <FaHeart className="text-rose-500" /> My Favorites
@@ -231,7 +230,6 @@ function Navbar({ children }) {
       <div className="drawer-side z-50">
         <label htmlFor="navbar-drawer" className="drawer-overlay"></label>
         <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-gradient-to-b from-white to-orange-50/30 text-gray-900 flex flex-col justify-between">
-
           {/* Drawer Header */}
           <div>
             <div className="flex items-center gap-3 mb-8 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-200">
@@ -245,7 +243,9 @@ function Navbar({ children }) {
                 <h2 className="font-bold text-xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                   BiteBot
                 </h2>
-                <p className="text-xs text-gray-600">Discover. Cook. Impress. Repeat</p>
+                <p className="text-xs text-gray-600">
+                  Discover. Cook. Impress. Repeat
+                </p>
               </div>
             </div>
 
@@ -370,7 +370,6 @@ function Navbar({ children }) {
           </div>
         </aside>
       </div>
-
     </div>
   );
 }

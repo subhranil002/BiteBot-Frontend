@@ -13,7 +13,7 @@ function RecipeDetail() {
   const { recipe, chef, error } = useSelector((state) => state.recipe);
   const { userData } = useSelector((state) => state.auth);
   const [isFav, setIsFav] = useState(
-    userData?.favourites?.find((fav) => fav === id)
+    userData?.favourites?.find((fav) => fav.toString() === id)
   );
   const [cost, setCost] = useState({ total: 0, perServing: 0 });
   const [stats, setStats] = useState({
@@ -47,28 +47,32 @@ function RecipeDetail() {
 
   useEffect(() => {
     if (!recipe?.ingredients) return;
+
     const totalCost = recipe.ingredients.reduce((sum, ing) => {
-      const qty = Number(ing?.quantity) || 0;
       const price = Number(ing?.marketPrice) || 0;
-      return sum + qty * price;
+      return sum + price;
     }, 0);
+
     const costPerServing =
       recipe?.servings && recipe.servings > 0
         ? totalCost / recipe.servings
         : totalCost;
+
     setCost({ total: totalCost, perServing: costPerServing });
+
     const reviews = recipe?.reviews || [];
     const count = reviews.length;
     const avg =
       count > 0
         ? reviews.reduce((s, r) => s + (Number(r?.rating) || 0), 0) / count
         : 0;
+
     setStats({ averageRating: Number(avg.toFixed(1)), reviewCount: count });
   }, [recipe]);
 
   const toggleFav = async () => {
     setLoading(true);
-    await favouriteToggleApi(recipe._id);
+    await favouriteToggleApi(recipe._id.toString());
     setIsFav(!isFav);
     setLoading(false);
   };
@@ -107,14 +111,15 @@ function RecipeDetail() {
                 className="w-full h-[280px] sm:h-[400px] lg:h-[500px] object-cover transition-transform duration-700 hover:scale-105"
               />
 
-              {/* Like Button in Hero */}
+              {/* Like Button */}
               <button
                 onClick={() => toggleFav()}
                 disabled={loading}
-                className={`absolute top-4 right-4 btn btn-circle ${isFav
-                  ? "bg-rose-500 text-white border-none"
-                  : "bg-white/80 text-gray-700 border-none hover:bg-white"
-                  }`}
+                className={`absolute top-4 right-4 btn btn-circle ${
+                  isFav
+                    ? "bg-rose-500 text-white border-none"
+                    : "bg-white/80 text-gray-700 border-none hover:bg-white"
+                }`}
               >
                 <FaHeart className="w-5 h-5" />
               </button>
@@ -133,13 +138,10 @@ function RecipeDetail() {
                   </div>
                 </div>
               </div>
-
-
             </div>
 
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Left (Main content) */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Chef Info */}
                 <div className="card bg-base-100 shadow-md border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
@@ -156,7 +158,7 @@ function RecipeDetail() {
                         </div>
                         <div>
                           <Link
-                            to={`/profile/${chef?._id ?? ""}`}
+                            to={`/profile/${chef?._id.toString() ?? ""}`}
                             className="card-title link link-hover text-orange-600"
                           >
                             {chef?.profile?.name || "Chef"}
@@ -167,12 +169,6 @@ function RecipeDetail() {
                           </div>
                         </div>
                       </div>
-                      <button
-                        className="btn btn-outline border-orange-300 text-orange-600 hover:bg-orange-50"
-                        onClick={() => navigate(`/profile/${chef?._id ?? ""}`)}
-                      >
-                        <FaHeart className="text-orange-500" /> Subscribe
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -199,7 +195,7 @@ function RecipeDetail() {
                   ))}
                 </div>
 
-                {/* Dietary Labels */}
+                {/* Dietary */}
                 {recipe.dietaryLabels?.length > 0 && (
                   <div className="card bg-base-100 shadow-sm border border-orange-100">
                     <div className="card-body">
@@ -248,11 +244,7 @@ function RecipeDetail() {
                                 {ing.quantity} {ing.unit}
                               </td>
                               <td className="text-right text-gray-500">
-                                ₹
-                                {(
-                                  (Number(ing.quantity) || 0) *
-                                  (Number(ing.marketPrice) || 0)
-                                ).toFixed(2)}
+                                ₹{(Number(ing.marketPrice) || 0).toFixed(2)}
                               </td>
                             </tr>
                           ))}
@@ -269,7 +261,6 @@ function RecipeDetail() {
                     <div className="space-y-8">
                       {recipe.steps.map((step, i) => (
                         <div key={i} className="space-y-4">
-                          {/* Instruction Text */}
                           <div className="flex items-start gap-4">
                             <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
                               {step.stepNo}
@@ -281,7 +272,6 @@ function RecipeDetail() {
                             </div>
                           </div>
 
-                          {/* Step Image */}
                           {step.imageUrl?.secure_url && (
                             <div className="w-full">
                               <img
@@ -300,10 +290,9 @@ function RecipeDetail() {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                {/* Rating & Reviews */}
+                {/* Rating */}
                 <div className="card bg-base-100 shadow-md border border-orange-100">
                   <div className="card-body text-center">
-                    {/* Simple stars display to avoid radio/checked issues */}
                     <div className="flex justify-center gap-1 mb-2 text-yellow-400">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <FaStar
@@ -325,7 +314,7 @@ function RecipeDetail() {
                   </div>
                 </div>
 
-                {/* Reviews Preview */}
+                {/* Reviews */}
                 {recipe.reviews?.length > 0 && (
                   <div className="card bg-base-100 shadow-md border border-orange-100">
                     <div className="card-body">
@@ -356,8 +345,8 @@ function RecipeDetail() {
                             <p className="text-xs text-gray-500 mt-1">
                               {review.createdAt
                                 ? new Date(
-                                  review.createdAt
-                                ).toLocaleDateString()
+                                    review.createdAt
+                                  ).toLocaleDateString()
                                 : ""}
                             </p>
                           </div>
@@ -367,7 +356,7 @@ function RecipeDetail() {
                   </div>
                 )}
 
-                {/* External Media Links */}
+                {/* External Media */}
                 {recipe.externalMediaLinks?.length > 0 && (
                   <div className="card bg-base-100 shadow-lg border border-orange-100">
                     <div className="card-body">
@@ -395,22 +384,6 @@ function RecipeDetail() {
                     </div>
                   </div>
                 )}
-
-                {/* Related Recipes */}
-                {/* {relatedRecipes.length > 0 && (
-                  <div className="card bg-base-100 shadow-md border border-orange-100">
-                    <div className="card-body">
-                      <h4 className="card-title text-gray-800">
-                        More {recipe.cuisine} Recipes
-                      </h4>
-                      <div className="space-y-4">
-                        {relatedRecipes.map((r) => (
-                          <RecipeCard key={r._id} recipe={r} compact />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )} */}
               </div>
             </div>
           </div>
