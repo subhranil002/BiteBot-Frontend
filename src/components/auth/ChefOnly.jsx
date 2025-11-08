@@ -7,23 +7,23 @@ function ChefOnly() {
   const { isLoggedIn, role } = useSelector((state) => state.auth);
   const location = useLocation();
 
+  const isChef = role === "CHEF";
+
   useEffect(() => {
-    if (isLoggedIn && role !== "CHEF") {
+    if (isLoggedIn && !isChef) {
       toast.error("You don't have access to this page!");
     }
-  }, []);
+  }, [isLoggedIn, isChef]);
 
   if (!isLoggedIn) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (role !== "CHEF") {
-    return (
-      <Navigate
-        to={location.state?.from?.pathname || location.state?.from || "/"}
-        replace
-      />
-    );
+  if (!isChef) {
+    const from = location.state?.from;
+    const redirectTo =
+      (typeof from === "string" ? from : from?.pathname) || "/";
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <Outlet />;

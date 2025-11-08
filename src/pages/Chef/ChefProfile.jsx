@@ -20,14 +20,16 @@ import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
 
-const ChefProfile = ({ profileData }) => {
+function ChefProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
   console.log(profileData);
 
   const isOwnProfile = userData?._id.toString() === profileData?._id.toString();
 
   const [subscribed, setSubscribed] = useState(
-    userData?.profile?.subscribed?.some((chef) => chef._id.toString() === profileData._id.toString())
+    userData?.profile?.subscribed?.some(
+      (chef) => chef._id.toString() === profileData._id.toString()
+    )
   );
   const [loading, setLoading] = useState(false);
 
@@ -211,19 +213,19 @@ const ChefProfile = ({ profileData }) => {
                   </button>
                 ) : (
                   <button
-                  onClick={() => subscribeToggle()}
-                  disabled={loading}
-                  className={`btn gap-2 ${
-                    subscribed
-                      ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
-                      : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
-                  }`}
-                >
-                  <FaHeart />
-                  {subscribed
-                    ? "Unsubscribe"
-                    : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
-                </button>
+                    onClick={() => subscribeToggle()}
+                    disabled={loading}
+                    className={`btn gap-2 ${
+                      subscribed
+                        ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
+                        : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
+                    }`}
+                  >
+                    <FaHeart />
+                    {subscribed
+                      ? "Unsubscribe"
+                      : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
+                  </button>
                 )}
               </div>
             </div>
@@ -289,10 +291,13 @@ const ChefProfile = ({ profileData }) => {
                   Recipes by {profileData?.profile?.name}
                 </h3>
                 {profileData?.chefProfile?.recipes?.length ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {profileData?.chefProfile?.recipes.map((recipe) => (
                       <div className="flex justify-center">
-                        <RecipeCard key={recipe._id.toString()} recipe={recipe} />
+                        <RecipeCard
+                          key={recipe._id.toString()}
+                          recipe={recipe}
+                        />
                       </div>
                     ))}
                   </div>
@@ -318,7 +323,9 @@ const ChefProfile = ({ profileData }) => {
                         <FaStar className="text-yellow-400" />
                         <span className="font-semibold">{rev.name}</span>
                       </div>
-                      <p className="text-gray-600 text-sm mt-1">{rev.message}</p>
+                      <p className="text-gray-600 text-sm mt-1">
+                        {rev.message}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -327,25 +334,25 @@ const ChefProfile = ({ profileData }) => {
 
             {/* Only visible to the chef themselves */}
             {isOwnProfile && (
-                <>
-                  <div className="card glass border mt-4 border-orange-100 shadow-md hover:shadow-orange-300/60 mb-8">
-                    <div className="card-body">
-                      <ProfileStats profileData={profileData} />
-                    </div>
+              <>
+                <div className="card glass border mt-4 border-orange-100 shadow-md hover:shadow-orange-300/60 mb-8">
+                  <div className="card-body">
+                    <ProfileStats profileData={profileData} />
                   </div>
-  
-                  <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 mb-8">
-                    <div className="card-body">
-                      <ProfileTabs profileData={profileData} />
-                    </div>
+                </div>
+
+                <div className="card glass border border-orange-100 shadow-md hover:shadow-orange-300/60 mb-8">
+                  <div className="card-body">
+                    <ProfileTabs profileData={profileData} />
                   </div>
-                </>
-              )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </HomeLayout>
     </>
   );
-};
+}
 
 export default ChefProfile;
