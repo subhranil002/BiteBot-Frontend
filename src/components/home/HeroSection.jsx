@@ -77,7 +77,7 @@ function HeroSection() {
                 Start Chat
               </Link>
               <Link
-                to="/search"
+                to="/"
                 className="btn btn-lg border-2 border-orange-400 text-orange-600 hover:bg-orange-100/80 font-semibold rounded-2xl transition-all duration-300 w-full sm:w-44 flex items-center justify-center gap-2"
               >
                 Explore Recipes

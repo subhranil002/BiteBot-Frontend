@@ -163,7 +163,7 @@ const Login = () => {
                 },
                 pattern: {
                   value:
-                    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+                    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/,
                   message:
                     "Must include uppercase, number, and special character",
                 },
@@ -193,7 +193,7 @@ const Login = () => {
           {/* Links */}
           <div className="text-center text-sm text-gray-600 mt-6 space-y-2">
             <p>
-              Don’t have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 to="/signup"
                 className="text-orange-500 font-semibold hover:text-red-500 transition-colors duration-300 hover:underline"

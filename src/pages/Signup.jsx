@@ -295,7 +295,7 @@ const SignUp = () => {
                   },
                   pattern: {
                     value:
-                      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+                      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/,
                     message:
                       "Must include uppercase, number, and special character",
                   },

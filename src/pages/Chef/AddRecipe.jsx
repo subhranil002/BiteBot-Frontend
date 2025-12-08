@@ -1,10 +1,8 @@
 import { useState } from "react";
-import {
-    FaCheckCircle,
-    FaChevronLeft,
-    FaChevronRight,
-} from "react-icons/fa";
+import { FormProvider, useForm } from "react-hook-form";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
+import addRecipeApi from "../../apis/recipe/addRecipeApi";
 import Step1BasicDetails from "../../components/addRecipe/Step1BasicDetails";
 import Step2Ingredients from "../../components/addRecipe/Step2Ingredients";
 import Step3Instructions from "../../components/addRecipe/Step3Instructions";
@@ -12,437 +10,339 @@ import Step4Preview from "../../components/addRecipe/Step4Preview";
 import HomeLayout from "../../layouts/HomeLayout";
 
 const STEPS = [
-    {
-        id: 1,
-        title: "Recipe Details",
-        description: "Basic information about your recipe",
-    },
-    {
-        id: 2,
-        title: "Ingredients",
-        description: "List all ingredients with quantities",
-    },
-    {
-        id: 3,
-        title: "Instructions",
-        description: "Step-by-step cooking instructions",
-    },
-    {
-        id: 4,
-        title: "Preview",
-        description: "Review your recipe before publishing",
-    },
-    {
-        id: 5,
-        title: "Publish",
-        description: "Share your recipe with the world",
-    },
+  {
+    id: 1,
+    title: "Recipe Details",
+    description: "Basic information about your recipe",
+  },
+  {
+    id: 2,
+    title: "Ingredients",
+    description: "List all ingredients with quantities",
+  },
+  {
+    id: 3,
+    title: "Instructions",
+    description: "Step-by-step cooking instructions",
+  },
+  {
+    id: 4,
+    title: "Preview",
+    description: "Review your recipe before publishing",
+  },
 ];
-
-const DEFAULT_FORM = {
-    title: "",
-    description: "",
-    cuisine: "",
-    servings: 4,
-    prepMinutes: 15,
-    cookMinutes: 30,
-    isPremium: false,
-    tags: [],
-    ingredients: [{ name: "", quantity: "", unit: "g", pricePerUnit: 0 }],
-    steps: [{ step: 1, text: "", image: "" }],
-    heroImage: "",
-    id: null,
-};
 
 const cuisineOptions = [
-    "Italian",
-    "Indian",
-    "Thai",
-    "Korean",
-    "French",
-    "Mediterranean",
-    "Chinese",
-    "Mexican",
-    "Japanese",
-    "American",
-    "Greek",
-    "Fusion",
+  "indian",
+  "italian",
+  "chinese",
+  "mexican",
+  "thai",
+  "japanese",
+  "french",
+  "mediterranean",
+  "american",
+  "korean",
+  "vietnamese",
+  "middle-eastern",
+  "british",
+  "spanish",
+  "german",
+  "greek",
 ];
 
-const commonTags = [
-    "vegetarian",
-    "vegan",
-    "gluten-free",
-    "dairy-free",
-    "keto",
-    "paleo",
-    "quick",
-    "healthy",
-    "spicy",
-    "comfort-food",
-    "one-pot",
-    "no-cook",
-    "budget-friendly",
-    "kid-friendly",
-    "high-protein",
-    "low-fat",
+const dietaryOptions = [
+  "vegetarian",
+  "vegan",
+  "keto",
+  "paleo",
+  "gluten-free",
+  "dairy-free",
+  "low-carb",
+  "high-protein",
+  "sugar-free",
+  "organic",
+  "raw",
+  "mediterranean",
+  "low-fat",
 ];
 
 const unitOptions = [
-    "g",
-    "kg",
-    "ml",
-    "l",
-    "cup",
-    "tbsp",
-    "tsp",
-    "pc",
-    "oz",
-    "lb",
+  "g",
+  "kg",
+  "ml",
+  "l",
+  "cup",
+  "tbsp",
+  "tsp",
+  "pc",
+  "oz",
+  "lb",
 ];
 
 export default function AddRecipe() {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formData, setFormData] = useState(DEFAULT_FORM);
-    const [errors, setErrors] = useState({});
-    const [newTag, setNewTag] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // helper validators
-    const validateStep = (step) => {
-        const newErrors = {};
+  const methods = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+      cuisine: "",
+      servings: 0,
+      prepMinutes: 0,
+      cookMinutes: 0,
+      isPremium: false,
+      dietaryLabels: [],
+      ingredients: [
+        { id: "i-1", name: "", quantity: 0, unit: "g", marketPrice: 0 },
+      ],
+      steps: [{ id: "s-1", text: "", imageFile: null }],
+      thumbnailFile: null,
+      externalMediaLinks: [],
+    },
+  });
 
-        switch (step) {
-            case 1:
-                if (!formData.title.trim())
-                    newErrors.title = "Recipe title is required";
-                if (!formData.description.trim())
-                    newErrors.description = "Description is required";
-                if (!formData.cuisine)
-                    newErrors.cuisine = "Please select a cuisine";
-                if (formData.servings < 1)
-                    newErrors.servings = "Servings must be at least 1";
-                if (formData.prepMinutes < 0)
-                    newErrors.prepMinutes = "Prep time cannot be negative";
-                if (formData.cookMinutes < 0)
-                    newErrors.cookMinutes = "Cook time cannot be negative";
-                break;
+  const {
+    handleSubmit,
+    trigger,
+    getValues,
+    watch,
+    setError,
+    setValue,
+    reset,
+    register,
+    control,
+    formState: { errors },
+  } = methods;
 
-            case 2:
-                formData.ingredients.forEach((ingredient, index) => {
-                    if (!ingredient.name.trim())
-                        newErrors[`ingredient_${index}_name`] =
-                            "Ingredient name is required";
-                    if (
-                        !ingredient.quantity ||
-                        Number(ingredient.quantity) <= 0
-                    )
-                        newErrors[`ingredient_${index}_quantity`] =
-                            "Valid quantity is required";
-                });
-                if (!formData.ingredients || formData.ingredients.length === 0)
-                    newErrors.ingredients =
-                        "At least one ingredient is required";
-                break;
+  const nextStep = async () => {
+    let fieldsToValidate = [];
+    const values = getValues();
 
-            case 3:
-                formData.steps.forEach((s, index) => {
-                    if (!s.text.trim())
-                        newErrors[`step_${index}_text`] =
-                            "Step instruction is required";
-                });
-                if (!formData.steps || formData.steps.length === 0)
-                    newErrors.steps = "At least one step is required";
-                break;
-        }
+    if (currentStep === 1) {
+      fieldsToValidate = [
+        "title",
+        "description",
+        "cuisine",
+        "servings",
+        "prepMinutes",
+        "cookMinutes",
+        "thumbnailFile",
+      ];
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+      const extLinks = values.externalMediaLinks || [];
+      if (extLinks.length) {
+        fieldsToValidate.push(
+          ...extLinks.map((_, i) => `externalMediaLinks.${i}.name`),
+          ...extLinks.map((_, i) => `externalMediaLinks.${i}.url`)
+        );
+      }
+    } else if (currentStep === 2) {
+      if (!values.ingredients || values.ingredients.length === 0) {
+        setError("ingredients", {
+          message: "At least one ingredient is required",
+        });
+        return;
+      }
+      fieldsToValidate = values.ingredients.flatMap((_, i) => [
+        `ingredients.${i}.name`,
+        `ingredients.${i}.quantity`,
+        `ingredients.${i}.unit`,
+        `ingredients.${i}.marketPrice`,
+      ]);
+    } else if (currentStep === 3) {
+      if (!values.steps || values.steps.length === 0) {
+        setError("steps", {
+          message: "At least one step is required",
+        });
+        return;
+      }
+      fieldsToValidate = values.steps.flatMap((_, i) => [
+        `steps.${i}.text`,
+        `steps.${i}.imageFile`,
+      ]);
+    }
 
-    const nextStep = () => {
-        if (validateStep(currentStep)) {
-            setCurrentStep((s) => Math.min(s + 1, STEPS.length));
-        }
-    };
-    const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 1));
+    const ok = fieldsToValidate.length ? await trigger(fieldsToValidate) : true;
+    if (ok) setCurrentStep((s) => Math.min(s + 1, STEPS.length));
+  };
 
-    const addIngredient = () => {
-        setFormData((prev) => ({
-            ...prev,
-            ingredients: [
-                ...prev.ingredients,
-                { name: "", quantity: "", unit: "g", pricePerUnit: 0 },
-            ],
-        }));
-    };
-    const removeIngredient = (index) => {
-        setFormData((prev) => ({
-            ...prev,
-            ingredients: prev.ingredients.filter((_, i) => i !== index),
-        }));
-    };
-    const updateIngredient = (index, field, value) => {
-        setFormData((prev) => ({
-            ...prev,
-            ingredients: prev.ingredients.map((ing, i) =>
-                i === index ? { ...ing, [field]: value } : ing
-            ),
-        }));
-    };
+  const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 1));
 
-    const addStep = () => {
-        setFormData((prev) => ({
-            ...prev,
-            steps: [
-                ...prev.steps,
-                { step: prev.steps.length + 1, text: "", image: "" },
-            ],
-        }));
-    };
-    const removeStep = (index) => {
-        setFormData((prev) => ({
-            ...prev,
-            steps: prev.steps
-                .filter((_, i) => i !== index)
-                .map((s, i) => ({ ...s, step: i + 1 })),
-        }));
-    };
-    const updateStep = (index, field, value) => {
-        setFormData((prev) => ({
-            ...prev,
-            steps: prev.steps.map((s, i) =>
-                i === index ? { ...s, [field]: value } : s
-            ),
-        }));
-    };
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
 
-    const addTag = (tag) => {
-        if (!formData.tags.includes(tag))
-            setFormData((prev) => ({ ...prev, tags: [...prev.tags, tag] }));
-    };
-    const removeTag = (tag) =>
-        setFormData((prev) => ({
-            ...prev,
-            tags: prev.tags.filter((t) => t !== tag),
-        }));
-    const handleAddCustomTag = () => {
-        const t = newTag.trim();
-        if (t && !formData.tags.includes(t)) {
-            addTag(t);
-            setNewTag("");
-        }
-    };
+    try {
+      const totalCookingTime =
+        (Number(data.prepMinutes) || 0) + (Number(data.cookMinutes) || 0);
 
-    const handleSubmit = async () => {
-        if (!validateStep(3)) return;
+      const ingredients = (data.ingredients || []).map((ing) => ({
+        name: ing.name?.trim(),
+        quantity: Number(ing.quantity),
+        unit: ing.unit,
+        marketPrice: Number(ing.marketPrice),
+      }));
 
-        setIsSubmitting(true);
-            const id = "r" + Date.now();
-            setFormData((prev) => ({ ...prev, id }));
-            setCurrentStep(5);
-            setIsSubmitting(false);
-    };
+      const steps = (data.steps || []).map((step, index) => ({
+        stepNo: index + 1,
+        instruction: step.text?.trim(),
+      }));
 
-    const estimatedPrice = formData.ingredients.reduce(
-        (total, ing) =>
-            total +
-            (parseFloat(ing.quantity) || 0) *
-                (parseFloat(ing.pricePerUnit) || 0),
-        0
-    );
+      const dietaryLabels =
+        Array.isArray(data.dietaryLabels) && data.dietaryLabels.length > 0
+          ? data.dietaryLabels
+          : undefined;
 
-    return (
-        <HomeLayout>
-            {/* ✅ Success View */}
-            {currentStep === 5 && (
-                <div className="container mx-auto px-4 py-16 text-center">
-                    <div className="card glass max-w-md mx-auto shadow-md">
-                        <div className="card-body space-y-6">
-                            <div className="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center mx-auto">
-                                <FaCheckCircle className="w-8 h-8 text-success" />
-                            </div>
-                            <div className="space-y-2">
-                                <h1 className="text-2xl font-bold">
-                                    Recipe Published!
-                                </h1>
-                                <p className="text-gray-600">
-                                    Your recipe "{formData.title}" has been saved locally (demo mode).
-                                </p>
-                            </div>
-                            <div className="card-actions justify-center mt-4">
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() => {}}
-                                >
-                                    View Recipe
-                                </button>
-                                <button
-                                    className="btn btn-outline btn-accent"
-                                    onClick={() => {
-                                        setFormData(DEFAULT_FORM);
-                                        setCurrentStep(1);
-                                    }}
-                                >
-                                    Add Another Recipe
-                                </button>
-                            </div>
-                        </div>
+      const externalMediaLinks =
+        Array.isArray(data.externalMediaLinks) &&
+        data.externalMediaLinks.length > 0
+          ? data.externalMediaLinks.map((link) => ({
+              name: link.name?.trim(),
+              url: link.url,
+            }))
+          : undefined;
+
+      const thumbnailFile = data.thumbnailFile || null;
+      const stepImages = (data.steps || [])
+        .map((step) => step.imageFile || null)
+        .filter(Boolean);
+
+      const payload = {
+        title: data.title?.trim(),
+        description: data.description?.trim(),
+        cuisine: data.cuisine,
+        servings: Number(data.servings),
+        totalCookingTime,
+        isPremium: !!data.isPremium,
+
+        ingredients,
+        steps,
+        dietaryLabels,
+        externalMediaLinks,
+
+        thumbnailFile,
+        stepImages,
+      };
+
+      await addRecipeApi(payload);
+
+      reset();
+      setCurrentStep(1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <HomeLayout>
+      <FormProvider
+        {...{
+          register,
+          watch,
+          setValue,
+          control,
+          formState: { errors },
+        }}
+      >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="container mx-auto px-4 py-8 max-w-4xl"
+        >
+          <div className="mb-8">
+            <div className="flex items-center justify-between relative">
+              {STEPS.map((step) => (
+                <div
+                  key={step.id}
+                  className="flex flex-col items-center relative z-10"
+                >
+                  <div
+                    className={`btn btn-circle ${
+                      currentStep === step.id
+                        ? "btn-primary text-white"
+                        : currentStep > step.id
+                        ? "btn-success text-white"
+                        : "btn-outline btn-ghost text-gray-500"
+                    }`}
+                  >
+                    {currentStep > step.id ? (
+                      <FaCheckCircle className="w-5 h-5" />
+                    ) : (
+                      step.id
+                    )}
+                  </div>
+                  <div className="mt-2 text-center">
+                    <div className="text-sm font-medium">{step.title}</div>
+                    <div className="text-xs text-gray-500 hidden sm:block">
+                      {step.description}
                     </div>
+                  </div>
                 </div>
+              ))}
+
+              <div className="absolute top-5 left-0 right-0 h-0.5 bg-base-300 -z-10">
+                <div
+                  className="h-full bg-primary transition-all duration-300"
+                  style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="card bg-base-100 shadow-md border border-base-200">
+            <div className="card-body">
+              {currentStep === 1 && (
+                <Step1BasicDetails
+                  cuisineOptions={cuisineOptions}
+                  dietaryOptions={dietaryOptions}
+                />
+              )}
+              {currentStep === 2 && (
+                <Step2Ingredients unitOptions={unitOptions} />
+              )}
+              {currentStep === 3 && <Step3Instructions />}
+              {currentStep === 4 && <Step4Preview />}
+            </div>
+          </div>
+
+          <div className="flex justify-between mt-8">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                className="btn btn-outline btn-neutral flex items-center gap-2"
+                onClick={prevStep}
+                disabled={currentStep === 1}
+              >
+                <FaChevronLeft /> Back
+              </button>
+            </div>
+
+            {currentStep < 4 ? (
+              <button
+                type="button"
+                className="btn btn-primary gap-2"
+                onClick={nextStep}
+              >
+                Next <FaChevronRight />
+              </button>
+            ) : (
+              <div className="flex gap-2 items-center">
+                <button
+                  type="submit"
+                  className={`btn btn-success gap-2 ${
+                    isSubmitting ? "loading" : ""
+                  }`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Publishing..." : "Publish Recipe"}
+                </button>
+              </div>
             )}
-    
-            {/* ✅ Form Wizard */}
-            {currentStep < 5 && (
-                <div className="container mx-auto px-4 py-8 max-w-4xl">
-                    {/* Progress Steps */}
-                    <div className="mb-8">
-                        <div className="flex items-center justify-between relative">
-                            {STEPS.slice(0, 4).map((step) => (
-                                <div
-                                    key={step.id}
-                                    className="flex flex-col items-center relative z-10"
-                                >
-                                    <div
-                                        className={`btn btn-circle ${
-                                            currentStep === step.id
-                                                ? "btn-primary text-white"
-                                                : currentStep > step.id
-                                                ? "btn-success text-white"
-                                                : "btn-outline btn-ghost text-gray-500"
-                                        }`}
-                                    >
-                                        {currentStep > step.id ? (
-                                            <FaCheckCircle className="w-5 h-5" />
-                                        ) : (
-                                            step.id
-                                        )}
-                                    </div>
-                                    <div className="mt-2 text-center">
-                                        <div className="text-sm font-medium">{step.title}</div>
-                                        <div className="text-xs text-gray-500 hidden sm:block">
-                                            {step.description}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-    
-                            {/* Progress Line */}
-                            <div className="absolute top-5 left-0 right-0 h-0.5 bg-base-300 -z-10">
-                                <div
-                                    className="h-full bg-primary transition-all duration-300"
-                                    style={{
-                                        width: `${((currentStep - 1) / 3) * 100}%`,
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-    
-                    {/* Step Container */}
-                    <div className="card bg-base-100 shadow-md border border-base-200">
-                        <div className="card-body">
-                            {currentStep === 1 && (
-                                <Step1BasicDetails
-                                    formData={formData}
-                                    setFormData={setFormData}
-                                    errors={errors}
-                                    cuisineOptions={cuisineOptions}
-                                    commonTags={commonTags}
-                                    onAddTag={addTag}
-                                    onRemoveTag={removeTag}
-                                    newTag={newTag}
-                                    setNewTag={setNewTag}
-                                    onAddCustomTag={handleAddCustomTag}
-                                />
-                            )}
-    
-                            {currentStep === 2 && (
-                                <Step2Ingredients
-                                    formData={formData}
-                                    errors={errors}
-                                    unitOptions={unitOptions}
-                                    onAddIngredient={addIngredient}
-                                    onRemoveIngredient={removeIngredient}
-                                    onUpdateIngredient={updateIngredient}
-                                />
-                            )}
-    
-                            {currentStep === 3 && (
-                                <Step3Instructions
-                                    formData={formData}
-                                    errors={errors}
-                                    onAddStep={addStep}
-                                    onRemoveStep={removeStep}
-                                    onUpdateStep={updateStep}
-                                />
-                            )}
-    
-                            {currentStep === 4 && <Step4Preview formData={formData} />}
-                        </div>
-                    </div>
-    
-                    {/* Navigation */}
-                    <div className="flex justify-between mt-8">
-                        <div className="flex gap-2">
-                            <button
-                                className="btn btn-outline btn-neutral flex items-center gap-2"
-                                onClick={prevStep}
-                            >
-                                <FaChevronLeft />
-                                Back
-                            </button>
-                        </div>
-    
-                        {currentStep < 4 ? (
-                            <button className="btn btn-primary gap-2" onClick={nextStep}>
-                                Next
-                                <FaChevronRight />
-                            </button>
-                        ) : (
-                            <div className="flex gap-2 items-center">
-                                <button
-                                    className={`btn btn-success gap-2 ${
-                                        isSubmitting ? "loading" : ""
-                                    }`}
-                                    onClick={handleSubmit}
-                                    disabled={isSubmitting}
-                                    aria-disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? "Publishing..." : "Publish Recipe"}
-                                </button>
-                            </div>
-                        )}
-                    </div>
-    
-                    {/* Optional Sidebar */}
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="md:col-span-2" />
-                        <div className="card bg-base-100 border border-base-200 shadow-sm">
-                            <div className="card-body">
-                                <h4 className="font-semibold mb-2">Summary</h4>
-                                <div className="text-sm text-gray-600 space-y-2">
-                                    <div className="flex justify-between">
-                                        <span>Estimated cost</span>
-                                        <span>${estimatedPrice.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Servings</span>
-                                        <span>{formData.servings}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Total time</span>
-                                        <span>
-                                            {formData.prepMinutes + formData.cookMinutes} min
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </HomeLayout>
-    );
-    
+          </div>
+        </form>
+      </FormProvider>
+    </HomeLayout>
+  );
 }
