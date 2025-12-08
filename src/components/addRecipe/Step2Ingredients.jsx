@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash, FaExclamationCircle } from "react-icons/fa";
 
 const Step2Ingredients = ({ unitOptions = [] }) => {
   const {
@@ -14,161 +14,184 @@ const Step2Ingredients = ({ unitOptions = [] }) => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Ingredients</h2>
+    <div className="space-y-8 p-1">
+      
+      {/* --- Header Section --- */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 border-b border-base-200 pb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-base-content">Ingredients</h2>
+          <p className="text-sm text-base-content/60 mt-1">
+            List everything needed for this dish.
+          </p>
+        </div>
+        
         <button
           type="button"
           onClick={() =>
             append({
               id: `i-${Date.now()}`,
               name: "",
-              quantity: 0,
+              quantity: "", 
               unit: "g",
-              marketPrice: 0,
+              marketPrice: "",
             })
           }
-          className="btn btn-primary gap-2"
+          className="btn btn-sm btn-outline border-orange-400 text-orange-600 hover:bg-orange-500 hover:border-orange-500 hover:text-white gap-2"
         >
-          <FaPlus className="w-4 h-4" />
+          <FaPlus className="w-3 h-3" />
           Add Ingredient
         </button>
       </div>
 
+      {/* --- Ingredients List --- */}
       <div className="space-y-4">
+        
+        {/* Empty State */}
+        {fields.length === 0 && (
+          <div className="alert bg-base-100 border border-dashed border-base-300 flex flex-col items-center justify-center py-10 text-center shadow-none">
+            <div className="text-base-content/40 mb-2">
+                <FaExclamationCircle className="w-6 h-6 mx-auto" />
+            </div>
+            <span className="text-base-content/60 text-sm">No ingredients added yet.</span>
+            <button 
+                type="button"
+                onClick={() => append({ id: `i-${Date.now()}`, name: "", quantity: 0, unit: "g", marketPrice: 0 })}
+                className="btn btn-link btn-sm text-orange-500 no-underline hover:text-orange-600"
+            >
+                Add your first ingredient
+            </button>
+          </div>
+        )}
+
+        {/* List Items */}
         {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-12 gap-4 items-end">
-            {/* name */}
-            <div className="col-span-12 md:col-span-5 space-y-1">
-              <label
-                className="label text-sm"
-                htmlFor={`ingredients.${index}.name`}
-              >
-                Ingredient
-              </label>
-              <input
-                id={`ingredients.${index}.name`}
-                type="text"
-                placeholder="e.g., Olive oil"
-                {...register(`ingredients.${index}.name`, {
-                  required: "Ingredient name is required",
-                })}
-                className={`input input-bordered w-full ${
-                  errors?.ingredients?.[index]?.name ? "input-error" : ""
-                }`}
-              />
-              {errors?.ingredients?.[index]?.name && (
-                <p className="text-xs text-error">
-                  {errors.ingredients[index].name.message}
-                </p>
-              )}
-            </div>
+          <div 
+            key={field.id} 
+            className="card card-compact bg-base-100 border border-base-200 shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <div className="card-body p-4">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                
+                {/* 1. Ingredient Name (5 cols) */}
+                <div className="form-control md:col-span-5 w-full">
+                  <label className="label pt-0 pb-1.5" htmlFor={`ingredients.${index}.name`}>
+                    <span className="label-text text-xs font-bold text-base-content/70">Ingredient Name</span>
+                  </label>
+                  <input
+                    id={`ingredients.${index}.name`}
+                    type="text"
+                    placeholder="e.g. Fresh Basil"
+                    {...register(`ingredients.${index}.name`, {
+                      required: "Name is required",
+                    })}
+                    className={`input input-sm input-bordered w-full focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all ${
+                      errors?.ingredients?.[index]?.name ? "input-error" : ""
+                    }`}
+                  />
+                </div>
 
-            {/* quantity */}
-            <div className="col-span-6 md:col-span-2 space-y-1">
-              <label
-                className="label text-sm"
-                htmlFor={`ingredients.${index}.quantity`}
-              >
-                Quantity
-              </label>
-              <input
-                id={`ingredients.${index}.quantity`}
-                type="number"
-                step="0.5"
-                placeholder="Amount"
-                {...register(`ingredients.${index}.quantity`, {
-                  required: "Quantity is required",
-                  min: { value: 0.001, message: "Must be > 0" },
-                  valueAsNumber: true,
-                })}
-                className={`input input-bordered w-full ${
-                  errors?.ingredients?.[index]?.quantity ? "input-error" : ""
-                }`}
-              />
-              {errors?.ingredients?.[index]?.quantity && (
-                <p className="text-xs text-error">
-                  {errors.ingredients[index].quantity.message}
-                </p>
-              )}
-            </div>
+                {/* 2. Quantity (2 cols) */}
+                <div className="form-control md:col-span-2 w-full">
+                  <label className="label pt-0 pb-1.5" htmlFor={`ingredients.${index}.quantity`}>
+                    <span className="label-text text-xs font-bold text-base-content/70">Quantity</span>
+                  </label>
+                  <input
+                    id={`ingredients.${index}.quantity`}
+                    type="number"
+                    step="0.5"
+                    placeholder="0"
+                    {...register(`ingredients.${index}.quantity`, {
+                      required: "Req",
+                      min: { value: 0.001, message: "> 0" },
+                      valueAsNumber: true,
+                    })}
+                    className={`input input-sm input-bordered w-full focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all ${
+                      errors?.ingredients?.[index]?.quantity ? "input-error" : ""
+                    }`}
+                  />
+                </div>
 
-            {/* unit */}
-            <div className="col-span-4 md:col-span-2 space-y-1">
-              <label
-                className="label text-sm"
-                htmlFor={`ingredients.${index}.unit`}
-              >
-                Unit
-              </label>
-              <select
-                id={`ingredients.${index}.unit`}
-                {...register(`ingredients.${index}.unit`, {
-                  required: "Unit is required",
-                })}
-                className={`select select-bordered w-full ${
-                  errors?.ingredients?.[index]?.unit ? "select-error" : ""
-                }`}
-              >
-                {unitOptions.map((unit) => (
-                  <option key={unit} value={unit}>
-                    {unit}
-                  </option>
-                ))}
-              </select>
-              {errors?.ingredients?.[index]?.unit && (
-                <p className="text-xs text-error">
-                  {errors.ingredients[index].unit.message}
-                </p>
-              )}
-            </div>
+                {/* 3. Unit (2 cols) */}
+                <div className="form-control md:col-span-2 w-full">
+                  <label className="label pt-0 pb-1.5" htmlFor={`ingredients.${index}.unit`}>
+                    <span className="label-text text-xs font-bold text-base-content/70">Unit</span>
+                  </label>
+                  <select
+                    id={`ingredients.${index}.unit`}
+                    {...register(`ingredients.${index}.unit`, {
+                      required: "Req",
+                    })}
+                    className={`select select-sm select-bordered w-full focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all ${
+                      errors?.ingredients?.[index]?.unit ? "select-error" : ""
+                    }`}
+                  >
+                    {unitOptions.map((unit) => (
+                      <option key={unit} value={unit}>
+                        {unit}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            {/* marketPrice */}
-            <div className="col-span-6 md:col-span-2 space-y-1">
-              <label
-                className="label text-sm"
-                htmlFor={`ingredients.${index}.marketPrice`}
-              >
-                Market Price (&#8377;)
-              </label>
-              <input
-                id={`ingredients.${index}.marketPrice`}
-                type="number"
-                placeholder="0.00"
-                {...register(`ingredients.${index}.marketPrice`, {
-                  required: "Market price is required",
-                  min: { value: 0.01, message: "Must be > 0" },
-                  valueAsNumber: true,
-                })}
-                className={`input input-bordered w-full ${
-                  errors?.ingredients?.[index]?.marketPrice ? "input-error" : ""
-                }`}
-              />
-              {errors?.ingredients?.[index]?.marketPrice && (
-                <p className="text-xs text-error">
-                  {errors.ingredients[index].marketPrice.message}
-                </p>
-              )}
-            </div>
+                {/* 4. Market Price (2 cols) */}
+                <div className="form-control md:col-span-2 w-full">
+                  <label className="label pt-0 pb-1.5" htmlFor={`ingredients.${index}.marketPrice`}>
+                    <span className="label-text text-xs font-bold text-base-content/70">Price (₹)</span>
+                  </label>
+                  <input
+                    id={`ingredients.${index}.marketPrice`}
+                    type="number"
+                    placeholder="0.00"
+                    {...register(`ingredients.${index}.marketPrice`, {
+                      required: "Req",
+                      min: { value: 0.01, message: "> 0" },
+                      valueAsNumber: true,
+                    })}
+                    className={`input input-sm input-bordered w-full focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-all ${
+                      errors?.ingredients?.[index]?.marketPrice ? "input-error" : ""
+                    }`}
+                  />
+                </div>
 
-            {/* remove */}
-            <div className="col-span-12 md:col-span-1">
-              {fields.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="btn btn-outline btn-sm w-full"
-                >
-                  <FaMinus className="w-4 h-4" />
-                </button>
+                {/* 5. Remove Button (1 col) */}
+                <div className="md:col-span-1 flex justify-end md:justify-center pt-0 md:pt-7">
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="btn btn-square btn-xs btn-ghost text-base-content/40 hover:text-error hover:bg-error/10 transition-colors"
+                    title="Remove ingredient"
+                  >
+                    <FaTrash className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+              </div>
+
+              {/* Error Messages Row */}
+              {(errors?.ingredients?.[index]?.name || errors?.ingredients?.[index]?.quantity || errors?.ingredients?.[index]?.marketPrice) && (
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 px-1">
+                   {errors.ingredients[index].name && (
+                       <span className="text-xs text-error flex items-center gap-1"><FaExclamationCircle/> {errors.ingredients[index].name.message}</span>
+                   )}
+                   {errors.ingredients[index].quantity && (
+                       <span className="text-xs text-error flex items-center gap-1"><FaExclamationCircle/> Qty: {errors.ingredients[index].quantity.message}</span>
+                   )}
+                   {errors.ingredients[index].marketPrice && (
+                       <span className="text-xs text-error flex items-center gap-1"><FaExclamationCircle/> Price: {errors.ingredients[index].marketPrice.message}</span>
+                   )}
+                </div>
               )}
             </div>
           </div>
         ))}
       </div>
 
-      {errors?.ingredients?.message && (
-        <p className="text-sm text-error">{errors.ingredients.message}</p>
+      {/* Global Error (if any) */}
+      {errors?.ingredients?.root && (
+        <div className="alert alert-error shadow-sm py-2">
+            <FaExclamationCircle />
+            <span className="text-sm">{errors.ingredients.root.message}</span>
+        </div>
       )}
     </div>
   );

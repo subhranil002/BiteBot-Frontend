@@ -17,6 +17,7 @@ import SearchResults from "../pages/SearchResult";
 import SignUp from "../pages/Signup";
 import Favorites from "../pages/User/Favourites";
 import { getProfile } from "../redux/slices/authSlice";
+import AdminDashboard from "../pages/AdminDashboard";
 
 function Router() {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ function Router() {
         <Route path="/recipe/:id" element={<RecipeDetail />} />
         <Route path="/recipe/add" element={<AddRecipe />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
       </Route>
       <Route element={<ChefOnly />}>
         <Route path="/dashboard" element={<ChefDashboard />} />

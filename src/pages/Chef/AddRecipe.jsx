@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { FaCheckCircle, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaCheckCircle, FaChevronLeft, FaChevronRight, FaHome } from "react-icons/fa";
 
 import addRecipeApi from "../../apis/recipe/addRecipeApi";
 import Step1BasicDetails from "../../components/addRecipe/Step1BasicDetails";
@@ -8,6 +8,7 @@ import Step2Ingredients from "../../components/addRecipe/Step2Ingredients";
 import Step3Instructions from "../../components/addRecipe/Step3Instructions";
 import Step4Preview from "../../components/addRecipe/Step4Preview";
 import HomeLayout from "../../layouts/HomeLayout";
+import { useNavigate } from "react-router-dom";
 
 const STEPS = [
   {
@@ -83,6 +84,7 @@ const unitOptions = [
 export default function AddRecipe() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const methods = useForm({
     defaultValues: {
@@ -196,11 +198,11 @@ export default function AddRecipe() {
 
       const externalMediaLinks =
         Array.isArray(data.externalMediaLinks) &&
-        data.externalMediaLinks.length > 0
+          data.externalMediaLinks.length > 0
           ? data.externalMediaLinks.map((link) => ({
-              name: link.name?.trim(),
-              url: link.url,
-            }))
+            name: link.name?.trim(),
+            url: link.url,
+          }))
           : undefined;
 
       const thumbnailFile = data.thumbnailFile || null;
@@ -251,48 +253,59 @@ export default function AddRecipe() {
           onSubmit={handleSubmit(onSubmit)}
           className="container mx-auto px-4 py-8 max-w-4xl"
         >
-          <div className="mb-8">
+          {/* --- Stepper & Progress Bar --- */}
+          <div className="mb-10">
             <div className="flex items-center justify-between relative">
-              {STEPS.map((step) => (
-                <div
-                  key={step.id}
-                  className="flex flex-col items-center relative z-10"
-                >
+              
+              {/* Steps */}
+              {STEPS.map((step) => {
+                const isCompleted = currentStep > step.id;
+                const isActive = currentStep === step.id;
+                
+                return (
                   <div
-                    className={`btn btn-circle ${
-                      currentStep === step.id
-                        ? "btn-primary text-white"
-                        : currentStep > step.id
-                        ? "btn-success text-white"
-                        : "btn-outline btn-ghost text-gray-500"
-                    }`}
+                    key={step.id}
+                    className="flex flex-col items-center relative z-10"
                   >
-                    {currentStep > step.id ? (
-                      <FaCheckCircle className="w-5 h-5" />
-                    ) : (
-                      step.id
-                    )}
-                  </div>
-                  <div className="mt-2 text-center">
-                    <div className="text-sm font-medium">{step.title}</div>
-                    <div className="text-xs text-gray-500 hidden sm:block">
-                      {step.description}
+                    <div
+                      className={`btn btn-circle btn-md transition-all duration-300 border-2 ${
+                        isActive
+                          ? "bg-orange-500 text-white border-orange-500 shadow-md scale-110"
+                          : isCompleted
+                          ? "bg-orange-500 text-white border-orange-500"
+                          : "bg-base-100 text-base-content/30 border-base-200 hover:border-orange-300"
+                      }`}
+                    >
+                      {isCompleted ? (
+                        <FaCheckCircle className="w-5 h-5" />
+                      ) : (
+                        <span className="font-bold">{step.id}</span>
+                      )}
+                    </div>
+                    
+                    <div className={`mt-3 text-center transition-colors duration-300 ${isActive ? "text-orange-600" : "text-base-content/50"}`}>
+                      <div className="text-sm font-bold">{step.title}</div>
+                      <div className="text-[10px] font-medium hidden sm:block opacity-80">
+                        {step.description}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
-              <div className="absolute top-5 left-0 right-0 h-0.5 bg-base-300 -z-10">
+              {/* Background Line */}
+              <div className="absolute top-6 left-0 right-0 h-1 bg-base-200 -z-10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-primary transition-all duration-300"
-                  style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
+                  className="h-full bg-yellow-500 transition-all duration-500 ease-in-out"
+                  style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
                 />
               </div>
             </div>
           </div>
 
-          <div className="card bg-base-100 shadow-md border border-base-200">
-            <div className="card-body">
+          {/* --- Main Form Content --- */}
+          <div className="card bg-base-100 shadow-xl border border-base-200">
+            <div className="card-body p-6 md:p-8">
               {currentStep === 1 && (
                 <Step1BasicDetails
                   cuisineOptions={cuisineOptions}
@@ -307,40 +320,50 @@ export default function AddRecipe() {
             </div>
           </div>
 
-          <div className="flex justify-between mt-8">
-            <div className="flex gap-2">
+          {/* --- Navigation Buttons --- */}
+          <div className="flex justify-between mt-8 pt-4 border-t border-transparent">
+            {/* Back Button */}
+            {currentStep === 1 ? (
               <button
                 type="button"
-                className="btn btn-outline btn-neutral flex items-center gap-2"
-                onClick={prevStep}
-                disabled={currentStep === 1}
+                onClick={() => navigate("/")} // Navigate back to home
+                className="btn btn-ghost text-base-content/50 hover:text-error hover:bg-error/10 gap-2 transition-all"
               >
-                <FaChevronLeft /> Back
+                <FaHome className="w-4 h-4" /> Cancel
               </button>
-            </div>
+            ) : (
+              <button
+                type="button"
+                onClick={prevStep}
+                className="btn btn-outline border-base-300 text-base-content/60 hover:bg-base-200 hover:border-base-300 hover:text-base-content gap-2 transition-all"
+              >
+                <FaChevronLeft className="w-3 h-3" /> Back
+              </button>
+            )}
 
+            {/* Next / Submit Button */}
             {currentStep < 4 ? (
               <button
                 type="button"
-                className="btn btn-primary gap-2"
                 onClick={nextStep}
+                className="btn bg-orange-500 hover:bg-orange-600 text-white border-orange-500 hover:border-orange-600 gap-2 px-8 shadow-sm hover:shadow-md"
               >
-                Next <FaChevronRight />
+                Next Step <FaChevronRight className="w-3 h-3" />
               </button>
             ) : (
-              <div className="flex gap-2 items-center">
-                <button
-                  type="submit"
-                  className={`btn btn-success gap-2 ${
-                    isSubmitting ? "loading" : ""
-                  }`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Publishing..." : "Publish Recipe"}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`btn gap-2 bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 px-8 shadow-sm hover:shadow-md
+                  ${isSubmitting ? "loading" : ""}
+                `}
+              >
+                {!isSubmitting && <FaCheckCircle className="w-4 h-4" />}
+                {isSubmitting ? "Publishing Recipe..." : "Publish Recipe"}
+              </button>
             )}
           </div>
+
         </form>
       </FormProvider>
     </HomeLayout>

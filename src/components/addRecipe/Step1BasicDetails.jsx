@@ -58,47 +58,53 @@ const Step1BasicDetails = ({ cuisineOptions, dietaryOptions }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Recipe Details</h2>
+    <div className="space-y-8 p-1">
+      
+      {/* Header */}
+      <div className="border-b pb-4 border-base-200">
+        <h2 className="text-2xl font-bold text-base-content">Recipe Details</h2>
+        <p className="text-sm text-base-content/60 mt-1">
+          Tell us the basics about your dish.
+        </p>
+      </div>
 
+      {/* Title + Cuisine */}
       <div className="grid md:grid-cols-2 gap-6">
+        
         {/* Title */}
-        <div className="space-y-2">
-          <label className="label" htmlFor="title">
-            <span className="label-text">Recipe Title *</span>
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content/80">Recipe Title *</span>
           </label>
           <input
-            id="title"
+            type="text"
             placeholder="e.g. Grandma's Secret Pasta"
             {...register("title", {
               required: "Recipe title is required",
               minLength: { value: 3, message: "At least 3 characters" },
               maxLength: { value: 100, message: "Max 100 characters" },
             })}
-            className={`input input-bordered w-full ${
+            className={`input input-bordered w-full focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all ${
               errors.title ? "input-error" : ""
             }`}
           />
           {errors.title && (
-            <p className="text-sm text-error">{errors.title.message}</p>
+            <span className="text-xs text-error mt-1 ml-1">{errors.title.message}</span>
           )}
         </div>
 
         {/* Cuisine */}
-        <div className="space-y-2">
-          <label className="label" htmlFor="cuisine">
-            <span className="label-text">Cuisine *</span>
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content/80">Cuisine *</span>
           </label>
           <select
-            id="cuisine"
-            {...register("cuisine", {
-              required: "Please select a cuisine",
-            })}
-            className={`select select-bordered w-full ${
+            {...register("cuisine", { required: "Please select a cuisine" })}
+            className={`select select-bordered w-full focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all ${
               errors.cuisine ? "select-error" : ""
             }`}
           >
-            <option value="">Select cuisine.</option>
+            <option value="">Select cuisine type</option>
             {cuisineOptions.map((cuisine) => (
               <option key={cuisine} value={cuisine}>
                 {formatLabel(cuisine)}
@@ -106,332 +112,318 @@ const Step1BasicDetails = ({ cuisineOptions, dietaryOptions }) => {
             ))}
           </select>
           {errors.cuisine && (
-            <p className="text-sm text-error">{errors.cuisine.message}</p>
+            <span className="text-xs text-error mt-1 ml-1">{errors.cuisine.message}</span>
           )}
         </div>
       </div>
 
       {/* Description */}
-      <div className="space-y-2">
-        <label className="label" htmlFor="description">
-          <span className="label-text">Description *</span>
+      <div className="form-control w-full">
+        <label className="label">
+          <span className="label-text font-semibold text-base-content/80">Description *</span>
         </label>
         <textarea
-          id="description"
-          placeholder="Describe your recipe, what makes it special."
+          rows={4}
+          placeholder="Describe the taste, texture, and story behind your recipe..."
           {...register("description", {
             required: "Description is required",
             minLength: { value: 10, message: "At least 10 characters" },
             maxLength: { value: 1000, message: "Max 1000 characters" },
           })}
-          className={`textarea textarea-bordered w-full ${
+          className={`textarea textarea-bordered w-full text-base focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all ${
             errors.description ? "textarea-error" : ""
           }`}
-          rows={3}
         />
         {errors.description && (
-          <p className="text-sm text-error">{errors.description.message}</p>
+          <span className="text-xs text-error mt-1 ml-1">{errors.description.message}</span>
         )}
       </div>
 
-      {/* Servings & time */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <label className="label" htmlFor="servings">
-            <span className="label-text">Servings *</span>
+      {/* Servings + Prep + Cook */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Servings */}
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content/80">Servings *</span>
           </label>
-          <div className="flex items-center gap-2">
-            <FaUsers className="w-4 h-4 text-gray-400" />
+          <div className={`input input-bordered flex items-center gap-3 focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500 ${errors.servings ? "input-error" : ""}`}>
+            <FaUsers className="text-orange-500/70" />
             <input
-              id="servings"
               type="number"
               min="1"
+              placeholder="0"
+              className="grow"
               {...register("servings", {
-                required: "Servings is required",
-                min: { value: 1, message: "At least 1 serving" },
+                required: "Required",
+                min: { value: 1, message: "Min 1" },
                 valueAsNumber: true,
               })}
-              className={`input input-bordered w-full ${
-                errors.servings ? "input-error" : ""
-              }`}
             />
           </div>
           {errors.servings && (
-            <p className="text-sm text-error">{errors.servings.message}</p>
+            <span className="text-xs text-error mt-1 ml-1">{errors.servings.message}</span>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="label" htmlFor="prepMinutes">
-            <span className="label-text">Prep Time (min) *</span>
+        {/* Prep Time */}
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content/80">Prep Time (min) *</span>
           </label>
-          <div className="flex items-center gap-2">
-            <FaClock className="w-4 h-4 text-gray-400" />
+          <div className={`input input-bordered flex items-center gap-3 focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500 ${errors.prepMinutes ? "input-error" : ""}`}>
+            <FaClock className="text-orange-500/70" />
             <input
-              id="prepMinutes"
               type="number"
-              min="0"
+              min="1"
+              placeholder="0"
+              className="grow"
               {...register("prepMinutes", {
-                required: "Prep time is required",
-                min: { value: 1, message: "Minimum 1 minute" },
+                required: "Required",
+                min: { value: 1, message: "Min 1" },
                 valueAsNumber: true,
               })}
-              className={`input input-bordered w-full ${
-                errors.prepMinutes ? "input-error" : ""
-              }`}
             />
           </div>
           {errors.prepMinutes && (
-            <p className="text-sm text-error">{errors.prepMinutes.message}</p>
+            <span className="text-xs text-error mt-1 ml-1">{errors.prepMinutes.message}</span>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="label" htmlFor="cookMinutes">
-            <span className="label-text">Cook Time (min) *</span>
+        {/* Cook Time */}
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content/80">Cook Time (min) *</span>
           </label>
-          <div className="flex items-center gap-2">
-            <FaClock className="w-4 h-4 text-gray-400" />
+          <div className={`input input-bordered flex items-center gap-3 focus-within:border-orange-500 focus-within:ring-1 focus-within:ring-orange-500 ${errors.cookMinutes ? "input-error" : ""}`}>
+            <FaClock className="text-orange-500/70" />
             <input
-              id="cookMinutes"
               type="number"
-              min="0"
+              min="1"
+              placeholder="0"
+              className="grow"
               {...register("cookMinutes", {
-                required: "Cook time is required",
-                min: { value: 1, message: "Minimum 1 minute" },
+                required: "Required",
+                min: { value: 1, message: "Min 1" },
                 valueAsNumber: true,
               })}
-              className={`input input-bordered w-full ${
-                errors.cookMinutes ? "input-error" : ""
-              }`}
             />
           </div>
           {errors.cookMinutes && (
-            <p className="text-sm text-error">{errors.cookMinutes.message}</p>
+            <span className="text-xs text-error mt-1 ml-1">{errors.cookMinutes.message}</span>
           )}
         </div>
       </div>
 
-      {/* Premium toggle + thumbnail + dietary labels + external links */}
-      <div className="space-y-6">
-        <label className="flex items-center gap-2 cursor-pointer">
+      {/* Premium Toggle */}
+      <div className="form-control">
+        <label className="label cursor-pointer justify-start gap-3">
           <input
-            id="isPremium"
             type="checkbox"
             {...register("isPremium")}
-            className="checkbox"
+            className="checkbox checkbox-warning border-orange-400 checked:border-orange-500 checked:bg-orange-500"
           />
-          <span className="text-sm">Premium Recipe</span>
+          <span className="label-text font-semibold text-base-content">
+            Mark as Premium Recipe
+          </span>
+        </label>
+      </div>
+
+      {/* Thumbnail Upload */}
+      <div className="form-control w-full">
+        <label className="label">
+          <span className="label-text font-semibold text-base-content/80">Thumbnail Image *</span>
         </label>
 
-        {/* Thumbnail upload + preview (REQUIRED) */}
-        <div className="space-y-2">
-          <label className="label">
-            <span className="label-text">Thumbnail *</span>
-          </label>
+        <input
+          type="file"
+          accept="image/*"
+          id="thumbnailFile"
+          className="hidden"
+          {...register("thumbnailFile", {
+            validate: (v) =>
+              v instanceof File || thumbnailFile instanceof File
+                ? true
+                : "Thumbnail image is required",
+          })}
+          onChange={handleThumbnailChange}
+        />
 
-          <input
-            id="thumbnailFile"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            {...register("thumbnailFile", {
-              validate: (v) =>
-                v instanceof File || thumbnailFile instanceof File
-                  ? true
-                  : "Thumbnail image is required",
-            })}
-            onChange={handleThumbnailChange}
-          />
-
-          <label
-            htmlFor="thumbnailFile"
-            className="border-2 border-dashed border-base-300 rounded-lg p-4 flex items-center gap-3 cursor-pointer"
-          >
-            <FaUpload className="w-6 h-6 text-gray-400" />
-            <div>
-              <p className="text-sm font-medium">
-                {thumbnailFile
-                  ? "Change thumbnail"
-                  : "Click to upload thumbnail"}
-              </p>
-              <p className="text-xs text-gray-500">
-                Recommended: landscape image for your recipe cover
-              </p>
-            </div>
-          </label>
-
-          {errors.thumbnailFile && (
-            <p className="text-sm text-error">{errors.thumbnailFile.message}</p>
-          )}
-
-          {thumbnailFile && (
-            <div className="mt-3 flex items-center gap-4">
-              <div className="w-24 h-24 rounded-lg overflow-hidden bg-base-200">
-                <img
-                  src={URL.createObjectURL(thumbnailFile)}
-                  alt="Thumbnail preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="text-sm text-gray-600">
-                <div className="flex items-center gap-2 font-medium">
-                  <FaImage className="w-4 h-4" />
-                  <span>{thumbnailFile.name}</span>
+        <label
+          htmlFor="thumbnailFile"
+          className={`flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-8 cursor-pointer transition-all duration-200 
+            ${errors.thumbnailFile ? 'border-error bg-error/5' : 'border-base-300 hover:border-orange-400 hover:bg-orange-50/50'}
+          `}
+        >
+            {thumbnailFile ? (
+                <div className="flex flex-col items-center gap-4 w-full">
+                    <div className="w-full max-w-xs aspect-video rounded-lg overflow-hidden shadow-sm border border-base-200">
+                        <img
+                        src={URL.createObjectURL(thumbnailFile)}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-success font-medium">
+                        <FaImage />
+                        <span className="truncate max-w-[200px]">{thumbnailFile.name}</span>
+                        <span className="text-base-content/50 font-normal">(Click to change)</span>
+                    </div>
                 </div>
-              </div>
-            </div>
-          )}
-        </div>
+            ) : (
+                <div className="flex flex-col items-center text-center gap-2">
+                    <div className="p-3 bg-orange-100 text-orange-600 rounded-full mb-1">
+                        <FaUpload className="w-6 h-6" />
+                    </div>
+                    <p className="font-semibold text-base-content">Click to upload thumbnail</p>
+                    <p className="text-xs text-base-content/60">SVG, PNG, JPG (Landscape recommended)</p>
+                </div>
+            )}
+        </label>
+        {errors.thumbnailFile && (
+          <span className="text-xs text-error mt-1 ml-1">{errors.thumbnailFile.message}</span>
+        )}
+      </div>
 
-        {/* Dietary labels */}
-        <div className="space-y-3">
-          <label className="label">
-            <span className="label-text">Dietary Labels</span>
-          </label>
-          <div className="flex flex-wrap gap-2">
+      {/* Dietary Labels */}
+      <div className="space-y-4">
+        <label className="label pb-0">
+          <span className="label-text font-semibold text-base-content/80">Dietary Labels</span>
+        </label>
+        
+        <div className="bg-base-100 p-4 rounded-xl border border-base-200">
+            <div className="flex flex-wrap gap-2">
             {dietaryOptions.map((label) => {
-              const active = dietaryLabels.includes(label);
-              return (
+                const active = dietaryLabels.includes(label);
+                return (
                 <button
-                  type="button"
-                  key={label}
-                  className={`badge ${
-                    active ? "badge-primary" : "badge-outline"
-                  } cursor-pointer capitalize`}
-                  onClick={() =>
-                    active ? onRemoveLabel(label) : onAddLabel(label)
-                  }
-                >
-                  {formatLabel(label)}
-                </button>
-              );
-            })}
-          </div>
-
-          {dietaryLabels.length > 0 && (
-            <div className="space-y-2">
-              <label className="label text-sm">Selected labels:</label>
-              <div className="flex flex-wrap gap-2">
-                {dietaryLabels.map((label) => (
-                  <span
+                    type="button"
                     key={label}
-                    className="badge badge-primary gap-1 flex items-center capitalize"
-                  >
+                    onClick={() => active ? onRemoveLabel(label) : onAddLabel(label)}
+                    className={`badge badge-lg gap-2 px-4 py-3 cursor-pointer transition-all border
+                    ${active 
+                        ? "badge-warning text-yellow-950 border-yellow-500" 
+                        : "badge-ghost bg-white text-base-content/70 hover:border-orange-300"
+                    }`}
+                >
+                    {active && <FaTimes className="w-3 h-3" />}
                     {formatLabel(label)}
-                    <FaTimes
-                      className="w-3 h-3 cursor-pointer ml-1"
-                      onClick={() => onRemoveLabel(label)}
-                    />
-                  </span>
-                ))}
-              </div>
+                    {!active && <FaPlus className="w-3 h-3 opacity-50" />}
+                </button>
+                );
+            })}
             </div>
-          )}
         </div>
 
-        {/* External media links */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <label className="label">
-              <span className="label-text">
-                External Links (optional, e.g. YouTube, blog)
-              </span>
-            </label>
-            <button
-              type="button"
-              className="btn btn-xs btn-outline gap-1"
-              onClick={() => appendLink({ name: "", url: "" })}
-            >
-              <FaPlus className="w-3 h-3" />
-              Add Link
-            </button>
+        {/* Selected Summary */}
+        {dietaryLabels.length > 0 && (
+          <div className="flex items-center gap-3 text-sm text-base-content/70 ml-1">
+             <span className="font-semibold text-orange-600">Selected:</span>
+             <div className="flex flex-wrap gap-1">
+                {dietaryLabels.map((l, i) => (
+                    <span key={l}>{formatLabel(l)}{i < dietaryLabels.length - 1 ? ", " : ""}</span>
+                ))}
+             </div>
           </div>
+        )}
+      </div>
 
-          {linkFields.length === 0 && (
-            <p className="text-xs text-gray-500">
-              You can attach related videos or articles later.
-            </p>
-          )}
+      {/* External Links */}
+      <div className="space-y-4 pt-4 border-t border-base-200">
+        <div className="flex justify-between items-end">
+          <div className="flex flex-col">
+            <label className="label-text font-semibold text-base-content/80 text-lg">
+                External Media
+            </label>
+            <span className="text-xs text-base-content/50">Add links to YouTube videos or blogs</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => appendLink({ name: "", url: "" })}
+            className="btn btn-sm btn-outline border-orange-400 text-orange-600 hover:bg-orange-500 hover:border-orange-500 hover:text-white gap-2"
+          >
+            <FaPlus className="w-3 h-3" />
+            Add Link
+          </button>
+        </div>
 
-          <div className="space-y-3">
-            {linkFields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid md:grid-cols-5 gap-3 items-end border border-base-200 rounded-lg p-3"
-              >
-                <div className="md:col-span-2 space-y-1">
-                  <label
-                    className="label text-xs"
-                    htmlFor={`externalMediaLinks.${index}.name`}
-                  >
+        {linkFields.length === 0 && (
+          <div className="text-center py-6 bg-base-100 rounded-xl border border-dashed border-base-300 text-base-content/40 text-sm">
+            No external links added yet.
+          </div>
+        )}
+
+        <div className="space-y-3">
+          {linkFields.map((field, index) => (
+            <div
+              key={field.id}
+              className="p-4 rounded-xl bg-base-100 border border-base-200 hover:shadow-sm transition-shadow"
+            >
+              <div className="grid md:grid-cols-12 gap-4 items-start">
+                
+                {/* Name */}
+                <div className="md:col-span-4 form-control">
+                  <label className="label-text text-xs font-semibold mb-1.5 ml-1">
                     Label
                   </label>
                   <input
-                    id={`externalMediaLinks.${index}.name`}
                     type="text"
-                    placeholder="e.g. YouTube walkthrough"
+                    placeholder="e.g. Video Tutorial"
                     {...register(`externalMediaLinks.${index}.name`, {
                       required: "Label is required",
                     })}
-                    className={`input input-bordered input-sm w-full ${
-                      errors?.externalMediaLinks?.[index]?.name
-                        ? "input-error"
-                        : ""
+                    className={`input input-sm input-bordered w-full focus:outline-none focus:border-orange-500 ${
+                      errors?.externalMediaLinks?.[index]?.name ? "input-error" : ""
                     }`}
                   />
-                  {errors?.externalMediaLinks?.[index]?.name && (
-                    <p className="text-xs text-error">
-                      {errors.externalMediaLinks[index].name.message}
-                    </p>
-                  )}
                 </div>
 
-                <div className="md:col-span-3 space-y-1">
-                  <label
-                    className="label text-xs"
-                    htmlFor={`externalMediaLinks.${index}.url`}
-                  >
+                {/* URL */}
+                <div className="md:col-span-7 form-control">
+                  <label className="label-text text-xs font-semibold mb-1.5 ml-1">
                     URL
                   </label>
                   <input
-                    id={`externalMediaLinks.${index}.url`}
                     type="url"
-                    placeholder="https://example.com/video"
+                    placeholder="https://..."
                     {...register(`externalMediaLinks.${index}.url`, {
                       required: "URL is required",
                       pattern: {
                         value: /^https?:\/\/.+$/i,
-                        message: "Enter a valid URL starting with http/https",
+                        message: "Valid URL required",
                       },
                     })}
-                    className={`input input-bordered input-sm w-full ${
-                      errors?.externalMediaLinks?.[index]?.url
-                        ? "input-error"
-                        : ""
+                    className={`input input-sm input-bordered w-full focus:outline-none focus:border-orange-500 ${
+                      errors?.externalMediaLinks?.[index]?.url ? "input-error" : ""
                     }`}
                   />
-                  {errors?.externalMediaLinks?.[index]?.url && (
-                    <p className="text-xs text-error">
-                      {errors.externalMediaLinks[index].url.message}
-                    </p>
-                  )}
                 </div>
 
-                <div className="md:col-span-5 flex justify-end">
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-xs text-error"
-                    onClick={() => removeLink(index)}
-                  >
-                    Remove
-                  </button>
+                {/* Remove Button */}
+                <div className="md:col-span-1 flex justify-end md:justify-center md:pt-6">
+                    <button
+                        type="button"
+                        onClick={() => removeLink(index)}
+                        className="btn btn-square btn-ghost btn-sm text-error hover:bg-error/10"
+                        title="Remove link"
+                    >
+                        <FaTimes />
+                    </button>
                 </div>
               </div>
-            ))}
-          </div>
+              
+              {/* Field specific errors display */}
+              {(errors?.externalMediaLinks?.[index]?.name || errors?.externalMediaLinks?.[index]?.url) && (
+                 <div className="mt-2 text-xs text-error flex gap-4">
+                    <span>{errors?.externalMediaLinks?.[index]?.name?.message}</span>
+                    <span>{errors?.externalMediaLinks?.[index]?.url?.message}</span>
+                 </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
+
     </div>
   );
 };
