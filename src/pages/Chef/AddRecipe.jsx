@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { FaCheckCircle, FaChevronLeft, FaChevronRight, FaHome } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+  FaHome,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 import addRecipeApi from "../../apis/recipe/addRecipeApi";
 import Step1BasicDetails from "../../components/addRecipe/Step1BasicDetails";
@@ -8,7 +14,6 @@ import Step2Ingredients from "../../components/addRecipe/Step2Ingredients";
 import Step3Instructions from "../../components/addRecipe/Step3Instructions";
 import Step4Preview from "../../components/addRecipe/Step4Preview";
 import HomeLayout from "../../layouts/HomeLayout";
-import { useNavigate } from "react-router-dom";
 
 const STEPS = [
   {
@@ -198,11 +203,11 @@ export default function AddRecipe() {
 
       const externalMediaLinks =
         Array.isArray(data.externalMediaLinks) &&
-          data.externalMediaLinks.length > 0
+        data.externalMediaLinks.length > 0
           ? data.externalMediaLinks.map((link) => ({
-            name: link.name?.trim(),
-            url: link.url,
-          }))
+              name: link.name?.trim(),
+              url: link.url,
+            }))
           : undefined;
 
       const thumbnailFile = data.thumbnailFile || null;
@@ -210,24 +215,38 @@ export default function AddRecipe() {
         .map((step) => step.imageFile || null)
         .filter(Boolean);
 
-      const payload = {
-        title: data.title?.trim(),
-        description: data.description?.trim(),
-        cuisine: data.cuisine,
-        servings: Number(data.servings),
-        totalCookingTime,
-        isPremium: !!data.isPremium,
+      const formData = new FormData();
 
-        ingredients,
-        steps,
-        dietaryLabels,
-        externalMediaLinks,
+      formData.append("title", data.title?.trim() || "");
+      formData.append("description", data.description?.trim() || "");
+      formData.append("cuisine", data.cuisine);
+      formData.append("servings", String(Number(data.servings) || 0));
+      formData.append("totalCookingTime", String(totalCookingTime));
+      formData.append("isPremium", data.isPremium ? "true" : "false");
 
-        thumbnailFile,
-        stepImages,
-      };
+      formData.append("ingredients", JSON.stringify(ingredients));
+      formData.append("steps", JSON.stringify(steps));
 
-      await addRecipeApi(payload);
+      if (dietaryLabels) {
+        formData.append("dietaryLabels", JSON.stringify(dietaryLabels));
+      }
+
+      if (externalMediaLinks) {
+        formData.append(
+          "externalMediaLinks",
+          JSON.stringify(externalMediaLinks)
+        );
+      }
+
+      if (thumbnailFile) {
+        formData.append("thumbnailFile", thumbnailFile);
+      }
+
+      stepImages.forEach((imgFile) => {
+        formData.append("stepImages", imgFile);
+      });
+
+      await addRecipeApi(formData);
 
       reset();
       setCurrentStep(1);
@@ -249,19 +268,15 @@ export default function AddRecipe() {
           formState: { errors },
         }}
       >
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="container mx-auto px-4 py-8 max-w-4xl"
-        >
+        <form className="container mx-auto px-4 py-8 max-w-4xl">
           {/* --- Stepper & Progress Bar --- */}
           <div className="mb-10">
             <div className="flex items-center justify-between relative">
-              
               {/* Steps */}
               {STEPS.map((step) => {
                 const isCompleted = currentStep > step.id;
                 const isActive = currentStep === step.id;
-                
+
                 return (
                   <div
                     key={step.id}
@@ -282,8 +297,12 @@ export default function AddRecipe() {
                         <span className="font-bold">{step.id}</span>
                       )}
                     </div>
-                    
-                    <div className={`mt-3 text-center transition-colors duration-300 ${isActive ? "text-orange-600" : "text-base-content/50"}`}>
+
+                    <div
+                      className={`mt-3 text-center transition-colors duration-300 ${
+                        isActive ? "text-orange-600" : "text-base-content/50"
+                      }`}
+                    >
                       <div className="text-sm font-bold">{step.title}</div>
                       <div className="text-[10px] font-medium hidden sm:block opacity-80">
                         {step.description}
@@ -297,7 +316,9 @@ export default function AddRecipe() {
               <div className="absolute top-6 left-0 right-0 h-1 bg-base-200 -z-10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-yellow-500 transition-all duration-500 ease-in-out"
-                  style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
+                  style={{
+                    width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%`,
+                  }}
                 />
               </div>
             </div>
@@ -352,18 +373,16 @@ export default function AddRecipe() {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
                 disabled={isSubmitting}
-                className={`btn gap-2 bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 px-8 shadow-sm hover:shadow-md
-                  ${isSubmitting ? "loading" : ""}
-                `}
+                onClick={handleSubmit(onSubmit)}
+                className="btn gap-2 bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 px-8 shadow-sm hover:shadow-md"
               >
                 {!isSubmitting && <FaCheckCircle className="w-4 h-4" />}
                 {isSubmitting ? "Publishing Recipe..." : "Publish Recipe"}
               </button>
             )}
           </div>
-
         </form>
       </FormProvider>
     </HomeLayout>
