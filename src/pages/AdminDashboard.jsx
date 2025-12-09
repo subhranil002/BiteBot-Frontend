@@ -132,7 +132,7 @@ export default function AdminDashboard() {
                                 <div className="flex items-center space-x-3">
                                 <div className="avatar">
                                     <div className="mask mask-squircle w-12 h-12 bg-base-300">
-                                        <img src="https://source.unsplash.com/random/100x100/?chicken,curry" alt="Food" />
+                                        <img src="https://bonmasala.com/wp-content/uploads/2022/01/Tandoori-chicken-masala.jpg" alt="Food" />
                                     </div>
                                 </div>
                                 <div>
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
                                 <div className="flex items-center space-x-3">
                                 <div className="avatar">
                                     <div className="mask mask-squircle w-12 h-12 bg-base-300">
-                                        <img src="https://source.unsplash.com/random/100x100/?bread,garlic" alt="Food" />
+                                        <img src="https://tse3.mm.bing.net/th/id/OIP.ad4BUY3Z2O0ix6Ka0CbhvAHaLG?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Food" />
                                     </div>
                                 </div>
                                 <div>
@@ -199,7 +199,7 @@ export default function AdminDashboard() {
                                 <div className="flex items-center space-x-3">
                                 <div className="avatar">
                                     <div className="mask mask-squircle w-12 h-12 bg-base-300">
-                                        <img src="https://source.unsplash.com/random/100x100/?noodles" alt="Food" />
+                                        <img src="https://bing.com/th?id=OSK.883226b2324c95a8fdfe4b39b0a7596c" alt="Food" />
                                     </div>
                                 </div>
                                 <div>

@@ -122,10 +122,10 @@ const Step4Preview = () => {
         {/* Content Divider */}
         <div className="divider m-0 h-0 border-base-200"></div>
 
-        <div className="grid md:grid-cols-12">
+        <div className="flex flex-col md:flex-row w-full">
             
-            {/* --- Left Column: Ingredients (Table style) --- */}
-            <div className="md:col-span-4 bg-base-50/50 p-6 border-r border-base-200">
+            {/* --- Left Column: Ingredients --- */}
+            <div className="w-full md:w-4/12 bg-base-50/50 p-6 border-b md:border-b-0 md:border-r border-base-200">
                 <div className="flex items-center gap-2 mb-4">
                     <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
                         <FaListUl className="w-4 h-4" />
@@ -173,8 +173,8 @@ const Step4Preview = () => {
                 </div>
             </div>
 
-            {/* --- Right Column: Instructions --- */}
-            <div className="md:col-span-8 p-6 bg-base-100">
+            {/* --- Right Column: Instructions */}
+            <div className="w-full md:w-8/12 p-6 bg-base-100">
                 <div className="flex items-center gap-2 mb-6">
                     <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
                         <FaUtensils className="w-4 h-4" />
@@ -191,7 +191,6 @@ const Step4Preview = () => {
 
                     {(formData.steps || []).map((step, index) => (
                         <li key={step.id || index} className="step step-warning w-full text-left">
-                            {/* FIX: Added min-w-0 to prevent Grid blowout caused by wide images */}
                             <div className="flex flex-col items-start text-left ml-4 mb-8 w-full min-w-0">
                                 <span className="font-bold text-sm text-orange-600 uppercase tracking-wide mb-1">
                                     Step {index + 1}
@@ -200,11 +199,11 @@ const Step4Preview = () => {
                                     {step.text}
                                 </p>
                                 {step.imageFile && (
-                                    <div className="w-full max-w-lg rounded-xl overflow-hidden shadow-sm border border-base-200 mt-2 bg-base-100">
+                                    <div className="w-full max-w-md rounded-xl overflow-hidden shadow-sm border border-base-200 mt-2 bg-base-100">
                                         <img 
                                             src={URL.createObjectURL(step.imageFile)} 
                                             alt={`Step ${index + 1}`}
-                                            className="w-full h-auto max-h-[400px] object-contain"
+                                            className="w-full h-64 object-cover"
                                         />
                                     </div>
                                 )}
