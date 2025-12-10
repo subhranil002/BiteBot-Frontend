@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaClock, FaHeart, FaStar, FaUsers } from "react-icons/fa";
+import { FaClock, FaFire,FaHeart, FaStar, FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -20,9 +20,10 @@ function RecipeDetail() {
     averageRating: 0,
     reviewCount: 0,
   });
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -30,6 +31,7 @@ function RecipeDetail() {
       return;
     }
     dispatch(getRecipeById(id));
+
     return () => {
       dispatch(resetRecipe());
     };
@@ -95,6 +97,15 @@ function RecipeDetail() {
       label: "Likes",
       value: recipe.likeCount?.length || 0,
     },
+    ...(recipe?.nutrition?.totalCalories
+      ? [
+          {
+            icon: <FaFire />,
+            label: "Calories",
+            value: recipe.nutrition.totalCalories,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -113,7 +124,7 @@ function RecipeDetail() {
 
               {/* Like Button */}
               <button
-                onClick={() => toggleFav()}
+                onClick={toggleFav}
                 disabled={loading}
                 className={`absolute top-4 right-4 btn btn-circle ${
                   isFav
@@ -173,8 +184,8 @@ function RecipeDetail() {
                   </div>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {/* Stats (now also shows Calories if available) */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {statTabs.map((item, i) => (
                     <div
                       key={i}

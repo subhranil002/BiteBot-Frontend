@@ -1,413 +1,477 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
-import { FaCamera, FaSave, FaTimes, FaPlus, FaTrash } from "react-icons/fa";
+import { FaCamera, FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-const HARD_CODED_INITIAL = {
-    profile: {
-        name: "John Doe",
-        bio: "Food enthusiast exploring Indian and fusion cuisines.",
-        avatar: {
-            secure_url:
-                "https://images.unsplash.com/photo-1603415526960-f7e0328b36f0?w=800&q=60",
-        },
-        dietary: ["Vegetarian", "Gluten-Free"],
-        allergens: ["Peanuts", "Shellfish"],
-        cuisines: ["Indian", "Italian", "Fusion"],
-    },
-};
-
-// Common options for dropdowns
 const DIETARY_OPTIONS = [
-    "Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Keto", 
-    "Paleo", "Pescatarian", "Low-Carb", "Sugar-Free", "Organic"
+  "vegetarian",
+  "vegan",
+  "gluten-free",
+  "dairy-free",
+  "keto",
+  "paleo",
+  "pescatarian",
+  "low-carb",
+  "sugar-free",
+  "organic",
 ];
 
 const ALLERGEN_OPTIONS = [
-    "Peanuts", "Tree Nuts", "Milk", "Eggs", "Fish", "Shellfish", 
-    "Soy", "Wheat", "Gluten", "Sesame", "Sulfites"
+  "Peanuts",
+  "Tree Nuts",
+  "Milk",
+  "Eggs",
+  "Fish",
+  "Shellfish",
+  "Soy",
+  "Wheat",
+  "Gluten",
+  "Sesame",
+  "Sulfites",
 ];
 
 const CUISINE_OPTIONS = [
-    "Indian", "Italian", "Chinese", "Mexican", "Thai", "Japanese",
-    "French", "Mediterranean", "American", "Fusion", "Korean",
-    "Vietnamese", "Spanish", "Greek", "Lebanese", "Turkish"
+  "indian",
+  "italian",
+  "chinese",
+  "mexican",
+  "thai",
+  "japanese",
+  "french",
+  "mediterranean",
+  "american",
+  "korean",
+  "vietnamese",
+  "middle-eastern",
+  "british",
+  "spanish",
+  "german",
+  "greek",
 ];
 
-function EditProfileDialog() {
-    const dlgRef = useRef(null);
-
-    const [formData, setFormData] = useState({
-        name: HARD_CODED_INITIAL.profile.name,
-        bio: HARD_CODED_INITIAL.profile.bio,
-        avatar: HARD_CODED_INITIAL.profile.avatar?.secure_url || "",
-        dietary: HARD_CODED_INITIAL.profile.dietary || [],
-        allergens: HARD_CODED_INITIAL.profile.allergens || [],
-        cuisines: HARD_CODED_INITIAL.profile.cuisines || [],
-    });
-
-    const [newDietary, setNewDietary] = useState("");
-    const [newAllergen, setNewAllergen] = useState("");
-    const [newCuisine, setNewCuisine] = useState("");
-
-    const handleChange = (field, value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const handleAvatarChange = (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            setFormData((prev) => ({ ...prev, avatar: url }));
-        }
-    };
-
-    const closeDialog = () => {
-        dlgRef.current?.close();
-    };
-
-    const handleSave = () => {
-        // TODO: Integrate with backend -> PATCH /user/profile
-        console.log("Updated Profile Data:", formData);
-        closeDialog();
-    };
-
-    // Dietary Functions
-    const addDietary = () => {
-        if (newDietary.trim() && !formData.dietary.includes(newDietary.trim())) {
-            setFormData(prev => ({
-                ...prev,
-                dietary: [...prev.dietary, newDietary.trim()]
-            }));
-            setNewDietary("");
-        }
-    };
-
-    const removeDietary = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            dietary: prev.dietary.filter((_, i) => i !== index)
-        }));
-    };
-
-    // Allergen Functions
-    const addAllergen = () => {
-        if (newAllergen.trim() && !formData.allergens.includes(newAllergen.trim())) {
-            setFormData(prev => ({
-                ...prev,
-                allergens: [...prev.allergens, newAllergen.trim()]
-            }));
-            setNewAllergen("");
-        }
-    };
-
-    const removeAllergen = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            allergens: prev.allergens.filter((_, i) => i !== index)
-        }));
-    };
-
-    // Cuisine Functions
-    const addCuisine = () => {
-        if (newCuisine.trim() && !formData.cuisines.includes(newCuisine.trim())) {
-            setFormData(prev => ({
-                ...prev,
-                cuisines: [...prev.cuisines, newCuisine.trim()]
-            }));
-            setNewCuisine("");
-        }
-    };
-
-    const removeCuisine = (index) => {
-        setFormData(prev => ({
-            ...prev,
-            cuisines: prev.cuisines.filter((_, i) => i !== index)
-        }));
-    };
-
-    const handleKeyPress = (e, addFunction) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addFunction();
-        }
-    };
-
-    return (
-        <dialog
-            id="edit-profile"
-            ref={dlgRef}
-            className="modal"
-            aria-label="Edit Profile Dialog"
-        >
-            <div className="modal-box max-w-2xl w-full bg-white/80 backdrop-blur-md border border-orange-100 shadow-xl rounded-2xl p-6 relative max-h-[90vh] overflow-y-auto">
-                {/* Close Button */}
-                <button
-                    type="button"
-                    className="btn btn-sm btn-circle bg-gradient-to-r from-orange-400 to-red-400 text-white hover:opacity-90 transition-all shadow-md absolute right-4 top-4 z-10"
-                    onClick={closeDialog}
-                    aria-label="Close dialog"
-                >
-                    <AiOutlineClose className="w-5 h-5" />
-                </button>
-
-                {/* Header */}
-                <div className="text-center mb-6">
-                    <h3 className="font-bold text-2xl text-gray-800 mb-2">
-                        Edit Profile
-                    </h3>
-                    <p className="text-gray-500">
-                        Update your profile information and preferences
-                    </p>
-                </div>
-
-                {/* Form */}
-                <form
-                    className="space-y-6"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSave();
-                    }}
-                >
-                    {/* Avatar Section */}
-                    <div className="flex flex-col items-center space-y-3">
-                        <div className="relative">
-                            {formData.avatar ? (
-                                <img
-                                    src={formData.avatar}
-                                    alt={formData.name}
-                                    className="w-24 h-24 rounded-full border-4 border-orange-100 shadow-md object-cover"
-                                />
-                            ) : (
-                                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-200 to-red-200 flex items-center justify-center text-2xl font-semibold text-white shadow-md">
-                                    {formData.name?.charAt(0) ?? "U"}
-                                </div>
-                            )}
-
-                            <label
-                                htmlFor="avatar-upload"
-                                className="absolute -bottom-2 -right-2 bg-gradient-to-r from-orange-400 to-red-400 text-white p-2 rounded-full shadow-md hover:scale-105 transition-all cursor-pointer"
-                                title="Change avatar"
-                            >
-                                <FaCamera className="w-4 h-4" />
-                            </label>
-                            <input
-                                type="file"
-                                id="avatar-upload"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleAvatarChange}
-                            />
-                        </div>
-                        <p className="text-xs text-center text-gray-500">
-                            Click the camera icon to change your profile picture
-                        </p>
-                    </div>
-
-                    {/* Basic Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                        {/* Display Name */}
-                        <div className="form-control w-full">
-                            <label className="label" htmlFor="name">
-                                <span className="label-text font-medium text-gray-700">
-                                    Display Name *
-                                </span>
-                            </label>
-                            <input
-                                id="name"
-                                className="input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                                value={formData.name}
-                                onChange={(e) =>
-                                    handleChange("name", e.target.value)
-                                }
-                                placeholder="Enter your display name"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    {/* Bio */}
-                    <div className="form-control w-full">
-                        <label className="label" htmlFor="bio">
-                            <span className="label-text font-medium text-gray-700">
-                                Bio
-                            </span>
-                        </label>
-                        <textarea
-                            id="bio"
-                            className="textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                            value={formData.bio}
-                            onChange={(e) =>
-                                handleChange("bio", e.target.value)
-                            }
-                            placeholder="Tell us about yourself, your cooking style, or favorite dishes..."
-                            rows={3}
-                        />
-                    </div>
-
-                    {/* Dietary Preferences */}
-                    <div className="form-control w-full">
-                        <label className="label">
-                            <span className="label-text font-medium text-gray-700">
-                                Dietary Preferences
-                            </span>
-                        </label>
-                        <div className="space-y-3">
-                            <div className="flex gap-2">
-                                <select
-                                    className="select select-bordered flex-1 border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                                    value={newDietary}
-                                    onChange={(e) => setNewDietary(e.target.value)}
-                                >
-                                    <option value="">Select dietary preference</option>
-                                    {DIETARY_OPTIONS.map(option => (
-                                        <option key={option} value={option}>{option}</option>
-                                    ))}
-                                </select>
-                                <button
-                                    type="button"
-                                    className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 transition-all gap-2"
-                                    onClick={addDietary}
-                                    disabled={!newDietary.trim()}
-                                >
-                                    <FaPlus className="w-4 h-4" />
-                                    Add
-                                </button>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {formData.dietary.map((item, index) => (
-                                    <div key={index} className="badge badge-lg bg-green-100 border-green-300 text-green-700 gap-2 px-3 py-3">
-                                        {item}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeDietary(index)}
-                                            className="hover:text-green-900 transition-colors"
-                                        >
-                                            <FaTrash className="w-3 h-3" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Allergens */}
-                    <div className="form-control w-full">
-                        <label className="label">
-                            <span className="label-text font-medium text-gray-700">
-                                Allergens
-                            </span>
-                            <span className="label-text-alt text-gray-500">
-                                Foods you're allergic to
-                            </span>
-                        </label>
-                        <div className="space-y-3">
-                            <div className="flex gap-2">
-                                <select
-                                    className="select select-bordered flex-1 border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                                    value={newAllergen}
-                                    onChange={(e) => setNewAllergen(e.target.value)}
-                                >
-                                    <option value="">Select allergen</option>
-                                    {ALLERGEN_OPTIONS.map(option => (
-                                        <option key={option} value={option}>{option}</option>
-                                    ))}
-                                </select>
-                                <button
-                                    type="button"
-                                    className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 transition-all gap-2"
-                                    onClick={addAllergen}
-                                    disabled={!newAllergen.trim()}
-                                >
-                                    <FaPlus className="w-4 h-4" />
-                                    Add
-                                </button>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {formData.allergens.map((item, index) => (
-                                    <div key={index} className="badge badge-lg bg-red-100 border-red-300 text-red-700 gap-2 px-3 py-3">
-                                        {item}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeAllergen(index)}
-                                            className="hover:text-red-900 transition-colors"
-                                        >
-                                            <FaTrash className="w-3 h-3" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Cuisines */}
-                    <div className="form-control w-full">
-                        <label className="label">
-                            <span className="label-text font-medium text-gray-700">
-                                Favorite Cuisines
-                            </span>
-                        </label>
-                        <div className="space-y-3">
-                            <div className="flex gap-2">
-                                <select
-                                    className="select select-bordered flex-1 border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                                    value={newCuisine}
-                                    onChange={(e) => setNewCuisine(e.target.value)}
-                                >
-                                    <option value="">Select cuisine</option>
-                                    {CUISINE_OPTIONS.map(option => (
-                                        <option key={option} value={option}>{option}</option>
-                                    ))}
-                                </select>
-                                <button
-                                    type="button"
-                                    className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 transition-all gap-2"
-                                    onClick={addCuisine}
-                                    disabled={!newCuisine.trim()}
-                                >
-                                    <FaPlus className="w-4 h-4" />
-                                    Add
-                                </button>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {formData.cuisines.map((item, index) => (
-                                    <div key={index} className="badge badge-lg bg-blue-100 border-blue-300 text-blue-700 gap-2 px-3 py-3">
-                                        {item}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeCuisine(index)}
-                                            className="hover:text-blue-900 transition-colors"
-                                        >
-                                            <FaTrash className="w-3 h-3" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="modal-action justify-end flex items-center gap-3 pt-6 border-t border-orange-100">
-                        <button
-                            type="button"
-                            className="btn btn-ghost gap-2 text-gray-600 hover:bg-orange-50"
-                            onClick={closeDialog}
-                        >
-                            <FaTimes className="w-4 h-4" />
-                            <span>Cancel</span>
-                        </button>
-
-                        <button
-                            type="submit"
-                            className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white gap-2 hover:opacity-90 transition-all shadow-md"
-                        >
-                            <FaSave className="w-4 h-4" />
-                            <span>Save Changes</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </dialog>
-    );
+function Chip({ color, children, onRemove }) {
+  const colorMap = {
+    green:
+      "badge-lg bg-green-100 border border-green-300 text-green-700 hover:text-green-900",
+    red: "badge-lg bg-red-100 border border-red-300 text-red-700 hover:text-red-900",
+  };
+  return (
+    <span className={`badge ${colorMap[color]} gap-2`}>
+      <span className="truncate max-w-[12ch] sm:max-w-[20ch]">{children}</span>
+      <button
+        type="button"
+        className="ml-1 btn btn-ghost btn-xs px-1"
+        onClick={onRemove}
+        aria-label={`Remove ${children}`}
+      >
+        <FaTrash className="w-3 h-3" />
+      </button>
+    </span>
+  );
 }
 
-export default EditProfileDialog;
+export default function EditProfileDialog() {
+  const dlgRef = useRef(null);
+  const { profile } = useSelector((state) => state.auth.userData);
+  const [isLoading, setIsLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    getValues,
+    watch,
+    formState: { isSubmitting, errors },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      name: profile.name,
+      bio: profile.bio,
+      dietaryLabels: profile.dietaryLabels.map((v) => ({ value: v })),
+      allergens: profile.allergens.map((v) => ({ value: v })),
+      cuisine: profile.cuisine,
+    },
+  });
+
+  const {
+    fields: dietaryFields,
+    append: appendDietary,
+    remove: removeDietary,
+  } = useFieldArray({ control, name: "dietaryLabels" });
+
+  const {
+    fields: allergenFields,
+    append: appendAllergen,
+    remove: removeAllergen,
+  } = useFieldArray({ control, name: "allergens" });
+
+  const watchedFileList = watch("file");
+
+  useEffect(() => {
+    const file = watchedFileList?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setPreviewUrl(null);
+  }, [watchedFileList]);
+
+  const getAvatarUrl = () => {
+    if (previewUrl) return previewUrl;
+    const url = profile?.avatar?.secure_url;
+    if (url) {
+      return url.replace(
+        "/upload/",
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+      );
+    }
+    return null;
+  };
+
+  const ensureUniqueAppend = (currentItems, valueToAdd, appendFn) => {
+    if (!valueToAdd) return;
+    const exists = currentItems.some(
+      (item) => (item?.value ?? "") === valueToAdd
+    );
+    if (!exists) appendFn({ value: valueToAdd });
+  };
+
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+
+    try {
+      const file = data.file?.[0];
+      const dietary = data.dietaryLabels.map((i) => i.value);
+      const allergs = data.allergens.map((i) => i.value);
+
+      const form = new FormData();
+      form.append("name", data.name.trim());
+      form.append("bio", data.bio);
+      form.append("dietaryLabels", JSON.stringify(dietary));
+      form.append("allergens", JSON.stringify(allergs));
+      form.append("cuisine", data.cuisine);
+      if (file) form.append("file", file);
+
+      console.log("PATCH /user/profile -> FormData", {
+        name: form.get("name"),
+        bio: form.get("bio"),
+        cuisine: form.get("cuisine"),
+        dietaryLabels: form.get("dietaryLabels"),
+        allergens: form.get("allergens"),
+        file: form.get("file"),
+      });
+
+      dlgRef.current?.close();
+    } catch (err) {
+      console.error("Profile update failed:", err);
+    } finally {
+      setIsLoading(false);
+      reset();
+    }
+  };
+
+  return (
+    <dialog
+      id="edit-profile"
+      ref={dlgRef}
+      className="modal"
+      aria-labelledby="edit-profile-title"
+    >
+      <div className="modal-box w-full max-w-2xl bg-white/80 backdrop-blur-md border border-orange-100 shadow-xl rounded-2xl p-4 sm:p-6 relative max-h-[92vh] overflow-y-auto">
+        {/* Close */}
+        <button
+          type="button"
+          className="btn btn-sm btn-circle bg-gradient-to-r from-orange-400 to-red-400 text-white hover:opacity-90 shadow-md absolute right-3 top-3"
+          onClick={() => dlgRef.current?.close()}
+          aria-label="Close edit profile dialog"
+        >
+          <AiOutlineClose className="w-5 h-5" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-5">
+          <h3
+            id="edit-profile-title"
+            className="font-bold text-xl sm:text-2xl text-gray-800"
+          >
+            Edit Profile
+          </h3>
+        </div>
+
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* Avatar */}
+          <section className="flex flex-col items-center gap-3">
+            <div className="relative group">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-orange-100 shadow-md overflow-hidden bg-gradient-to-br from-orange-200 to-red-200 grid place-items-center">
+                {getAvatarUrl() && (
+                  <img
+                    src={getAvatarUrl()}
+                    alt="User avatar"
+                    className="object-cover w-full h-full"
+                  />
+                )}
+              </div>
+
+              <label
+                htmlFor="avatar-upload"
+                className="absolute -bottom-2 -right-2 bg-gradient-to-r from-orange-400 to-red-400 text-white p-2 rounded-full shadow-md hover:scale-105 transition cursor-pointer"
+                title="Change avatar"
+              >
+                <FaCamera className="w-4 h-4" />
+              </label>
+              <input
+                type="file"
+                id="avatar-upload"
+                accept=".jpg,.jpeg,.png,.webp"
+                className="hidden"
+                {...register("file", {
+                  required: "Avatar is required",
+                  maxSize: 5000000, // 5MB
+                  accept: {
+                    "image/jpeg": [".jpg", ".jpeg"],
+                    "image/png": [".png"],
+                    "image/webp": [".webp"],
+                  },
+                })}
+              />
+            </div>
+            <p className="text-xs text-center text-gray-500">
+              Tap the camera icon to update your picture
+            </p>
+          </section>
+
+          {/* Name */}
+          <section className="grid grid-cols-1 gap-4">
+            <div className="form-control w-full">
+              <label className="label" htmlFor="name">
+                <span className="label-text font-medium text-gray-700">
+                  Display Name
+                </span>
+              </label>
+              <input
+                id="name"
+                className={`input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
+                  errors.name ? "input-error" : ""
+                }`}
+                placeholder="Enter your display name"
+                {...register("name", {
+                  required: "Name is required",
+                  minLength: { value: 2, message: "Min 2 characters" },
+                })}
+              />
+              {errors.name && (
+                <span className="label-text-alt text-red-500 mt-1">
+                  {errors.name.message}
+                </span>
+              )}
+            </div>
+          </section>
+
+          {/* Bio */}
+          <section className="form-control w-full">
+            <label className="label" htmlFor="bio">
+              <span className="label-text font-medium text-gray-700">Bio</span>
+            </label>
+            <textarea
+              id="bio"
+              rows={3}
+              className={`textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
+                errors.bio ? "textarea-error" : ""
+              }`}
+              placeholder="Tell us about yourself, your cooking style, or favorite dishes..."
+              {...register("bio", {
+                maxLength: {
+                  value: 500,
+                  message: `Max 500 characters`,
+                },
+              })}
+            />
+            {errors.bio && (
+              <span className="label-text-alt text-red-500 mt-1">
+                {errors.bio.message}
+              </span>
+            )}
+          </section>
+
+          {/* Dietary Preferences */}
+          <section className="form-control w-full">
+            <label className="label" htmlFor="dietary-select">
+              <span className="label-text font-medium text-gray-700">
+                Dietary Preferences
+              </span>
+            </label>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <select
+                id="dietary-select"
+                className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
+                defaultValue=""
+                {...register("dietaryLabels")}
+              >
+                <option value="">Select dietary preference</option>
+                {DIETARY_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 gap-2"
+                onClick={() =>
+                  ensureUniqueAppend(
+                    dietaryFields,
+                    getValues("dietaryLabels"),
+                    appendDietary
+                  )
+                }
+                aria-disabled={!getValues("dietaryLabels")}
+                disabled={!getValues("dietaryLabels")}
+              >
+                <FaPlus className="w-4 h-4" />
+                <span className="whitespace-nowrap">Add</span>
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              {dietaryFields.map((field, idx) => (
+                <div key={field.id} className="inline-flex items-center gap-2">
+                  <input
+                    type="hidden"
+                    defaultValue={field.value}
+                    {...register(`dietaryLabels.${idx}.value`)}
+                  />
+                  <Chip
+                    color="green"
+                    onRemove={() => removeDietary(idx)}
+                    title={`Remove ${field.value}`}
+                  >
+                    {field.value}
+                  </Chip>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Allergens */}
+          <section className="form-control w-full">
+            <label className="label" htmlFor="allergen-select">
+              <span className="label-text font-medium text-gray-700">
+                Allergens
+              </span>
+            </label>
+
+            {/* Inline "Picker" (no separate component) */}
+            <div className="flex flex-col sm:flex-row gap-2">
+              <select
+                id="allergen-select"
+                className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
+                defaultValue=""
+                {...register("allergenDraft")}
+              >
+                <option value="">Select allergen</option>
+                {ALLERGEN_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 gap-2"
+                onClick={() =>
+                  ensureUniqueAppend(
+                    allergenFields,
+                    getValues("allergenDraft"),
+                    appendAllergen
+                  )
+                }
+                aria-disabled={!getValues("allergenDraft")}
+                disabled={!getValues("allergenDraft")}
+              >
+                <FaPlus className="w-4 h-4" />
+                <span className="whitespace-nowrap">Add</span>
+              </button>
+            </div>
+            
+            <div className="flex flex-wrap gap-2 mt-3">
+              {allergenFields.map((field, idx) => (
+                <div key={field.id} className="inline-flex items-center gap-2">
+                  <input
+                    type="hidden"
+                    defaultValue={field.value}
+                    {...register(`allergens.${idx}.value`)}
+                  />
+                  <Chip
+                    color="red"
+                    onRemove={() => removeAllergen(idx)}
+                    title={`Remove ${field.value}`}
+                  >
+                    {field.value}
+                  </Chip>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Cuisine (single) */}
+          <section className="form-control w-full">
+            <label className="label" htmlFor="cuisine-select">
+              <span className="label-text font-medium text-gray-700">
+                Favorite Cuisine
+              </span>
+              <span className="label-text-alt text-gray-500">
+                Single choice
+              </span>
+            </label>
+            <select
+              id="cuisine-select"
+              className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
+              defaultValue={profile.cuisine || ""}
+              {...register("cuisine")}
+            >
+              <option value="">Select cuisine</option>
+              {CUISINE_OPTIONS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </section>
+
+          {/* Actions */}
+          <div className="modal-action flex items-center justify-end gap-3 pt-4 border-t border-orange-100">
+            <button
+              type="button"
+              className="btn btn-ghost gap-2 text-gray-600 hover:bg-orange-50"
+              onClick={() => dlgRef.current?.close()}
+            >
+              <FaTimes className="w-4 h-4" />
+              <span>Cancel</span>
+            </button>
+            <button
+              type="submit"
+              className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white gap-2 hover:opacity-90 shadow-md"
+              disabled={isLoading || isSubmitting}
+            >
+              {isLoading ? (
+                <span className="loading loading-spinner loading-sm"></span>
+              ) : (
+                <>
+                  <FaSave className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  );
+}
