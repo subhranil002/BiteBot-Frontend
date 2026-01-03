@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaCamera, FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { updateProfile } from "../../redux/slices/authSlice";
 
 const DIETARY_OPTIONS = [
   "vegetarian",
@@ -57,7 +59,7 @@ function Chip({ color, children, onRemove }) {
     red: "badge-lg bg-red-100 border border-red-300 text-red-700 hover:text-red-900",
   };
   return (
-    <span className={`badge ${colorMap[color]} gap-2`}>
+    <span className={`badge ${colorMap[color]} gap-2 uppercase`}>
       <span className="truncate max-w-[12ch] sm:max-w-[20ch]">{children}</span>
       <button
         type="button"
@@ -76,6 +78,7 @@ export default function EditProfileDialog() {
   const { profile } = useSelector((state) => state.auth.userData);
   const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -88,11 +91,14 @@ export default function EditProfileDialog() {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      name: profile.name,
-      bio: profile.bio,
+      name: profile.name || "",
+      bio: profile.bio || "",
       dietaryLabels: profile.dietaryLabels.map((v) => ({ value: v })),
       allergens: profile.allergens.map((v) => ({ value: v })),
-      cuisine: profile.cuisine,
+      cuisine: profile.cuisine || "",
+      dietaryDraft: "",
+      allergenDraft: "",
+      avatar: null,
     },
   });
 
@@ -108,7 +114,9 @@ export default function EditProfileDialog() {
     remove: removeAllergen,
   } = useFieldArray({ control, name: "allergens" });
 
-  const watchedFileList = watch("file");
+  const watchedFileList = watch("avatar");
+  const dietaryDraft = watch("dietaryDraft");
+  const allergenDraft = watch("allergenDraft");
 
   useEffect(() => {
     const file = watchedFileList?.[0];
@@ -142,35 +150,25 @@ export default function EditProfileDialog() {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-
+    data.dietaryLabels = data.dietaryLabels.map((i) => i.value);
+    data.allergens = data.allergens.map((i) => i.value);
     try {
-      const file = data.file?.[0];
-      const dietary = data.dietaryLabels.map((i) => i.value);
-      const allergs = data.allergens.map((i) => i.value);
-
-      const form = new FormData();
-      form.append("name", data.name.trim());
-      form.append("bio", data.bio);
-      form.append("dietaryLabels", JSON.stringify(dietary));
-      form.append("allergens", JSON.stringify(allergs));
-      form.append("cuisine", data.cuisine);
-      if (file) form.append("file", file);
-
-      console.log("PATCH /user/profile -> FormData", {
-        name: form.get("name"),
-        bio: form.get("bio"),
-        cuisine: form.get("cuisine"),
-        dietaryLabels: form.get("dietaryLabels"),
-        allergens: form.get("allergens"),
-        file: form.get("file"),
-      });
-
       dlgRef.current?.close();
+      await dispatch(updateProfile(data));
     } catch (err) {
       console.error("Profile update failed:", err);
     } finally {
       setIsLoading(false);
-      reset();
+      reset({
+        name: profile.name,
+        bio: profile.bio,
+        dietaryLabels: profile.dietaryLabels.map((v) => ({ value: v })),
+        allergens: profile.allergens.map((v) => ({ value: v })),
+        cuisine: profile.cuisine,
+        dietaryDraft: "",
+        allergenDraft: "",
+        file: null,
+      });
     }
   };
 
@@ -224,17 +222,20 @@ export default function EditProfileDialog() {
                 <FaCamera className="w-4 h-4" />
               </label>
               <input
-                type="file"
                 id="avatar-upload"
-                accept=".jpg,.jpeg,.png,.webp"
+                type="file"
+                accept="image/*"
                 className="hidden"
-                {...register("file", {
-                  required: "Avatar is required",
-                  maxSize: 5000000, // 5MB
-                  accept: {
-                    "image/jpeg": [".jpg", ".jpeg"],
-                    "image/png": [".png"],
-                    "image/webp": [".webp"],
+                {...register("avatar", {
+                  validate: {
+                    fileSize: (files) =>
+                      !files?.[0] || files[0].size <= 5_000_000 || "Max 5MB",
+                    fileType: (files) =>
+                      !files?.[0] ||
+                      ["image/jpeg", "image/png", "image/webp"].includes(
+                        files[0].type
+                      ) ||
+                      "Invalid file type",
                   },
                 })}
               />
@@ -308,9 +309,8 @@ export default function EditProfileDialog() {
             <div className="flex flex-col sm:flex-row gap-2">
               <select
                 id="dietary-select"
-                className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
-                defaultValue=""
-                {...register("dietaryLabels")}
+                className="select select-bordered w-full rounded-xl uppercase"
+                {...register("dietaryDraft")}
               >
                 <option value="">Select dietary preference</option>
                 {DIETARY_OPTIONS.map((opt) => (
@@ -322,19 +322,19 @@ export default function EditProfileDialog() {
 
               <button
                 type="button"
-                className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 gap-2"
-                onClick={() =>
+                className="btn btn-outline btn-sm"
+                disabled={!dietaryDraft}
+                onClick={() => {
                   ensureUniqueAppend(
                     dietaryFields,
-                    getValues("dietaryLabels"),
+                    dietaryDraft,
                     appendDietary
-                  )
-                }
-                aria-disabled={!getValues("dietaryLabels")}
-                disabled={!getValues("dietaryLabels")}
+                  );
+                  reset({ ...getValues(), dietaryDraft: "" });
+                }}
               >
-                <FaPlus className="w-4 h-4" />
-                <span className="whitespace-nowrap">Add</span>
+                <FaPlus className="w-3 h-3" />
+                Add
               </button>
             </div>
 
@@ -370,7 +370,7 @@ export default function EditProfileDialog() {
             <div className="flex flex-col sm:flex-row gap-2">
               <select
                 id="allergen-select"
-                className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
+                className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl uppercase"
                 defaultValue=""
                 {...register("allergenDraft")}
               >
@@ -384,22 +384,22 @@ export default function EditProfileDialog() {
 
               <button
                 type="button"
-                className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white border-0 hover:opacity-90 gap-2"
-                onClick={() =>
+                className="btn btn-outline btn-sm"
+                disabled={!allergenDraft}
+                onClick={() => {
                   ensureUniqueAppend(
                     allergenFields,
-                    getValues("allergenDraft"),
+                    allergenDraft,
                     appendAllergen
-                  )
-                }
-                aria-disabled={!getValues("allergenDraft")}
-                disabled={!getValues("allergenDraft")}
+                  );
+                  reset({ ...getValues(), allergenDraft: "" });
+                }}
               >
-                <FaPlus className="w-4 h-4" />
-                <span className="whitespace-nowrap">Add</span>
+                <FaPlus className="w-3 h-3" />
+                Add
               </button>
             </div>
-            
+
             <div className="flex flex-wrap gap-2 mt-3">
               {allergenFields.map((field, idx) => (
                 <div key={field.id} className="inline-flex items-center gap-2">
@@ -432,7 +432,7 @@ export default function EditProfileDialog() {
             </label>
             <select
               id="cuisine-select"
-              className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl"
+              className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl uppercase"
               defaultValue={profile.cuisine || ""}
               {...register("cuisine")}
             >

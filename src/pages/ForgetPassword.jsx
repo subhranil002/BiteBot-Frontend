@@ -18,34 +18,21 @@ import {
   GiPotato,
   GiSushis,
 } from "react-icons/gi";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-
-// Assuming you have this action created in your slice
-// import { forgotPassword } from "../redux/slices/authSlice";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
-  
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    // Dispatch your forgot password logic here
-    // const res = await dispatch(forgotPassword(data.email));
-    
-    // Optional: Navigate to a "Check Email" success page or show toast
-    if (res?.payload?.success) {
-       // navigate("/login"); // or show success message
-       console.log("Reset link sent");
-    }
+    console.log(data.email);
+    reset();
   };
 
-  // --- REUSED VISUAL LOGIC ---
   const foodIcons = [
     <GiChickenLeg className="text-amber-500" />,
     <GiFruitBowl className="text-red-400" />,
@@ -79,7 +66,7 @@ const ForgotPassword = () => {
           className="absolute animate-float"
           style={{
             left: `${left}%`,
-            top: "100vh", // Rising from bottom
+            top: "100vh",
             animationDuration: `${duration}s`,
             animationDelay: `${delay}s`,
             fontSize: `${size}px`,
@@ -92,13 +79,12 @@ const ForgotPassword = () => {
       );
     })
   );
-  // ---------------------------
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
       {/* Floating Icons Background */}
-      <div 
-        aria-hidden="true" 
+      <div
+        aria-hidden="true"
         className="absolute inset-0 overflow-hidden pointer-events-none"
       >
         {floatingIconsRef.current}
@@ -112,7 +98,6 @@ const ForgotPassword = () => {
 
       {/* Glassmorphic Card */}
       <div className="relative z-10 w-full max-w-md bg-white/70 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-3xl overflow-hidden animate-fadeIn">
-        
         {/* Header */}
         <div className="text-center py-8 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
           <div className="mx-auto w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mb-4 shadow-inner">
@@ -122,13 +107,13 @@ const ForgotPassword = () => {
             Forgot Password?
           </h1>
           <p className="text-gray-600 mt-2 text-sm font-medium px-6">
-            Don't worry! It happens. Please enter the email associated with your account.
+            Don't worry! It happens. Please enter the email associated with your
+            account.
           </p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
-          
           {/* Email Input */}
           <div>
             <label className="label">
@@ -178,7 +163,6 @@ const ForgotPassword = () => {
               Back to Login
             </Link>
           </div>
-
         </form>
       </div>
     </div>

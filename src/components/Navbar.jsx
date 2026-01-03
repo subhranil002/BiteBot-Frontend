@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import { useState } from "react";
 import {
   FaBars,
   FaBolt,
@@ -7,7 +7,7 @@ import {
   FaFire,
   FaHeart,
   FaHome,
-  //   FaSearch,
+  FaSearch,
   FaSignOutAlt,
   FaTachometerAlt,
   FaUser,
@@ -24,14 +24,14 @@ function Navbar({ children }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  //   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
 
-  //   const handleSearch = (e) => {
-  //     e?.preventDefault();
-  //     if (!searchTerm.trim()) return;
-  //     navigate(`/search?q=${searchTerm.trim()}`);
-  //   };
+  const handleSearch = (e) => {
+    e?.preventDefault();
+    if (!searchTerm.trim()) return;
+    navigate(`/search?q=${searchTerm.trim()}`);
+  };
 
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -97,7 +97,7 @@ function Navbar({ children }) {
                 </div>
 
                 {/* Center: Search */}
-                {/* <div className="flex-1 hidden lg:flex justify-center">
+                <div className="flex-1 hidden lg:flex justify-center">
                   <form
                     onSubmit={handleSearch}
                     className="w-full max-w-xl"
@@ -107,14 +107,14 @@ function Navbar({ children }) {
                       <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500 transition-all duration-300 group-focus-within:scale-110" />
                       <input
                         type="text"
-                        placeholder="Search recipes, ingredients, chefs..."
+                        placeholder="Search recipes, chefs..."
                         className="input w-full pl-12 pr-4 py-3 text-sm rounded-2xl transition-all backdrop-blur-sm bg-gray-100 border-2 border-orange-200 text-gray-900 placeholder-gray-500 focus:border-orange-400 focus:ring-4 focus:ring-orange-200/50 hover:border-orange-300 shadow-inner"
                         aria-label="Search"
                         onChange={(e) => setSearchTerm(e.target.value)}
                       />
                     </div>
                   </form>
-                </div> */}
+                </div>
 
                 {/* Right: User / Login */}
                 <div className="ml-4 flex items-center gap-3">
@@ -258,22 +258,22 @@ function Navbar({ children }) {
               </div>
 
               {/* Mobile Search */}
-              {/* <form
-            onSubmit={handleSearch}
-            className="mb-6 lg:hidden"
-            role="search"
-          >
-            <div className="relative group">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
-              <input
-                type="text"
-                placeholder="Search delicious recipes..."
-                className="input w-full pl-12 rounded-xl backdrop-blur-sm bg-white border-2 border-orange-200 text-gray-900 placeholder-gray-500 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 shadow-inner"
-                aria-label="Search"
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </form> */}
+              <form
+                onSubmit={handleSearch}
+                className="mb-6 lg:hidden"
+                role="search"
+              >
+                <div className="relative group">
+                  <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-orange-500" />
+                  <input
+                    type="text"
+                    placeholder="Search delicious recipes..."
+                    className="input w-full pl-12 rounded-xl backdrop-blur-sm bg-white border-2 border-orange-200 text-gray-900 placeholder-gray-500 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 shadow-inner"
+                    aria-label="Search"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </form>
 
               {/* Navigation Links */}
               <Link

@@ -9,9 +9,9 @@ import Chat from "../pages/Chatbot/Chat";
 import AddRecipe from "../pages/Chef/AddRecipe";
 import ChefDashboard from "../pages/Chef/ChefDashboard";
 import ContactUs from "../pages/ContactUs";
+import ForgotPassword from "../pages/ForgetPassword";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import ForgotPassword from "../pages/ForgetPassword";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/Profile";
 import RecipeDetail from "../pages/Recipe/RecipeDetail";
@@ -45,7 +45,7 @@ function Router() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/forgetpassword" element={<ForgotPassword />} />
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route element={<RequireAuth />}>
         <Route path="/chat" element={<Chat />} />
         <Route path="/search" element={<SearchResults />} />
