@@ -255,9 +255,8 @@ export default function EditProfileDialog() {
               </label>
               <input
                 id="name"
-                className={`input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
-                  errors.name ? "input-error" : ""
-                }`}
+                className={`input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${errors.name ? "input-error" : ""
+                  }`}
                 placeholder="Enter your display name"
                 {...register("name", {
                   required: "Name is required",
@@ -280,9 +279,8 @@ export default function EditProfileDialog() {
             <textarea
               id="bio"
               rows={3}
-              className={`textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
-                errors.bio ? "textarea-error" : ""
-              }`}
+              className={`textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${errors.bio ? "textarea-error" : ""
+                }`}
               placeholder="Tell us about yourself, your cooking style, or favorite dishes..."
               {...register("bio", {
                 maxLength: {
@@ -322,7 +320,7 @@ export default function EditProfileDialog() {
 
               <button
                 type="button"
-                className="btn btn-outline btn-sm"
+                className="btn bg-gradient-to-r  from-orange-400 to-red-400 text-white gap-2 hover:opacity-90 shadow-md"
                 disabled={!dietaryDraft}
                 onClick={() => {
                   ensureUniqueAppend(
@@ -384,7 +382,7 @@ export default function EditProfileDialog() {
 
               <button
                 type="button"
-                className="btn btn-outline btn-sm"
+                className="btn bg-gradient-to-r  from-orange-400 to-red-400 text-white gap-2 hover:opacity-90 shadow-md"
                 disabled={!allergenDraft}
                 onClick={() => {
                   ensureUniqueAppend(
@@ -458,16 +456,10 @@ export default function EditProfileDialog() {
             <button
               type="submit"
               className="btn bg-gradient-to-r from-orange-400 to-red-400 text-white gap-2 hover:opacity-90 shadow-md"
-              disabled={isLoading || isSubmitting}
+              disabled={isSubmitting}
             >
-              {isLoading ? (
-                <span className="loading loading-spinner loading-sm"></span>
-              ) : (
-                <>
-                  <FaSave className="w-4 h-4" />
-                  <span>Save Changes</span>
-                </>
-              )}
+              <FaSave className="w-4 h-4" />
+              <span>Save Changes</span>
             </button>
           </div>
         </form>

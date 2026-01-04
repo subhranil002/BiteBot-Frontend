@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { FiUpload } from "react-icons/fi";
+import { FiUpload, FiEye, FiEyeOff, FiX } from "react-icons/fi";
 import {
   GiCarrot,
   GiCheeseWedge,
@@ -42,6 +42,25 @@ const cuisines = [
   "greek",
 ];
 
+// New Allergens List
+const commonAllergens = [
+  "Peanuts",
+  "Tree Nuts",
+  "Milk",
+  "Egg",
+  "Wheat",
+  "Soy",
+  "Fish",
+  "Shellfish",
+  "Sesame",
+  "Mustard",
+  "Celery",
+  "Lupin",
+  "Sulfites",
+  "Molluscs",
+  "Corn",
+];
+
 const dietaryPreferences = [
   "vegetarian",
   "vegan",
@@ -65,13 +84,22 @@ const SignUp = () => {
     formState: { errors, isSubmitting },
     watch,
     control,
+    setValue, // Needed to manually update the allergens field
   } = useForm();
+
+  // State for toggling visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // State for Allergen Search Input
+  const [allergenSearch, setAllergenSearch] = useState("");
+
   const password = watch("password");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/";
   const { isLoggedIn } = useSelector((state) => state.auth);
+
   const foodIcons = [
     <GiChickenLeg className="text-amber-500" />,
     <GiFruitBowl className="text-red-400" />,
@@ -119,15 +147,17 @@ const SignUp = () => {
   );
 
   const onSubmit = async (data) => {
+    // data.profile_allergens will now contain an array of strings
     const res = await dispatch(registerUser(data));
     if (res?.payload?.success) navigate("/");
   };
 
   useEffect(() => {
     if (isLoggedIn) {
+      const from = location.state?.from?.pathname || "/";
       navigate(from, { replace: true });
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate, location]);
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 p-6">
@@ -284,24 +314,33 @@ const SignUp = () => {
                   Password
                 </span>
               </label>
-              <input
-                type="password"
-                placeholder="Enter password"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters",
-                  },
-                  pattern: {
-                    value:
-                      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/,
-                    message:
-                      "Must include uppercase, number, and special character",
-                  },
-                })}
-                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/,
+                      message:
+                        "Must include uppercase, number, and special character",
+                    },
+                  })}
+                  className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 focus:outline-none transition-colors"
+                >
+                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.password.message}
@@ -316,15 +355,24 @@ const SignUp = () => {
                   Confirm Password
                 </span>
               </label>
-              <input
-                type="password"
-                placeholder="Confirm password"
-                {...register("confirmPassword", {
-                  required: "Please confirm password",
-                  validate: (v) => v === password || "Passwords do not match",
-                })}
-                className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm password"
+                  {...register("confirmPassword", {
+                    required: "Please confirm password",
+                    validate: (v) => v === password || "Passwords do not match",
+                  })}
+                  className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 focus:outline-none transition-colors"
+                >
+                  {showConfirmPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.confirmPassword.message}
@@ -358,6 +406,91 @@ const SignUp = () => {
                 </p>
               )}
             </div>
+
+            {/* ---------------- NEW ALLERGENS SECTION ---------------- */}
+            <div>
+              <label className="label">
+                <span className="label-text font-semibold text-gray-700">
+                  Allergens (Optional)
+                </span>
+              </label>
+              <Controller
+                control={control}
+                name="profile_allergens"
+                defaultValue={[]}
+                render={({ field }) => {
+                  const selectedAllergens = field.value || [];
+
+                  const handleSelect = (allergen) => {
+                    if (!selectedAllergens.includes(allergen)) {
+                      field.onChange([...selectedAllergens, allergen]);
+                    }
+                    setAllergenSearch(""); // clear input after select
+                  };
+
+                  const handleRemove = (allergenToRemove) => {
+                    field.onChange(
+                      selectedAllergens.filter((a) => a !== allergenToRemove)
+                    );
+                  };
+
+                  // Filter suggestions based on input and exclude already selected
+                  const filteredSuggestions = commonAllergens.filter(
+                    (allergen) =>
+                      allergen.toLowerCase().includes(allergenSearch.toLowerCase()) &&
+                      !selectedAllergens.includes(allergen)
+                  );
+
+                  return (
+                    <div className="relative">
+                      {/* Selected Chips */}
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {selectedAllergens.map((item) => (
+                          <span
+                            key={item}
+                            className="badge badge-warning gap-1 p-3 text-white font-medium"
+                          >
+                            {item}
+                            <button
+                              type="button"
+                              onClick={() => handleRemove(item)}
+                              className="hover:text-red-600 transition-colors"
+                            >
+                              <FiX />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Input Field */}
+                      <input
+                        type="text"
+                        value={allergenSearch}
+                        onChange={(e) => setAllergenSearch(e.target.value)}
+                        placeholder={selectedAllergens.length > 0 ? "Add more..." : "Type to search allergies..."}
+                        className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
+                      />
+
+                      {/* Dropdown Suggestions */}
+                      {allergenSearch && filteredSuggestions.length > 0 && (
+                        <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto">
+                          {filteredSuggestions.map((allergen) => (
+                            <li
+                              key={allergen}
+                              onClick={() => handleSelect(allergen)}
+                              className="px-4 py-2 hover:bg-orange-50 cursor-pointer text-gray-700 transition-colors"
+                            >
+                              {allergen}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                }}
+              />
+            </div>
+            {/* ---------------- END ALLERGENS SECTION ---------------- */}
 
             {/* Dietary Preferences */}
             <div>
