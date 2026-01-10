@@ -56,7 +56,7 @@ function RecipeCarousel({ title, recipes }) {
         }}
       >
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="w-[300px] mr-5">
+          <div key={recipe._id} className="w-[300px] mr-5">
             <RecipeCard recipe={recipe} />
           </div>
         ))}

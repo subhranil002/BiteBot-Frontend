@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import Router from "./router/Router";
+import Router from "./Router";
 
 function App() {
     const location = useLocation();

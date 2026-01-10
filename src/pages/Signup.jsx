@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { FiUpload, FiEye, FiEyeOff, FiX } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiUpload, FiX } from "react-icons/fi";
 import {
   GiCarrot,
   GiCheeseWedge,
@@ -21,61 +21,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { commonAllergens, cuisines, dietaryPreferences } from "../constants";
 import { registerUser } from "../redux/slices/authSlice";
-
-const cuisines = [
-  "indian",
-  "italian",
-  "chinese",
-  "mexican",
-  "thai",
-  "japanese",
-  "french",
-  "mediterranean",
-  "american",
-  "korean",
-  "vietnamese",
-  "middle-eastern",
-  "british",
-  "spanish",
-  "german",
-  "greek",
-];
-
-// New Allergens List
-const commonAllergens = [
-  "Peanuts",
-  "Tree Nuts",
-  "Milk",
-  "Egg",
-  "Wheat",
-  "Soy",
-  "Fish",
-  "Shellfish",
-  "Sesame",
-  "Mustard",
-  "Celery",
-  "Lupin",
-  "Sulfites",
-  "Molluscs",
-  "Corn",
-];
-
-const dietaryPreferences = [
-  "vegetarian",
-  "vegan",
-  "keto",
-  "paleo",
-  "gluten-free",
-  "dairy-free",
-  "low-carb",
-  "high-protein",
-  "sugar-free",
-  "organic",
-  "raw",
-  "mediterranean",
-  "low-fat",
-];
 
 const SignUp = () => {
   const {

@@ -87,11 +87,7 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
 });
 
 export const getProfile = createAsyncThunk("auth/getProfile", async () => {
-  try {
     return await getProfileApi();
-  } catch (error) {
-    console.log(error);
-  }
 });
 
 export const updateProfile = createAsyncThunk(
