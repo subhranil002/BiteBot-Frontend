@@ -19,6 +19,7 @@ import SearchResults from "./pages/SearchResult";
 import SignUp from "./pages/Signup";
 import Favorites from "./pages/User/Favourites";
 import { getProfile } from "./redux/slices/authSlice";
+import ResetPassword from "./pages/ResetPassword";
 
 function Router() {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
+      <Route path="/resetpassword/:id" element={<ResetPassword />} />
       <Route element={<RequireAuth />}>
         <Route path="/chat" element={<Chat />} />
         <Route path="/search" element={<SearchResults />} />
