@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaClock, FaFire,FaHeart, FaStar, FaUsers } from "react-icons/fa";
+import { FaCheckCircle, FaClock, FaFire, FaShareAlt, FaHeart, FaPrint, FaStar, FaUsers } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -21,6 +21,11 @@ function RecipeDetail() {
     reviewCount: 0,
   });
   const [loading, setLoading] = useState(false);
+
+  const [madeIt, setMadeIt] = useState(false);
+  const [showReview, setShowReview] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -99,14 +104,34 @@ function RecipeDetail() {
     },
     ...(recipe?.nutrition?.totalCalories
       ? [
-          {
-            icon: <FaFire />,
-            label: "Calories",
-            value: recipe.nutrition.totalCalories,
-          },
-        ]
+        {
+          icon: <FaFire />,
+          label: "Calories",
+          value: recipe.nutrition.totalCalories,
+        },
+      ]
       : []),
   ];
+
+  const handleShare = async () => {
+    const shareData = {
+      title: recipe.title,
+      text: "Check out this amazing recipe!",
+      url: window.location.href,
+    };
+  
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareData.url);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (err) {
+      toast.error("Try again! Unable to share.");
+    }
+  };
+  
 
   return (
     <HomeLayout>
@@ -126,13 +151,19 @@ function RecipeDetail() {
               <button
                 onClick={toggleFav}
                 disabled={loading}
-                className={`absolute top-4 right-4 btn btn-circle ${
-                  isFav
-                    ? "bg-rose-500 text-white border-none"
-                    : "bg-white/80 text-gray-700 border-none hover:bg-white"
-                }`}
+                className={`absolute top-4 right-4 btn btn-circle ${isFav
+                  ? "bg-rose-500 text-white border-none"
+                  : "bg-white/80 text-gray-700 border-none hover:bg-white"
+                  }`}
               >
                 <FaHeart className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={handleShare}
+                className="absolute bottom-4 z-20 right-4 btn btn-circle bg-white/80 text-orange-600 border-none hover:bg-white shadow-md transition-all hover:scale-105"
+              >
+                <FaShareAlt className="w-5 h-5" />
               </button>
 
               <div className="absolute inset-x-0 bottom-0 px-4 sm:px-10 pb-6 sm:pb-10">
@@ -228,79 +259,113 @@ function RecipeDetail() {
                 )}
 
                 {/* Ingredients */}
-                <div className="card bg-base-100 shadow-lg border border-orange-100">
-                  <div className="card-body">
-                    <h3 className="card-title text-gray-800">Ingredients</h3>
+                <div className="print-only-steps">
+                  <div className="card bg-base-100 shadow-lg border border-orange-100">
+                    <div className="card-body">
+                      <h3 className="card-title text-gray-800">Ingredients</h3>
 
-                    <p className="text-sm text-gray-500">
-                      Estimated cost: ₹{cost?.total?.toFixed(2) ?? "0.00"}
-                      {cost?.perServing > 0 &&
-                        ` (₹${cost?.perServing?.toFixed(2)} per serving)`}
-                    </p>
+                      <p className="text-sm text-gray-500">
+                        Estimated cost: ₹{cost?.total?.toFixed(2) ?? "0.00"}
+                        {cost?.perServing > 0 &&
+                          ` (₹${cost?.perServing?.toFixed(2)} per serving)`}
+                      </p>
 
-                    <div className="overflow-x-auto">
-                      <table className="table table-zebra">
-                        <thead>
-                          <tr>
-                            <th>Ingredient</th>
-                            <th>Quantity</th>
-                            <th className="text-right">Cost</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {recipe.ingredients.map((ing, index) => (
-                            <tr key={index}>
-                              <td className="font-medium">{ing.name}</td>
-                              <td className="text-gray-600">
-                                {ing.quantity} {ing.unit}
-                              </td>
-                              <td className="text-right text-gray-500">
-                                ₹{(Number(ing.marketPrice) || 0).toFixed(2)}
-                              </td>
+                      <div className="overflow-x-auto">
+                        <table className="table table-zebra">
+                          <thead>
+                            <tr>
+                              <th>Ingredient</th>
+                              <th>Quantity</th>
+                              <th className="text-right">Cost</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {recipe.ingredients.map((ing, index) => (
+                              <tr key={index}>
+                                <td className="font-medium">{ing.name}</td>
+                                <td className="text-gray-600">
+                                  {ing.quantity} {ing.unit}
+                                </td>
+                                <td className="text-right text-gray-500">
+                                  ₹{(Number(ing.marketPrice) || 0).toFixed(2)}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Instructions */}
-                <div className="card bg-base-100 shadow-lg border border-orange-100">
-                  <div className="card-body">
-                    <h3 className="card-title text-gray-800">Instructions</h3>
-                    <div className="space-y-8">
-                      {recipe.steps.map((step, i) => (
-                        <div key={i} className="space-y-4">
-                          <div className="flex items-start gap-4">
-                            <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
-                              {step.stepNo}
+                  {/* Instructions */}
+                  <div className="card bg-base-100 shadow-lg border border-orange-100">
+                    <div className="card-body">
+                      <h3 className="card-title text-gray-800">Instructions</h3>
+                      <div className="space-y-8">
+                        {recipe.steps.map((step, i) => (
+                          <div key={i} className="print-step space-y-4">
+                            <div className="flex items-start gap-4">
+                              <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
+                                {step.stepNo}
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-gray-700 leading-relaxed text-lg">
+                                  {step.instruction}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <p className="text-gray-700 leading-relaxed text-lg">
-                                {step.instruction}
-                              </p>
-                            </div>
+
+                            {step.imageUrl?.secure_url && (
+                              <div className="w-full">
+                                <img
+                                  src={step.imageUrl.secure_url}
+                                  alt={`Step ${step.stepNo}`}
+                                  className="rounded-lg shadow-md w-full max-h-96 object-cover"
+                                />
+                              </div>
+                            )}
                           </div>
-
-                          {step.imageUrl?.secure_url && (
-                            <div className="w-full">
-                              <img
-                                src={step.imageUrl.secure_url}
-                                alt={`Step ${step.stepNo}`}
-                                className="rounded-lg shadow-md w-full max-h-96 object-cover"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
               {/* Sidebar */}
               <div className="space-y-6">
+
+                {/* I MADE IT */}
+                <div className="card bg-base-100 shadow-md border border-orange-100">
+                  <div className="card-body text-center">
+                    <button
+                      onClick={() => setMadeIt(!madeIt)}
+                      className={`btn w-full border-none ${madeIt
+                        ? "bg-green-500 text-white"
+                        : "bg-gradient-to-r from-orange-400 to-red-400 text-white"
+                        }`}
+                    >
+                      <FaCheckCircle className="mr-2" />
+                      {madeIt ? "You Made This!" : "I Made It"}
+                    </button>
+                    {madeIt && (
+                      <p className="text-sm text-green-600 mt-2">
+                        🎉 Nice! Hope it tasted amazing.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {/* RATE & REVIEW */}
+                <div className="card bg-base-100 shadow-md border border-orange-100">
+                  <div className="card-body">
+                    <button
+                      onClick={() => setShowReview(true)}
+                      className="btn w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-none"
+                    >
+                      <FaStar className="mr-2" />
+                      Rate & Review
+                    </button>
+                  </div>
+                </div>
                 {/* Rating */}
                 <div className="card bg-base-100 shadow-md border border-orange-100">
                   <div className="card-body text-center">
@@ -324,6 +389,69 @@ function RecipeDetail() {
                     </p>
                   </div>
                 </div>
+
+                {showReview && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
+                    <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl animate-fadeIn">
+
+                      {/* Header */}
+                      <div className="text-center py-6 px-6 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
+                        <h3 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
+                          Rate this Recipe
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Share your experience with others
+                        </p>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6 space-y-5">
+                        {/* Stars */}
+                        <div className="flex justify-center gap-2 text-yellow-400">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <FaStar
+                              key={i}
+                              onClick={() => setRating(i + 1)}
+                              className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
+                                ? "opacity-100 scale-110"
+                                : "opacity-30 hover:opacity-60"
+                                }`}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Review Text */}
+                        <textarea
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          className="textarea textarea-bordered w-full h-28 resize-none bg-white/60 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                          placeholder="Write your review..."
+                        />
+
+                        {/* Buttons */}
+                        <div className="flex gap-3 pt-2">
+                          <button
+                            onClick={() => setShowReview(false)}
+                            className="btn flex-1 rounded-xl bg-white/70 hover:bg-white border border-gray-200 text-gray-700 transition-all"
+                          >
+                            Cancel
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              console.log({ rating, reviewText });
+                              setShowReview(false);
+                            }}
+                            className="btn flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
 
                 {/* Reviews */}
                 {recipe.reviews?.length > 0 && (
@@ -356,8 +484,8 @@ function RecipeDetail() {
                             <p className="text-xs text-gray-500 mt-1">
                               {review.createdAt
                                 ? new Date(
-                                    review.createdAt
-                                  ).toLocaleDateString()
+                                  review.createdAt
+                                ).toLocaleDateString()
                                 : ""}
                             </p>
                           </div>
@@ -395,7 +523,23 @@ function RecipeDetail() {
                     </div>
                   </div>
                 )}
+
+                {/* Print */}
+                <div className="card bg-base-100 shadow-md border border-orange-100">
+                  <div className="card-body">
+                    <button
+                      onClick={() => window.print()}
+                      className="btn w-full bg-gradient-to-r from-orange-400 to-red-400 text-white border-none"
+                    >
+                      <FaPrint className="mr-2" />
+                      Print Recipe
+                    </button>
+                  </div>
+                </div>
               </div>
+
+
+
             </div>
           </div>
         </div>
