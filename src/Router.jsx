@@ -9,17 +9,17 @@ import Chat from "./pages/Chatbot/Chat";
 import AddRecipe from "./pages/Chef/AddRecipe";
 import ChefDashboard from "./pages/Chef/ChefDashboard";
 import ContactUs from "./pages/ContactUs";
-import ForgotPassword from "./pages/ForgetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import RecipeDetail from "./pages/Recipe/RecipeDetail";
+import ResetPassword from "./pages/ResetPassword";
 import SearchResults from "./pages/SearchResult";
 import SignUp from "./pages/Signup";
 import Favorites from "./pages/User/Favourites";
 import { getProfile } from "./redux/slices/authSlice";
-import ResetPassword from "./pages/ResetPassword";
 
 function Router() {
   const dispatch = useDispatch();

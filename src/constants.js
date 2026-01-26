@@ -1,4 +1,4 @@
-export const cuisines = [
+export const CUISINE_OPTIONS = [
   "indian",
   "italian",
   "chinese",
@@ -17,25 +17,25 @@ export const cuisines = [
   "greek",
 ];
 
-export const commonAllergens = [
-  "Peanuts",
-  "Tree Nuts",
-  "Milk",
-  "Egg",
-  "Wheat",
-  "Soy",
-  "Fish",
-  "Shellfish",
-  "Sesame",
-  "Mustard",
-  "Celery",
-  "Lupin",
-  "Sulfites",
-  "Molluscs",
-  "Corn",
+export const ALLERGEN_OPTIONS = [
+  "peanuts",
+  "tree nuts",
+  "milk",
+  "egg",
+  "wheat",
+  "soy",
+  "fish",
+  "shellfish",
+  "sesame",
+  "mustard",
+  "celery",
+  "lupin",
+  "sulfites",
+  "molluscs",
+  "corn",
 ];
 
-export const dietaryPreferences = [
+export const DIETARY_OPTIONS = [
   "vegetarian",
   "vegan",
   "keto",

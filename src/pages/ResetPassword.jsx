@@ -2,23 +2,25 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { FiArrowLeft, FiLock } from "react-icons/fi";
 import {
-  GiChickenLeg,
-  GiFruitBowl,
-  GiHotMeal,
-  GiSushis,
-  GiCupcake,
-  GiCheeseWedge,
-  GiDonerKebab,
-  GiMeat,
-  GiCorn,
-  GiPotato,
   GiCarrot,
-  GiOlive,
+  GiCheeseWedge,
+  GiChickenLeg,
   GiCoffeeBeans,
+  GiCorn,
   GiCroissant,
+  GiCupcake,
+  GiDonerKebab,
+  GiFruitBowl,
   GiGrapes,
+  GiHotMeal,
+  GiMeat,
+  GiOlive,
+  GiPotato,
+  GiSushis,
 } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+import resetPasswordApi from "../apis/user/resetPasswordApi";
 
 const ResetPassword = () => {
   const {
@@ -28,12 +30,20 @@ const ResetPassword = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm();
-
+  const { id } = useParams();
   const password = watch("password");
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
-    console.log(data);
     reset();
+    const res = await resetPasswordApi({
+      resetToken: id,
+      password: data.password,
+    });
+    if (res.success) {
+      navigate("/login");
+    }
   };
 
   const foodIcons = [
@@ -80,7 +90,7 @@ const ResetPassword = () => {
           {icon}
         </div>
       );
-    })
+    }),
   );
 
   return (

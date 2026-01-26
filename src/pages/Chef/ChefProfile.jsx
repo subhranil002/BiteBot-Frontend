@@ -22,7 +22,6 @@ import HomeLayout from "../../layouts/HomeLayout";
 
 function ChefProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
-  console.log(profileData);
 
   const isOwnProfile = userData?._id.toString() === profileData?._id.toString();
 

@@ -21,7 +21,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { commonAllergens, cuisines, dietaryPreferences } from "../constants";
+import {
+  ALLERGEN_OPTIONS,
+  CUISINE_OPTIONS,
+  DIETARY_OPTIONS,
+} from "../constants";
 import { registerUser } from "../redux/slices/authSlice";
 
 const SignUp = () => {
@@ -31,13 +35,12 @@ const SignUp = () => {
     formState: { errors, isSubmitting },
     watch,
     control,
-    setValue, // Needed to manually update the allergens field
   } = useForm();
 
   // State for toggling visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // State for Allergen Search Input
   const [allergenSearch, setAllergenSearch] = useState("");
 
@@ -90,11 +93,10 @@ const SignUp = () => {
           {icon}
         </div>
       );
-    })
+    }),
   );
 
   const onSubmit = async (data) => {
-    // data.profile_allergens will now contain an array of strings
     const res = await dispatch(registerUser(data));
     if (res?.payload?.success) navigate("/");
   };
@@ -317,7 +319,11 @@ const SignUp = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute z-10 right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 focus:outline-none transition-colors"
                 >
-                  {showConfirmPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  {showConfirmPassword ? (
+                    <FiEyeOff size={20} />
+                  ) : (
+                    <FiEye size={20} />
+                  )}
                 </button>
               </div>
               {errors.confirmPassword && (
@@ -341,7 +347,7 @@ const SignUp = () => {
                 className="select select-bordered w-full capitalize focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 border-gray-200"
               >
                 <option value="">Select cuisine</option>
-                {cuisines.map((c) => (
+                {CUISINE_OPTIONS.map((c) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
@@ -377,15 +383,17 @@ const SignUp = () => {
 
                   const handleRemove = (allergenToRemove) => {
                     field.onChange(
-                      selectedAllergens.filter((a) => a !== allergenToRemove)
+                      selectedAllergens.filter((a) => a !== allergenToRemove),
                     );
                   };
 
                   // Filter suggestions based on input and exclude already selected
-                  const filteredSuggestions = commonAllergens.filter(
+                  const filteredSuggestions = ALLERGEN_OPTIONS.filter(
                     (allergen) =>
-                      allergen.toLowerCase().includes(allergenSearch.toLowerCase()) &&
-                      !selectedAllergens.includes(allergen)
+                      allergen
+                        .toLowerCase()
+                        .includes(allergenSearch.toLowerCase()) &&
+                      !selectedAllergens.includes(allergen),
                   );
 
                   return (
@@ -414,7 +422,11 @@ const SignUp = () => {
                         type="text"
                         value={allergenSearch}
                         onChange={(e) => setAllergenSearch(e.target.value)}
-                        placeholder={selectedAllergens.length > 0 ? "Add more..." : "Type to search allergies..."}
+                        placeholder={
+                          selectedAllergens.length > 0
+                            ? "Add more..."
+                            : "Type to search allergies..."
+                        }
                         className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                       />
 
@@ -447,7 +459,7 @@ const SignUp = () => {
                 </span>
               </label>
               <div className="flex flex-wrap gap-3">
-                {dietaryPreferences.map((pref) => (
+                {DIETARY_OPTIONS.map((pref) => (
                   <label
                     key={pref}
                     className="flex items-center gap-2 text-sm text-gray-700"

@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
+import contactUsApi from "../apis/user/contactUsApi";
 import HomeLayout from "../layouts/HomeLayout";
 
 const orangeIcon = new L.Icon({
@@ -31,8 +32,8 @@ function ContactUs() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    await contactUsApi(data);
   };
 
   return (
@@ -71,49 +72,29 @@ function ContactUs() {
                   <div className="form-control flex flex-col">
                     <label htmlFor="name" className="label mb-2">
                       <span className="label-text font-semibold text-gray-700">
-                        Full Name
+                        Subject
                       </span>
                     </label>
                     <input
-                      id="name"
-                      {...register("name", {
-                        required: "Name is required",
+                      id="subject"
+                      {...register("subject", {
+                        required: "Subject is required",
+                        minLength: {
+                          value: 5,
+                          message: "Subject must be at least 2 characters",
+                        },
+                        maxLength: {
+                          value: 30,
+                          message: "Subject must be at most 50 characters",
+                        },
                       })}
                       type="text"
-                      placeholder="Enter your full name"
+                      placeholder="Enter your subject"
                       className="input w-full input-bordered focus:border-orange-400 focus:ring focus:ring-orange-200"
                     />
                     {errors.name && (
                       <span className="label-text-alt text-error mt-1">
                         {errors.name.message}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Email */}
-                  <div className="form-control flex flex-col">
-                    <label htmlFor="email" className="label mb-2">
-                      <span className="label-text font-semibold text-gray-700">
-                        Email Address
-                      </span>
-                    </label>
-                    <input
-                      id="email"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value:
-                            /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                          message: "Invalid email address",
-                        },
-                      })}
-                      type="email"
-                      placeholder="Enter your email"
-                      className="input w-full input-bordered focus:border-orange-400 focus:ring focus:ring-orange-200"
-                    />
-                    {errors.email && (
-                      <span className="label-text-alt text-error mt-1">
-                        {errors.email.message}
                       </span>
                     )}
                   </div>
@@ -169,7 +150,7 @@ function ContactUs() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Email</h4>
-                      <p className="text-gray-600">support@example.com</p>
+                      <p className="text-gray-600">bitebot25@gmail.com</p>
                     </div>
                   </div>
 
@@ -207,7 +188,7 @@ function ContactUs() {
               </h2>
               <div className="rounded-lg overflow-hidden h-64 border border-orange-100">
                 <MapContainer
-                  center={[22.5726, 88.3639]} // Kolkata coordinates
+                  center={[22.5726, 88.3639]}
                   zoom={13}
                   scrollWheelZoom={false}
                   className="h-full w-full"

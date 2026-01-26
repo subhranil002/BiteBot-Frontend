@@ -1,10 +1,10 @@
 import { FaCalendarAlt, FaEdit } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
-import { useSelector } from "react-redux";
 
 function UserProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -24,7 +24,7 @@ function UserProfile({ profileData }) {
 
   return (
     <>
-      {isOwnProfile && <EditProfileDialog profileData={profileData} />}
+      {isOwnProfile && <EditProfileDialog profileData={userData} />}
       <HomeLayout>
         <div className="relative min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
           {/* ✨ Ambient blobs */}

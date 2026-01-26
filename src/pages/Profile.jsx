@@ -24,7 +24,7 @@ function Profile() {
         setLoading(false);
       })();
     }
-  }, [id]);
+  }, [id, userData.updatedAt]);
 
   if (loading) return "Loading...";
 

@@ -2,10 +2,10 @@ import toast from "react-hot-toast";
 
 import axiosInstance from "../../configs/axiosConfig";
 
-export default async function getUserByIdApi(id) {
-  const res = axiosInstance.get(`/user/${id}`);
+export default async function contactUsApi(data) {
+  const res = axiosInstance.post("/user/contact", data);
   toast.promise(res, {
-    loading: "Loading profile...",
+    loading: "Sending message...",
     success: (data) => {
       return data?.data?.message;
     },

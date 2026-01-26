@@ -42,14 +42,11 @@ const resetAuthState = (state) => {
 
 export const handleError = (error) => {
   if (typeof error === "object" && error !== null && "response" in error) {
-    toast.error(error?.response?.data?.message || "An error occurred");
-
     if (error.response?.status === 455) {
       return { clearState: true };
     }
   } else {
-    toast.error("An unexpected error occurred");
-    console.error(error);
+    toast.error("Something went wrong");
   }
 };
 
@@ -67,7 +64,7 @@ export const registerUser = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(handleError(error));
     }
-  }
+  },
 );
 
 export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
@@ -86,9 +83,16 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   }
 });
 
-export const getProfile = createAsyncThunk("auth/getProfile", async () => {
-    return await getProfileApi();
-});
+export const getProfile = createAsyncThunk(
+  "auth/getProfile",
+  async (_, thunkAPI) => {
+    try {
+      return await getProfileApi();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(handleError(error));
+    }
+  },
+);
 
 export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
@@ -104,7 +108,7 @@ export const updateProfile = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(handleError(error));
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
@@ -130,12 +134,17 @@ const authSlice = createSlice({
         authStorage.set("userData", action.payload?.data);
       })
       .addCase(logout.fulfilled, (state) => {
-        state.isLoggedIn = false;
-        state.role = "GUEST";
-        state.userData = {};
-        authStorage.clear();
+        resetAuthState(state);
       })
       .addCase(getProfile.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload?.success;
+        state.role = action.payload?.data?.role;
+        state.userData = action.payload?.data;
+        authStorage.set("isLoggedIn", action.payload?.success);
+        authStorage.set("role", action.payload?.data?.role);
+        authStorage.set("userData", action.payload?.data);
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
         state.isLoggedIn = action.payload?.success;
         state.role = action.payload?.data?.role;
         state.userData = action.payload?.data;
@@ -147,7 +156,7 @@ const authSlice = createSlice({
         (action) => action.payload?.clearState,
         (state) => {
           resetAuthState(state);
-        }
+        },
       );
   },
 });

@@ -20,6 +20,8 @@ import {
 } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
+import forgotPasswordApi from "../apis/user/forgotPasswordApi";
+
 const ForgotPassword = () => {
   const {
     register,
@@ -29,8 +31,8 @@ const ForgotPassword = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log(data.email);
     reset();
+    await forgotPasswordApi(data);
   };
 
   const foodIcons = [

@@ -4,53 +4,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaCamera, FaPlus, FaSave, FaTimes, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+  ALLERGEN_OPTIONS,
+  CUISINE_OPTIONS,
+  DIETARY_OPTIONS,
+} from "../../constants";
 import { updateProfile } from "../../redux/slices/authSlice";
-
-const DIETARY_OPTIONS = [
-  "vegetarian",
-  "vegan",
-  "gluten-free",
-  "dairy-free",
-  "keto",
-  "paleo",
-  "pescatarian",
-  "low-carb",
-  "sugar-free",
-  "organic",
-];
-
-const ALLERGEN_OPTIONS = [
-  "Peanuts",
-  "Tree Nuts",
-  "Milk",
-  "Eggs",
-  "Fish",
-  "Shellfish",
-  "Soy",
-  "Wheat",
-  "Gluten",
-  "Sesame",
-  "Sulfites",
-];
-
-const CUISINE_OPTIONS = [
-  "indian",
-  "italian",
-  "chinese",
-  "mexican",
-  "thai",
-  "japanese",
-  "french",
-  "mediterranean",
-  "american",
-  "korean",
-  "vietnamese",
-  "middle-eastern",
-  "british",
-  "spanish",
-  "german",
-  "greek",
-];
 
 function Chip({ color, children, onRemove }) {
   const colorMap = {
@@ -76,7 +35,6 @@ function Chip({ color, children, onRemove }) {
 export default function EditProfileDialog() {
   const dlgRef = useRef(null);
   const { profile } = useSelector((state) => state.auth.userData);
-  const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
   const dispatch = useDispatch();
 
@@ -134,7 +92,7 @@ export default function EditProfileDialog() {
     if (url) {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return null;
@@ -143,32 +101,19 @@ export default function EditProfileDialog() {
   const ensureUniqueAppend = (currentItems, valueToAdd, appendFn) => {
     if (!valueToAdd) return;
     const exists = currentItems.some(
-      (item) => (item?.value ?? "") === valueToAdd
+      (item) => (item?.value ?? "") === valueToAdd,
     );
     if (!exists) appendFn({ value: valueToAdd });
   };
 
   const onSubmit = async (data) => {
-    setIsLoading(true);
     data.dietaryLabels = data.dietaryLabels.map((i) => i.value);
     data.allergens = data.allergens.map((i) => i.value);
     try {
+      dispatch(updateProfile(data));
       dlgRef.current?.close();
-      await dispatch(updateProfile(data));
     } catch (err) {
       console.error("Profile update failed:", err);
-    } finally {
-      setIsLoading(false);
-      reset({
-        name: profile.name,
-        bio: profile.bio,
-        dietaryLabels: profile.dietaryLabels.map((v) => ({ value: v })),
-        allergens: profile.allergens.map((v) => ({ value: v })),
-        cuisine: profile.cuisine,
-        dietaryDraft: "",
-        allergenDraft: "",
-        file: null,
-      });
     }
   };
 
@@ -233,7 +178,7 @@ export default function EditProfileDialog() {
                     fileType: (files) =>
                       !files?.[0] ||
                       ["image/jpeg", "image/png", "image/webp"].includes(
-                        files[0].type
+                        files[0].type,
                       ) ||
                       "Invalid file type",
                   },
@@ -255,8 +200,9 @@ export default function EditProfileDialog() {
               </label>
               <input
                 id="name"
-                className={`input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${errors.name ? "input-error" : ""
-                  }`}
+                className={`input input-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
+                  errors.name ? "input-error" : ""
+                }`}
                 placeholder="Enter your display name"
                 {...register("name", {
                   required: "Name is required",
@@ -279,8 +225,9 @@ export default function EditProfileDialog() {
             <textarea
               id="bio"
               rows={3}
-              className={`textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${errors.bio ? "textarea-error" : ""
-                }`}
+              className={`textarea textarea-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl ${
+                errors.bio ? "textarea-error" : ""
+              }`}
               placeholder="Tell us about yourself, your cooking style, or favorite dishes..."
               {...register("bio", {
                 maxLength: {
@@ -326,7 +273,7 @@ export default function EditProfileDialog() {
                   ensureUniqueAppend(
                     dietaryFields,
                     dietaryDraft,
-                    appendDietary
+                    appendDietary,
                   );
                   reset({ ...getValues(), dietaryDraft: "" });
                 }}
@@ -369,7 +316,6 @@ export default function EditProfileDialog() {
               <select
                 id="allergen-select"
                 className="select select-bordered w-full border-orange-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-300 rounded-xl uppercase"
-                defaultValue=""
                 {...register("allergenDraft")}
               >
                 <option value="">Select allergen</option>
@@ -388,7 +334,7 @@ export default function EditProfileDialog() {
                   ensureUniqueAppend(
                     allergenFields,
                     allergenDraft,
-                    appendAllergen
+                    appendAllergen,
                   );
                   reset({ ...getValues(), allergenDraft: "" });
                 }}

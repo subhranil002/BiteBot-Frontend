@@ -4,7 +4,6 @@ import {
   FaAllergies,
   FaGlobe,
   FaHeart,
-  FaLock,
   FaSeedling,
   FaStar,
   FaUsers,
