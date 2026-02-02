@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaCheckCircle, FaClock, FaFire, FaShareAlt, FaHeart, FaPrint, FaStar, FaUsers } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaClock,
+  FaFire,
+  FaShareAlt,
+  FaHeart,
+  FaPrint,
+  FaStar,
+  FaUsers,
+  FaPen, // Added for the review icon
+  FaTimes, // Added for modal close
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -12,20 +23,30 @@ function RecipeDetail() {
   const { id } = useParams();
   const { recipe, chef, error } = useSelector((state) => state.recipe);
   const { userData } = useSelector((state) => state.auth);
+
   const [isFav, setIsFav] = useState(
     userData?.favourites?.find((fav) => fav.toString() === id)
   );
+
   const [cost, setCost] = useState({ total: 0, perServing: 0 });
   const [stats, setStats] = useState({
     averageRating: 0,
     reviewCount: 0,
   });
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [madeIt, setMadeIt] = useState(false);
+  const [madeItCount, setMadeItCount] = useState(0);
+
+  // --- Recipe Review State ---
   const [showReview, setShowReview] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+
+  // --- CHEF Review State (NEW) ---
+  const [showChefReview, setShowChefReview] = useState(false);
+  const [chefRating, setChefRating] = useState(0);
+  const [chefReviewText, setChefReviewText] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -84,6 +105,15 @@ function RecipeDetail() {
     setLoading(false);
   };
 
+  const handleChefReviewSubmit = () => {
+    // API Call logic for Chef Review goes here
+    console.log("Submitting Chef Review:", { chefId: chef?._id, rating: chefRating, text: chefReviewText });
+    toast.success("Thanks for reviewing the Chef!");
+    setShowChefReview(false);
+    setChefRating(0);
+    setChefReviewText("");
+  };
+
   if (!recipe) return "Loading...";
 
   const statTabs = [
@@ -113,13 +143,28 @@ function RecipeDetail() {
       : []),
   ];
 
+  const handleMadeItToggle = () => {
+    if (madeIt) {
+      // Undo
+      setMadeIt(false);
+      setMadeItCount(prev => prev - 1);
+      toast("Maybe next time!", { icon: "🍳" });
+    } else {
+      // Do
+      setMadeIt(true);
+      setMadeItCount(prev => prev + 1);
+      toast.success("Yay! Hope it was delicious! 🎉");
+    }
+    // TODO: Call API here to persist the change
+  };
+
   const handleShare = async () => {
     const shareData = {
       title: recipe.title,
       text: "Check out this amazing recipe!",
       url: window.location.href,
     };
-  
+
     try {
       if (navigator.share) {
         await navigator.share(shareData);
@@ -131,13 +176,13 @@ function RecipeDetail() {
       toast.error("Try again! Unable to share.");
     }
   };
-  
 
   return (
     <HomeLayout>
       <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
         <div className="container mx-auto px-4 py-10 relative z-10">
           <div className="max-w-6xl mx-auto space-y-10">
+
             {/* Hero Section */}
             <div className="hero relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
               <div className="hero-overlay bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
@@ -172,7 +217,6 @@ function RecipeDetail() {
                     {recipe.title}
                   </h1>
 
-                  {/* Scrollable description area */}
                   <div className="max-h-[50px] sm:max-h-[100px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
                     <p className="text-xs sm:text-base text-gray-100 whitespace-pre-line">
                       {recipe.description}
@@ -185,10 +229,12 @@ function RecipeDetail() {
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
-                {/* Chef Info */}
+
+                {/* --- CHEF INFO CARD (With Review Chef Button) --- */}
                 <div className="card bg-base-100 shadow-md border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
                   <div className="card-body">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      {/* Left: Avatar & Details */}
                       <div className="flex items-center gap-4">
                         <div className="avatar">
                           <div className="w-14 h-14 rounded-full border-2 border-orange-200">
@@ -211,11 +257,22 @@ function RecipeDetail() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Right: Review Chef Button */}
+                      <div>
+                        <button
+                          onClick={() => setShowChefReview(true)}
+                          className="btn btn-sm btn-outline border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300 gap-2 rounded-xl"
+                        >
+                          <FaPen className="w-3 h-3" />
+                          Review Chef
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Stats (now also shows Calories if available) */}
+                {/* Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {statTabs.map((item, i) => (
                     <div
@@ -298,7 +355,7 @@ function RecipeDetail() {
                   </div>
 
                   {/* Instructions */}
-                  <div className="card bg-base-100 shadow-lg border border-orange-100">
+                  <div className="card bg-base-100 shadow-lg border border-orange-100 mt-8">
                     <div className="card-body">
                       <h3 className="card-title text-gray-800">Instructions</h3>
                       <div className="space-y-8">
@@ -331,169 +388,101 @@ function RecipeDetail() {
                   </div>
                 </div>
               </div>
+
               {/* Sidebar */}
               <div className="space-y-6">
 
                 {/* I MADE IT */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body text-center">
+                {/* I MADE IT WIDGET */}
+                <div className={`card shadow-lg transition-all duration-500 border-2 ${madeIt
+                  ? "bg-emerald-50 border-emerald-400 shadow-emerald-100"
+                  : "bg-base-100 border-orange-100 hover:border-orange-200"
+                  }`}>
+                  <div className="card-body p-6 text-center">
+
+                    {/* The Counter */}
+                    <div className="flex flex-col items-center mb-4">
+                      <div className="flex items-baseline gap-1">
+                        <span className={`text-4xl font-black transition-all duration-300 ${madeIt ? "text-emerald-600 scale-110" : "text-gray-800"
+                          }`}>
+                          {madeItCount}
+                        </span>
+                      </div>
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        People cooked this
+                      </span>
+                    </div>
+
+                    {/* The Button */}
                     <button
-                      onClick={() => setMadeIt(!madeIt)}
-                      className={`btn w-full border-none ${madeIt
-                        ? "bg-green-500 text-white"
-                        : "bg-gradient-to-r from-orange-400 to-red-400 text-white"
+                      onClick={handleMadeItToggle}
+                      className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${madeIt
+                        ? "bg-emerald-500 hover:bg-emerald-600 border-none text-white ring-4 ring-emerald-100"
+                        : "bg-gradient-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
                         }`}
                     >
-                      <FaCheckCircle className="mr-2" />
-                      {madeIt ? "You Made This!" : "I Made It"}
+                      <FaCheckCircle className={`w-5 h-5 transition-transform duration-300 ${madeIt ? "scale-125" : "group-hover:scale-110"
+                        }`} />
+                      {madeIt ? "I Made It!" : "I Made This"}
                     </button>
-                    {madeIt && (
-                      <p className="text-sm text-green-600 mt-2">
-                        🎉 Nice! Hope it tasted amazing.
+
+                    {/* Success Message Animation */}
+                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${madeIt ? "max-h-20 opacity-100 mt-3" : "max-h-0 opacity-0"
+                      }`}>
+                      <p className="text-sm font-semibold text-emerald-600 bg-white/50 py-2 px-3 rounded-lg inline-flex items-center gap-2">
+                        <span>🎉</span> Delicious choice!
                       </p>
-                    )}
+                    </div>
+
                   </div>
                 </div>
-                {/* RATE & REVIEW */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body">
-                    <button
-                      onClick={() => setShowReview(true)}
-                      className="btn w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-none"
-                    >
-                      <FaStar className="mr-2" />
-                      Rate & Review
-                    </button>
-                  </div>
-                </div>
-                {/* Rating */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body text-center">
-                    <div className="flex justify-center gap-1 mb-2 text-yellow-400">
+
+                {/* --- Combined Reviews & Rating Card --- */}
+                <div className="card bg-base-100 shadow-md border border-orange-100 overflow-hidden">
+                  {/* Decorative Header Background */}
+                  <div className="h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+
+                  <div className="card-body items-center text-center p-6">
+
+                    <h3 className="font-bold text-gray-500 text-sm uppercase tracking-widest mb-1">
+                      Recipe Rating
+                    </h3>
+
+                    {/* The Big Number */}
+                    <div className="flex items-end justify-center gap-1 leading-none mb-2">
+                      <span className="text-5xl font-black text-gray-800">
+                        {stats.averageRating}
+                      </span>
+                      <span className="text-xl font-bold text-gray-300 mb-1">/ 5</span>
+                    </div>
+
+                    {/* The Stars - Fixed Visibility */}
+                    <div className="flex justify-center gap-1.5 mb-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <FaStar
                           key={i}
-                          className={
-                            i < Math.round(stats.averageRating)
-                              ? "opacity-100"
-                              : "opacity-30"
-                          }
+                          className={`text-2xl transition-colors duration-200 ${i < Math.round(stats.averageRating)
+                            ? "text-yellow-400 drop-shadow-sm" // Active: Bright Yellow + Shadow
+                            : "text-gray-200" // Inactive: Solid Light Gray (Much clearer than opacity)
+                            }`}
                         />
                       ))}
                     </div>
-                    <div className="text-2xl font-bold text-gray-700">
-                      {stats.averageRating}
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      Based on {stats.reviewCount} reviews
+
+                    <p className="text-sm text-gray-400 font-medium mb-6">
+                      ({stats.reviewCount} {stats.reviewCount === 1 ? "review" : "reviews"})
                     </p>
+
+                    {/* Action Button */}
+                    <button
+                      onClick={() => setShowReview(true)}
+                      className="btn w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-none shadow-md hover:shadow-orange-200 hover:-translate-y-0.5 transition-all rounded-xl"
+                    >
+                      <FaStar className="mr-1" />
+                      Rate This Recipe
+                    </button>
                   </div>
                 </div>
-
-                {showReview && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
-                    <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl animate-fadeIn">
-
-                      {/* Header */}
-                      <div className="text-center py-6 px-6 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
-                        <h3 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
-                          Rate this Recipe
-                        </h3>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Share your experience with others
-                        </p>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-6 space-y-5">
-                        {/* Stars */}
-                        <div className="flex justify-center gap-2 text-yellow-400">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <FaStar
-                              key={i}
-                              onClick={() => setRating(i + 1)}
-                              className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
-                                ? "opacity-100 scale-110"
-                                : "opacity-30 hover:opacity-60"
-                                }`}
-                            />
-                          ))}
-                        </div>
-
-                        {/* Review Text */}
-                        <textarea
-                          value={reviewText}
-                          onChange={(e) => setReviewText(e.target.value)}
-                          className="textarea textarea-bordered w-full h-28 resize-none bg-white/60 focus:outline-none focus:ring-2 focus:ring-orange-200"
-                          placeholder="Write your review..."
-                        />
-
-                        {/* Buttons */}
-                        <div className="flex gap-3 pt-2">
-                          <button
-                            onClick={() => setShowReview(false)}
-                            className="btn flex-1 rounded-xl bg-white/70 hover:bg-white border border-gray-200 text-gray-700 transition-all"
-                          >
-                            Cancel
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              console.log({ rating, reviewText });
-                              setShowReview(false);
-                            }}
-                            className="btn flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-
-                {/* Reviews */}
-                {recipe.reviews?.length > 0 && (
-                  <div className="card bg-base-100 shadow-md border border-orange-100">
-                    <div className="card-body">
-                      <h4 className="card-title text-gray-800">
-                        Recent Reviews
-                      </h4>
-                      <div className="space-y-4 max-h-80 overflow-y-auto">
-                        {recipe.reviews.slice(0, 3).map((review, index) => (
-                          <div
-                            key={index}
-                            className="border-b border-orange-100 pb-3 last:border-0"
-                          >
-                            <div className="flex items-center gap-1 text-yellow-400 mb-1">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                <FaStar
-                                  key={i}
-                                  className={
-                                    i < (Number(review?.rating) || 0)
-                                      ? "opacity-100"
-                                      : "opacity-30"
-                                  }
-                                />
-                              ))}
-                            </div>
-                            <p className="text-sm text-gray-700">
-                              {review.message}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {review.createdAt
-                                ? new Date(
-                                  review.createdAt
-                                ).toLocaleDateString()
-                                : ""}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {/* External Media */}
                 {recipe.externalMediaLinks?.length > 0 && (
@@ -537,13 +526,151 @@ function RecipeDetail() {
                   </div>
                 </div>
               </div>
-
-
-
             </div>
           </div>
         </div>
       </div>
+
+      {/* --- RECIPE REVIEW MODAL --- */}
+      {showReview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
+          <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl animate-fadeIn">
+            <div className="text-center py-6 px-6 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
+              <h3 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
+                Rate this Recipe
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Share your experience with others
+              </p>
+            </div>
+            <div className="p-6 space-y-5">
+              <div className="flex justify-center gap-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <FaStar
+                    key={i}
+                    onClick={() => setRating(i + 1)}
+                    className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
+                      ? "text-yellow-400 drop-shadow-sm scale-110" // Selected: Bright Yellow
+                      : "text-gray-100 opacity-90 hover:text-yellow-400  hover:scale-105"        // Not Selected: Visible Gray (Standard UI)
+                      }`}
+                  />
+                ))}
+              </div>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                className="textarea textarea-bordered w-full h-28 resize-none bg-white/60 focus:outline-none focus:ring-2 focus:ring-orange-200"
+                placeholder="Write your recipe review..."
+              />
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => setShowReview(false)}
+                  className="btn flex-1 rounded-xl bg-white/70 hover:bg-white border border-gray-200 text-gray-700 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    console.log({ rating, reviewText });
+                    setShowReview(false);
+                  }}
+                  className="btn flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- CHEF REVIEW MODAL (NEW) --- */}
+      {showChefReview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
+          <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-orange-100 bg-white shadow-2xl animate-fadeIn">
+            {/* Header */}
+            <div className="flex justify-between items-center py-4 px-6 border-b border-orange-50 bg-gradient-to-r from-orange-50 to-amber-50">
+              <h3 className="text-xl font-bold text-gray-800">
+                Review Chef {chef?.profile?.name}
+              </h3>
+              <button
+                onClick={() => setShowChefReview(false)}
+                className="btn btn-sm btn-circle btn-ghost text-gray-500 hover:bg-orange-100"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Chef Summary */}
+              <div className="flex items-center gap-3 bg-orange-50 p-3 rounded-xl border border-orange-100">
+                <div className="avatar">
+                  <div className="w-10 h-10 rounded-full">
+                    <img
+                      src={chef?.profile?.avatar?.secure_url}
+                      alt="Chef"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                    Posting Review For
+                  </p>
+                  <p className="font-bold text-gray-800">
+                    {chef?.profile?.name}
+                  </p>
+                </div>
+              </div>
+
+              {/* Star Input */}
+              <div className="text-center">
+                <p className="text-sm font-semibold text-gray-600 mb-2">
+                  How would you rate this Chef?
+                </p>
+                <div className="flex justify-center gap-3 text-yellow-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <FaStar
+                      key={i}
+                      onClick={() => setChefRating(i + 1)}
+                      className={`text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 ${i < chefRating
+                        ? "opacity-100 drop-shadow-sm"
+                        : "opacity-30 hover:opacity-60"
+                        }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Text Area */}
+              <div className="form-control">
+                <textarea
+                  value={chefReviewText}
+                  onChange={(e) => setChefReviewText(e.target.value)}
+                  className="textarea textarea-bordered w-full h-32 rounded-xl focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50"
+                  placeholder="Share your thoughts on the chef's style, consistency, etc..."
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowChefReview(false)}
+                  className="btn flex-1 btn-ghost rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleChefReviewSubmit}
+                  disabled={chefRating === 0}
+                  className="btn flex-1 bg-gradient-to-r from-orange-500 to-red-500 border-none text-white rounded-xl disabled:bg-gray-200 disabled:text-gray-400"
+                >
+                  Submit Review
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </HomeLayout>
   );
 }

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import {
   FaAllergies,
   FaGlobe,
@@ -7,6 +6,10 @@ import {
   FaSeedling,
   FaStar,
   FaUsers,
+  FaChevronDown,
+  FaChevronUp,
+  FaTimes,
+  FaCircle,
 } from "react-icons/fa";
 
 function ProfileStats({ profileData }) {
@@ -18,32 +21,33 @@ function ProfileStats({ profileData }) {
       icon: FaHeart,
       label: "Favorites",
       value: profileData?.favourites?.length ?? 0,
-      colorClass: "text-rose-500",
-      bgClass: "from-rose-100 to-pink-50",
+      // Icon specific colors
+      iconColor: "text-rose-500",
+      iconBg: "bg-rose-50",
     },
     {
       id: "subscribed",
       icon: FaUsers,
       label: "Subscribed",
       value: profileData?.profile?.subscribed?.length ?? 0,
-      colorClass: "text-blue-500",
-      bgClass: "from-blue-100 to-cyan-50",
+      iconColor: "text-blue-500",
+      iconBg: "bg-blue-50",
     },
     {
       id: "reviews",
       icon: FaStar,
-      label: "Reviews Given",
+      label: "Reviews",
       value: profileData?.reviewsGiven?.length ?? 0,
-      colorClass: "text-amber-500",
-      bgClass: "from-amber-100 to-yellow-50",
+      iconColor: "text-yellow-500",
+      iconBg: "bg-yellow-50",
     },
     {
       id: "dietary",
       icon: FaSeedling,
-      label: "Dietary Preferences",
+      label: "Dietary",
       value: profileData?.profile?.dietaryLabels?.length ?? 0,
-      colorClass: "text-emerald-500",
-      bgClass: "from-emerald-100 to-green-50",
+      iconColor: "text-emerald-500",
+      iconBg: "bg-emerald-50",
       hasList: true,
       details:
         profileData?.profile?.dietaryLabels?.length > 0
@@ -55,8 +59,8 @@ function ProfileStats({ profileData }) {
       icon: FaAllergies,
       label: "Allergens",
       value: profileData?.profile?.allergens?.length ?? 0,
-      colorClass: "text-red-500",
-      bgClass: "from-red-100 to-rose-50",
+      iconColor: "text-red-500",
+      iconBg: "bg-red-50",
       hasList: true,
       details:
         profileData?.profile?.allergens?.length > 0
@@ -66,131 +70,143 @@ function ProfileStats({ profileData }) {
     {
       id: "cuisine",
       icon: FaGlobe,
-      label: "Favourite Cuisine",
-      value: profileData?.profile?.cuisine,
-      colorClass: "text-purple-500",
-      bgClass: "from-purple-100 to-violet-50",
+      label: "Cuisine",
+      value: profileData?.profile?.cuisine || "N/A",
+      iconColor: "text-purple-500",
+      iconBg: "bg-purple-50",
     },
   ];
 
+  const handleToggle = (item) => {
+    if (!item.hasList) return;
+    setActiveItem(activeItem?.id === item.id ? null : item);
+  };
+
   return (
-    <div className="space-y-6 relative z-0">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+    <div className="w-full max-w-7xl mx-auto space-y-6">
+      
+      {/* 1. RESPONSIVE GRID */}
+      {/* Mobile: 2 cols | Tablet: 3 cols | Desktop: 6 cols */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         {statItems.map((item) => {
           const Icon = item.icon;
+          const isActive = activeItem?.id === item.id;
+          const isClickable = item.hasList;
 
           return (
             <div
               key={item.id}
-              className="relative group"
-              onClick={() => item.hasList && setActiveItem(item)}
+              onClick={() => handleToggle(item)}
+              className={`
+                card bg-base-100 shadow-sm border-2 transition-all duration-300 relative
+                ${
+                  isActive
+                    ? "border-orange-500 shadow-lg shadow-orange-100 scale-[1.02] -translate-y-1 z-10" // Brand Active State
+                    : "border-base-200 hover:border-orange-300 hover:shadow-md" // Brand Hover State
+                }
+                ${isClickable ? "cursor-pointer group" : "cursor-default"}
+              `}
             >
-              <div
-                className={`card bg-base-100 border-2 border-orange-100 shadow-sm hover:shadow-xl transition-all duration-300 min-h-[120px] sm:min-h-[140px] cursor-pointer group-hover:scale-105 group-active:scale-95 ${
-                  item.hasList ? "hover:border-orange-300" : "cursor-default"
-                }`}
-              >
-                <div className="card-body p-4 sm:p-5 flex flex-col items-center justify-center text-center gap-2">
-                  {/* Icon */}
-                  <div
-                    className={`w-10 h-10 rounded-full ${item.bgClass} bg-opacity-20 flex items-center justify-center`}
-                  >
-                    <Icon className={`w-5 h-5 ${item.colorClass}`} />
-                  </div>
-
-                  {/* Value */}
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="text-xl sm:text-2xl font-bold text-gray-900 capitalize">
-                      {item.value}
-                    </div>
-                    <div className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                      {item.label}
-                    </div>
-                  </div>
-
-                  {/* Clickable indicator */}
-                  {item.hasList && (
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                      <div className="w-6 h-1 bg-gradient-to-r from-orange-400 to-red-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                  )}
+              <div className="card-body p-3 sm:p-5 items-center text-center gap-1">
+                
+                {/* Icon Circle - Uses Specific Colors */}
+                <div
+                  className={`
+                    w-12 h-12 rounded-full flex items-center justify-center mb-1
+                    ${item.iconBg} ${item.iconColor}
+                    transition-transform duration-300 ${isClickable ? "group-hover:scale-110" : ""}
+                  `}
+                >
+                  <Icon className="w-6 h-6" />
                 </div>
+
+                {/* Number Value */}
+                <h2 className="text-2xl font-black text-gray-800">
+                  {item.value}
+                </h2>
+                
+                {/* Label */}
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">
+                  {item.label}
+                </p>
+
+                {/* Action Pill - Always Brand Orange */}
+                {isClickable && (
+                  <div
+                    className={`
+                      mt-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 transition-colors
+                      ${
+                        isActive
+                          ? "bg-orange-500 text-white"
+                          : "bg-base-200 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-600"
+                      }
+                    `}
+                  >
+                    {isActive ? "Close" : "View"}
+                    {isActive ? <FaChevronUp /> : <FaChevronDown />}
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Modal */}
-      {activeItem &&
-        createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-            <div className="card bg-base-100 shadow-2xl border border-orange-100 max-w-md w-full max-h-[90vh] overflow-hidden">
-              <div className="card-body p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full ${activeItem.bgClass} bg-opacity-20 flex items-center justify-center`}
-                    >
-                      <activeItem.icon
-                        className={`w-5 h-5 ${activeItem.colorClass}`}
-                      />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">
-                        {activeItem.label}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {activeItem.value} total
-                      </p>
-                    </div>
+      {/* 2. DETAIL PANEL */}
+      {/* Expands below the grid using Brand Theme */}
+      {activeItem && (
+        <div className="animate-in fade-in slide-in-from-top-4 duration-300 origin-top">
+          
+          {/* Decorative Arrow pointing to the grid */}
+          <div className="flex justify-center -mb-[1px]">
+             <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-orange-200"></div>
+          </div>
+
+          <div className="card bg-orange-50/30 border border-orange-200 shadow-inner">
+            <div className="card-body p-6 sm:p-8">
+              
+              {/* Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-orange-200">
+                <div className="flex items-center gap-3">
+                  {/* Icon in Header retains specific color identity */}
+                  <div className={`p-2 rounded-lg bg-white shadow-sm ${activeItem.iconColor}`}>
+                    <activeItem.icon className="w-5 h-5" />
                   </div>
-                  <button
-                    onClick={() => setActiveItem(null)}
-                    className="btn btn-sm btn-circle btn-ghost text-gray-400 hover:text-gray-600"
-                  >
-                    ✕
-                  </button>
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-800">
+                      {activeItem.label} Details
+                    </h3>
+                  </div>
                 </div>
-
-                {/* Content */}
-                <div className="space-y-4">
-                  {activeItem.details && activeItem.details.length > 0 ? (
-                    <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-1">
-                      {activeItem.details.map((detail, index) => (
-                        <div
-                          key={index}
-                          className="badge badge-lg bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 text-orange-700 font-medium py-3 hover:from-orange-100 hover:to-amber-100 transition-all cursor-default shadow-sm"
-                        >
-                          {detail}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500 font-medium">
-                        No items available
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer */}
-                <div className="card-actions justify-end mt-6">
-                  <button
-                    onClick={() => setActiveItem(null)}
-                    className="btn btn-outline border-orange-300 text-orange-600 hover:bg-orange-50"
-                  >
-                    Close
-                  </button>
-                </div>
+                
+                <button
+                  onClick={() => setActiveItem(null)}
+                  className="btn btn-circle btn-sm btn-ghost hover:bg-orange-200 text-gray-500"
+                >
+                  <FaTimes />
+                </button>
               </div>
+
+              {/* Content List */}
+              <div className="flex flex-wrap gap-2 pt-4">
+                {activeItem.details.map((detail, index) => (
+                  <div
+                    key={index}
+                    className="badge badge-lg h-auto py-3 px-4 bg-white border-orange-100 text-gray-700 shadow-sm gap-2"
+                  >
+                    {/* Tiny dot matching the specific category color */}
+                    <FaCircle className={`w-2 h-2 ${activeItem.iconColor}`} />
+                    <span className="font-medium text-sm capitalize">
+                        {detail}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
             </div>
-          </div>,
-          document.body
-        )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

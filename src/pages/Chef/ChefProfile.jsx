@@ -19,6 +19,7 @@ import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
+import EditChefProfileDialog from "../../components/chefProfile/editChefProfileDialog";
 
 function ChefProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -98,7 +99,7 @@ function ChefProfile({ profileData }) {
 
   return (
     <>
-      {isOwnProfile && <EditProfileDialog profileData={profileData} />}
+      {isOwnProfile && <EditChefProfileDialog profileData={profileData} />}
       <HomeLayout>
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50">
           <div className="container mx-auto px-4 py-10">
@@ -134,93 +135,112 @@ function ChefProfile({ profileData }) {
 
             {/* Info */}
             <div className="mt-20 mb-10 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-              <div className="space-y-4 max-w-2xl">
-                <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
-                  {profileData?.profile?.name}
-                </h1>
-                <p className="text-gray-600 text-lg">
-                  {profileData?.profile?.bio}
-                </p>
+              {/* LEFT SIDE: Info */}
+              <div className="space-y-6 max-w-3xl flex-1">
 
-                {/* External Links */}
-                {profileData?.chefProfile?.externalLinks?.length > 0 && (
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <FaLink className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                    <div className="flex flex-wrap gap-2">
-                      {profileData.chefProfile.externalLinks.map(
-                        (link, index) => (
+                {/* Name & Bio */}
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+                    {profileData?.profile?.name}
+                  </h1>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    {profileData?.profile?.bio || "No bio available."}
+                  </p>
+                </div>
+
+                {/* Details Grid: Specialty & Links */}
+                <div className="flex flex-wrap gap-6">
+
+                  {/* 1. Cuisine Specialty */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      Specializes In
+                    </span>
+                    <div className="badge badge-lg h-auto py-2 px-4 gap-2 bg-orange-50 border-orange-200 text-orange-700 shadow-sm rounded-xl">
+                      <FaUtensils className="w-3 h-3" />
+                      <span className="font-bold text-base">
+                        {profileData?.profile?.cuisine || "Multi-Cuisine"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 2. External Links */}
+                  {profileData?.chefProfile?.externalLinks?.length > 0 && (
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                        <FaLink /> Connect
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {profileData.chefProfile.externalLinks.map((link, index) => (
                           <a
                             key={index}
                             href={link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="badge badge-outline border-orange-300 text-orange-600 hover:bg-orange-50"
+                            className="badge badge-lg h-auto py-2 px-3 gap-2 bg-white border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-600 transition-colors shadow-sm cursor-pointer rounded-xl"
                           >
-                            <FaGlobe className="w-3 h-3 mr-1" />
-                            {new URL(link).hostname}
+                            <FaGlobe className="w-3 h-3" />
+                            <span className="font-medium text-sm">
+                              {new URL(link).hostname.replace("www.", "")}
+                            </span>
                           </a>
-                        )
-                      )}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-
-                {/* Cuisine */}
-                <div className="flex flex-wrap gap-2">
-                  <div className="badge badge-outline border-orange-400 text-orange-500">
-                    {profileData?.profile?.cuisine}
-                  </div>
+                  )}
                 </div>
 
-                {/* Joined + subscribers */}
-                <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <FaCalendarAlt className="w-4 h-4 text-orange-400" />
+                {/* Footer Meta: Joined & Subs */}
+                <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-orange-100/60">
+                  <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                    <div className="p-1.5 bg-orange-100 rounded-full text-orange-500">
+                      <FaCalendarAlt className="w-3 h-3" />
+                    </div>
                     <span>
                       Joined{" "}
-                      {new Date(profileData.createdAt).toLocaleDateString(
-                        "en-IN",
-                        {
-                          month: "long",
-                          year: "numeric",
-                          timeZone: "Asia/Kolkata",
-                        }
-                      )}
+                      {new Date(profileData.createdAt).toLocaleDateString("en-IN", {
+                        month: "long",
+                        year: "numeric",
+                      })}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <FaHeart className="w-4 h-4 text-orange-400" />
+
+                  <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                    <div className="p-1.5 bg-rose-100 rounded-full text-rose-500">
+                      <FaHeart className="w-3 h-3" />
+                    </div>
                     <span>
-                      {profileData?.chefProfile?.subscribers?.length || 0}{" "}
+                      <strong className="text-gray-800">
+                        {profileData?.chefProfile?.subscribers?.length || 0}
+                      </strong>{" "}
                       Subscribers
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Subscribe / Edit */}
-              <div className="flex flex-col gap-3">
+              {/* RIGHT SIDE: Actions */}
+              <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 min-w-[200px]">
                 {isOwnProfile ? (
                   <button
-                    className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
-                    onClick={() =>
-                      document.getElementById("edit-profile")?.showModal()
-                    }
+                    onClick={() => document.getElementById("edit-profile")?.showModal()}
+                    className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
                   >
                     <FaEdit className="w-4 h-4" />
-                    <span className="hidden sm:inline">Edit Profile</span>
+                    Edit Profile
                   </button>
                 ) : (
                   <button
                     onClick={() => subscribeToggle()}
                     disabled={loading}
-                    className={`btn gap-2 ${
-                      subscribed
-                        ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
-                        : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
-                    }`}
+                    className={`btn gap-2 ${subscribed
+
+                      ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
+
+                      : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
+                      }`}
                   >
-                    <FaHeart />
+                    <FaHeart className={subscribed ? "text-rose-500" : "text-white"} />
                     {subscribed
                       ? "Unsubscribe"
                       : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
@@ -247,36 +267,52 @@ function ChefProfile({ profileData }) {
             </div>
 
             {/* Professional Info Card */}
-            {profileData?.chefProfile?.experience && (
-              <div className="card bg-base-100 shadow border border-orange-100 mb-8">
-                <div className="card-body">
-                  <h3 className="card-title text-gray-800">
-                    <FaBriefcase className="text-orange-500" />
+            {(profileData?.chefProfile?.education || profileData?.chefProfile?.experience) && (
+              <div className="card bg-white shadow-xl border border-orange-100 overflow-hidden mb-10">
+                {/* Decorative Gradient Top */}
+                <div className="h-1.5 bg-gradient-to-r from-orange-400 via-red-400 to-amber-400"></div>
+
+                <div className="card-body p-6 sm:p-8">
+                  {/* Header */}
+                  <h3 className="text-xl font-bold text-gray-800 flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500 shadow-sm">
+                      <FaBriefcase className="w-5 h-5" />
+                    </div>
                     Professional Background
                   </h3>
-                  <div className="space-y-4">
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    {/* Education Column */}
                     {profileData?.chefProfile?.education && (
-                      <div>
-                        <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
-                          <FaGraduationCap className="w-4 h-4 text-orange-500" />
-                          Education
+                      <div className="group">
+                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-3">
+                          <FaGraduationCap className="text-orange-400 w-4 h-4" />
+                          Education & Certifications
                         </h4>
-                        <p className="text-gray-600">
-                          {profileData.chefProfile.education}
-                        </p>
+                        <div className="pl-4 border-l-4 border-orange-200 group-hover:border-orange-400 transition-colors py-1">
+                          <p className="text-gray-700 text-sm font-medium leading-relaxed">
+                            {profileData.chefProfile.education}
+                          </p>
+                        </div>
                       </div>
                     )}
-                    {profileData?.chefProfile.experience && (
-                      <div>
-                        <h4 className="font-semibold text-gray-700 flex items-center gap-2 mb-2">
-                          <FaBriefcase className="w-4 h-4 text-orange-500" />
-                          Experience
+
+                    {/* Experience Column */}
+                    {profileData?.chefProfile?.experience && (
+                      <div className="group">
+                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-3">
+                          <FaBriefcase className="text-amber-400 w-4 h-4" />
+                          Work Experience
                         </h4>
-                        <p className="text-gray-600">
-                          {profileData.chefProfile.experience}
-                        </p>
+                        <div className="pl-4 border-l-4 border-amber-200 group-hover:border-amber-400 transition-colors py-1">
+                          <p className="text-gray-700 text-sm font-medium leading-relaxed whitespace-pre-line">
+                            {profileData.chefProfile.experience}
+                          </p>
+                        </div>
                       </div>
                     )}
+
                   </div>
                 </div>
               </div>
