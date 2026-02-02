@@ -581,7 +581,7 @@ function SearchResults() {
               </button>
               <button
                 onClick={applyFilters}
-                className="btn btn-primary btn-sm bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white"
+                className="btn btn-primary btn-sm bg-linear-to-r from-orange-500 to-red-500 border-0 text-white"
               >
                 Apply
               </button>
@@ -589,7 +589,7 @@ function SearchResults() {
           ) : (
             <button
               onClick={applyFilters}
-              className="btn btn-primary btn-sm bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white flex-1"
+              className="btn btn-primary btn-sm bg-linear-to-r from-orange-500 to-red-500 border-0 text-white flex-1"
             >
               Apply Filters
             </button>
@@ -703,7 +703,7 @@ function SearchResults() {
           </button>
           <button
             onClick={() => window.history.back()}
-            className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-0 text-white btn-sm sm:btn-md"
+            className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-0 text-white btn-sm sm:btn-md"
           >
             Back to Search
           </button>
@@ -714,7 +714,7 @@ function SearchResults() {
 
   return (
     <HomeLayout>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-red-50 py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-8">
+      <div className="min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-red-50 py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-8">
         <div className="container mx-auto max-w-7xl">
           {/* Mobile Filter Collapse */}
           <div className="md:hidden mb-4">
@@ -757,7 +757,7 @@ function SearchResults() {
                       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 truncate">
                         <FaSearch className="inline w-4 h-4 sm:w-5 sm:h-5 text-orange-500 mr-2" />
                         Results for{" "}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-500">
+                        <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-red-500">
                           "{searchParams.searchTerm}"
                         </span>
                       </h1>

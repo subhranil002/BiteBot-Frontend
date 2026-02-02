@@ -30,7 +30,7 @@ function ProfileTabs({ profileData }) {
               onClick={() => setActiveTab(tab.key)}
               className={`btn gap-2 rounded-xl font-semibold transition-all duration-300 min-w-[120px] ${
                 isActive
-                  ? "bg-gradient-to-r from-orange-400 to-red-500 text-white shadow-lg scale-105"
+                  ? "bg-linear-to-r from-orange-400 to-red-500 text-white shadow-lg scale-105"
                   : "btn-ghost text-gray-700 border border-orange-100 hover:bg-orange-50"
               }`}
             >
@@ -75,7 +75,7 @@ function ProfileTabs({ profileData }) {
                               {chef.profile.name}
                             </h4>
                             {chef.isPremium && (
-                              <span className="badge bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 flex items-center gap-1">
+                              <span className="badge bg-linear-to-r from-yellow-500 to-orange-500 text-white border-0 flex items-center gap-1">
                                 <FaCrown className="w-3 h-3" /> Premium
                               </span>
                             )}
@@ -133,7 +133,7 @@ function ProfileTabs({ profileData }) {
                     className="card bg-base-100 shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                   >
                     <div className="card-body p-6">
-                      {/* Header with rating and date */}
+                      {/* rating and date */}
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                         <div className="flex items-center gap-3">
                           <div className="rating rating-sm">

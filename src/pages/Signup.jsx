@@ -109,7 +109,7 @@ const SignUp = () => {
   }, [isLoggedIn, navigate, location]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 p-6">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-linear-to-br from-amber-50 via-orange-50 to-red-50 p-6">
       {/* Floating icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingIconsRef.current}
@@ -117,13 +117,13 @@ const SignUp = () => {
 
       {/* Glowing blobs */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-gradient-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
+        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-linear-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-linear-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-4xl bg-white/70 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-3xl overflow-hidden">
-        <div className="text-center py-10 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-gradient-x">
+        <div className="text-center py-10 border-b border-white/40 bg-linear-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
+          <h1 className="text-4xl font-extrabold bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-linear-x">
             Create Account
           </h1>
           <p className="text-gray-600 mt-2 text-sm font-medium">
@@ -169,7 +169,7 @@ const SignUp = () => {
                           </button>
                         </div>
                       ) : (
-                        <div className="w-24 h-24 flex items-center justify-center rounded-full bg-gradient-to-br from-orange-200 to-red-200 border-4 border-orange-100 shadow-lg">
+                        <div className="w-24 h-24 flex items-center justify-center rounded-full bg-linear-to-br from-orange-200 to-red-200 border-4 border-orange-100 shadow-lg">
                           <FiUpload className="text-orange-400 text-2xl" />
                         </div>
                       )}
@@ -480,7 +480,7 @@ const SignUp = () => {
           {/* Submit Button */}
           <div className="col-span-1 md:col-span-2 mt-6">
             <button
-              className="btn w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+              className="btn w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
               disabled={isSubmitting}
             >
               <span className="relative z-10">

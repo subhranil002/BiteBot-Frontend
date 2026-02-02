@@ -21,7 +21,6 @@ function ProfileStats({ profileData }) {
       icon: FaHeart,
       label: "Favorites",
       value: profileData?.favourites?.length ?? 0,
-      // Icon specific colors
       iconColor: "text-rose-500",
       iconBg: "bg-rose-50",
     },
@@ -84,9 +83,6 @@ function ProfileStats({ profileData }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6">
-      
-      {/* 1. RESPONSIVE GRID */}
-      {/* Mobile: 2 cols | Tablet: 3 cols | Desktop: 6 cols */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         {statItems.map((item) => {
           const Icon = item.icon;
@@ -99,17 +95,15 @@ function ProfileStats({ profileData }) {
               onClick={() => handleToggle(item)}
               className={`
                 card bg-base-100 shadow-sm border-2 transition-all duration-300 relative
-                ${
-                  isActive
-                    ? "border-orange-500 shadow-lg shadow-orange-100 scale-[1.02] -translate-y-1 z-10" // Brand Active State
-                    : "border-base-200 hover:border-orange-300 hover:shadow-md" // Brand Hover State
+                ${isActive
+                  ? "border-orange-500 shadow-lg shadow-orange-100 scale-[1.02] -translate-y-1 z-10"
+                  : "border-base-200 hover:border-orange-300 hover:shadow-md"
                 }
                 ${isClickable ? "cursor-pointer group" : "cursor-default"}
               `}
             >
               <div className="card-body p-3 sm:p-5 items-center text-center gap-1">
-                
-                {/* Icon Circle - Uses Specific Colors */}
+
                 <div
                   className={`
                     w-12 h-12 rounded-full flex items-center justify-center mb-1
@@ -119,26 +113,20 @@ function ProfileStats({ profileData }) {
                 >
                   <Icon className="w-6 h-6" />
                 </div>
-
-                {/* Number Value */}
                 <h2 className="text-2xl font-black text-gray-800">
                   {item.value}
                 </h2>
-                
-                {/* Label */}
                 <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">
                   {item.label}
                 </p>
 
-                {/* Action Pill - Always Brand Orange */}
                 {isClickable && (
                   <div
                     className={`
                       mt-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 transition-colors
-                      ${
-                        isActive
-                          ? "bg-orange-500 text-white"
-                          : "bg-base-200 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-600"
+                      ${isActive
+                        ? "bg-orange-500 text-white"
+                        : "bg-base-200 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-600"
                       }
                     `}
                   >
@@ -153,22 +141,16 @@ function ProfileStats({ profileData }) {
       </div>
 
       {/* 2. DETAIL PANEL */}
-      {/* Expands below the grid using Brand Theme */}
       {activeItem && (
         <div className="animate-in fade-in slide-in-from-top-4 duration-300 origin-top">
-          
-          {/* Decorative Arrow pointing to the grid */}
-          <div className="flex justify-center -mb-[1px]">
-             <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px] border-b-orange-200"></div>
+          <div className="flex justify-center -mb-px">
+            <div className="w-0 h-0 border-l-10 border-l-transparent border-r-10 border-r-transparent border-b-10 border-b-orange-200"></div>
           </div>
 
           <div className="card bg-orange-50/30 border border-orange-200 shadow-inner">
             <div className="card-body p-6 sm:p-8">
-              
-              {/* Header */}
               <div className="flex items-center justify-between pb-4 border-b border-orange-200">
                 <div className="flex items-center gap-3">
-                  {/* Icon in Header retains specific color identity */}
                   <div className={`p-2 rounded-lg bg-white shadow-sm ${activeItem.iconColor}`}>
                     <activeItem.icon className="w-5 h-5" />
                   </div>
@@ -178,7 +160,7 @@ function ProfileStats({ profileData }) {
                     </h3>
                   </div>
                 </div>
-                
+
                 <button
                   onClick={() => setActiveItem(null)}
                   className="btn btn-circle btn-sm btn-ghost hover:bg-orange-200 text-gray-500"
@@ -194,10 +176,9 @@ function ProfileStats({ profileData }) {
                     key={index}
                     className="badge badge-lg h-auto py-3 px-4 bg-white border-orange-100 text-gray-700 shadow-sm gap-2"
                   >
-                    {/* Tiny dot matching the specific category color */}
                     <FaCircle className={`w-2 h-2 ${activeItem.iconColor}`} />
                     <span className="font-medium text-sm capitalize">
-                        {detail}
+                      {detail}
                     </span>
                   </div>
                 ))}

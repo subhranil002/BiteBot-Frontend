@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import subscribeApi from "../../apis/user/subscribeApi";
 import unsubscribeApi from "../../apis/user/unsubscribeApi";
 import RecipeCard from "../../components/recipe/RecipeCard";
-import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
@@ -101,17 +100,17 @@ function ChefProfile({ profileData }) {
     <>
       {isOwnProfile && <EditChefProfileDialog profileData={profileData} />}
       <HomeLayout>
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50">
+        <div className="min-h-screen bg-linear-to-br from-orange-50 via-rose-50 to-amber-50">
           <div className="container mx-auto px-4 py-10">
             {/* Banner */}
             <div className="relative mb-20">
-              <div className="w-full h-64 sm:h-80 lg:h-[22rem] rounded-3xl overflow-hidden shadow-2xl border border-orange-100">
+              <div className="w-full h-64 sm:h-80 lg:h-88 rounded-3xl overflow-hidden shadow-2xl border border-orange-100">
                 <img
                   src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=60"
                   alt="banner"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
               </div>
               <div className="absolute -bottom-16 left-6 sm:left-12">
                 <div className="avatar">
@@ -135,12 +134,11 @@ function ChefProfile({ profileData }) {
 
             {/* Info */}
             <div className="mt-20 mb-10 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-              {/* LEFT SIDE: Info */}
               <div className="space-y-6 max-w-3xl flex-1">
 
                 {/* Name & Bio */}
                 <div>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold bg-linear-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
                     {profileData?.profile?.name}
                   </h1>
                   <p className="text-gray-600 text-lg leading-relaxed">
@@ -148,10 +146,8 @@ function ChefProfile({ profileData }) {
                   </p>
                 </div>
 
-                {/* Details Grid: Specialty & Links */}
+                {/* Details: Specialty & Links */}
                 <div className="flex flex-wrap gap-6">
-
-                  {/* 1. Cuisine Specialty */}
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                       Specializes In
@@ -190,7 +186,7 @@ function ChefProfile({ profileData }) {
                   )}
                 </div>
 
-                {/* Footer Meta: Joined & Subs */}
+                {/* Joined & Subs */}
                 <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-orange-100/60">
                   <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <div className="p-1.5 bg-orange-100 rounded-full text-orange-500">
@@ -220,11 +216,11 @@ function ChefProfile({ profileData }) {
               </div>
 
               {/* RIGHT SIDE: Actions */}
-              <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 min-w-[200px]">
+              <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 min-w-[200px]">
                 {isOwnProfile ? (
                   <button
                     onClick={() => document.getElementById("edit-profile")?.showModal()}
-                    className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
+                    className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
                   >
                     <FaEdit className="w-4 h-4" />
                     Edit Profile
@@ -237,7 +233,7 @@ function ChefProfile({ profileData }) {
 
                       ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
 
-                      : "bg-gradient-to-r from-orange-400 to-red-500 text-white border-none"
+                      : "bg-linear-to-r from-orange-400 to-red-500 text-white border-none"
                       }`}
                   >
                     <FaHeart className={subscribed ? "text-rose-500" : "text-white"} />
@@ -270,7 +266,7 @@ function ChefProfile({ profileData }) {
             {(profileData?.chefProfile?.education || profileData?.chefProfile?.experience) && (
               <div className="card bg-white shadow-xl border border-orange-100 overflow-hidden mb-10">
                 {/* Decorative Gradient Top */}
-                <div className="h-1.5 bg-gradient-to-r from-orange-400 via-red-400 to-amber-400"></div>
+                <div className="h-1.5 bg-linear-to-r from-orange-400 via-red-400 to-amber-400"></div>
 
                 <div className="card-body p-6 sm:p-8">
                   {/* Header */}

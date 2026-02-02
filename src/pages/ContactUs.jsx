@@ -38,13 +38,13 @@ function ContactUs() {
 
   return (
     <HomeLayout>
-      <div className="py-12 px-4 md:px-8 lg:px-16 bg-gradient-to-br from-orange-50 via-amber-50 to-white">
+      <div className="py-12 px-4 md:px-8 lg:px-16 bg-linear-to-br from-orange-50 via-amber-50 to-white">
         <div className="container mx-auto max-w-6xl">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
               Get in{" "}
-              <span className="bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
                 Touch
               </span>
             </h1>
@@ -127,7 +127,7 @@ function ContactUs() {
 
                   {/* Submit */}
                   <div className="form-control mt-6">
-                    <button className="btn bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold gap-2 rounded-2xl shadow-md transition-all duration-300 w-full">
+                    <button className="btn bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold gap-2 rounded-2xl shadow-md transition-all duration-300 w-full">
                       <FiSend className="text-lg" />
                       Send Message
                     </button>

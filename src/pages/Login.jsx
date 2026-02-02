@@ -96,7 +96,7 @@ const Login = () => {
   }, [isLoggedIn]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-linear-to-br from-amber-50 via-orange-50 to-red-50">
       {/* Floating Icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingIconsRef.current}
@@ -104,14 +104,14 @@ const Login = () => {
 
       {/* Glowing Blobs */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-gradient-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
+        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-linear-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-linear-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
       </div>
 
       {/* Glassmorphic Card */}
       <div className="relative z-10 w-full max-w-md bg-white/70 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-3xl overflow-hidden animate-fadeIn">
-        <div className="text-center py-10 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-gradient-x">
+        <div className="text-center py-10 border-b border-white/40 bg-linear-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
+          <h1 className="text-4xl font-extrabold bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-linear-x">
             Welcome Back
           </h1>
           <p className="text-gray-600 mt-2 text-sm font-medium">
@@ -203,7 +203,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+            className="btn w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
           >
             <span className="relative z-10">
               {isSubmitting ? "Logging in..." : "Continue"}

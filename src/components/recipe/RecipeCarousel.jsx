@@ -24,13 +24,12 @@ function RecipeCarousel({ title, recipes }) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between px-2 md:px-4">
         {title}
         <div className="hidden sm:flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="btn btn-circle bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
+            className="btn btn-circle bg-linear-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
             aria-label="Scroll left"
           >
             <FaChevronLeft className="w-4 h-4" />
@@ -38,7 +37,7 @@ function RecipeCarousel({ title, recipes }) {
 
           <button
             onClick={() => scroll("right")}
-            className="btn btn-circle bg-gradient-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
+            className="btn btn-circle bg-linear-to-r from-orange-100 to-amber-100 text-orange-600 border border-orange-200 shadow-md hover:from-orange-200 hover:to-amber-200 hover:scale-105 transition-all duration-300"
             aria-label="Scroll right"
           >
             <FaChevronRight className="w-4 h-4" />

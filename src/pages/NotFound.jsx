@@ -11,7 +11,7 @@ const NotFound = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-linear-to-br from-amber-50 via-orange-50 to-red-50">
       {/* Floating icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: 20 }).map((_, i) => {
@@ -51,7 +51,7 @@ const NotFound = () => {
       {/* Main Glass Card */}
       <div className="card glass shadow-2xl p-10 max-w-2xl text-center z-10">
         <div className="relative mb-8">
-          <h1 className="text-9xl md:text-[12rem] font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-gradient-x drop-shadow-lg">
+          <h1 className="text-9xl md:text-[12rem] font-extrabold bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent animate-linear-x drop-shadow-lg">
             404
           </h1>
           <FaSadTear className="absolute -top-4 -right-4 text-6xl text-amber-400 animate-bounce opacity-80 drop-shadow" />
@@ -69,7 +69,7 @@ const NotFound = () => {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <Link to="/" className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 text-white border-none shadow-lg hover:scale-105 transition-transform">
+          <Link to="/" className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 text-white border-none shadow-lg hover:scale-105 transition-transform">
             <FaHome className="w-5 h-5 mr-2" />
             Back to Home
           </Link>
@@ -106,7 +106,7 @@ const NotFound = () => {
           </p>
           <Link
             to="/chat"
-            className="btn btn-sm mt-4 bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md hover:scale-105 transition-transform"
+            className="btn btn-sm mt-4 bg-linear-to-r from-orange-500 to-red-500 text-white shadow-md hover:scale-105 transition-transform"
           >
             Try AI Chef →
           </Link>

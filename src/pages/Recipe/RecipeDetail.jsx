@@ -179,13 +179,13 @@ function RecipeDetail() {
 
   return (
     <HomeLayout>
-      <div className="min-h-screen relative bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
+      <div className="min-h-screen relative bg-linear-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
         <div className="container mx-auto px-4 py-10 relative z-10">
           <div className="max-w-6xl mx-auto space-y-10">
 
             {/* Hero Section */}
             <div className="hero relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
-              <div className="hero-overlay bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+              <div className="hero-overlay bg-linear-to-t from-black/40 via-black/10 to-transparent"></div>
               <img
                 src={recipe.thumbnail?.secure_url}
                 alt={recipe.title}
@@ -212,7 +212,7 @@ function RecipeDetail() {
               </button>
 
               <div className="absolute inset-x-0 bottom-0 px-4 sm:px-10 pb-6 sm:pb-10">
-                <div className="bg-gradient-to-t from-black/85 via-black/60 to-transparent text-white p-4 sm:p-6 rounded-2xl max-w-3xl mx-auto sm:mx-0 shadow-lg backdrop-blur-sm">
+                <div className="bg-linear-to-t from-black/85 via-black/60 to-transparent text-white p-4 sm:p-6 rounded-2xl max-w-3xl mx-auto sm:mx-0 shadow-lg backdrop-blur-sm">
                   <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight drop-shadow-md mb-2">
                     {recipe.title}
                   </h1>
@@ -230,11 +230,11 @@ function RecipeDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
 
-                {/* --- CHEF INFO CARD (With Review Chef Button) --- */}
+                {/* --- CHEF INFO CARD --- */}
                 <div className="card bg-base-100 shadow-md border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
                   <div className="card-body">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      {/* Left: Avatar & Details */}
+                      {/* Avatar & Details */}
                       <div className="flex items-center gap-4">
                         <div className="avatar">
                           <div className="w-14 h-14 rounded-full border-2 border-orange-200">
@@ -258,7 +258,7 @@ function RecipeDetail() {
                         </div>
                       </div>
 
-                      {/* Right: Review Chef Button */}
+                      {/* Review Chef Button */}
                       <div>
                         <button
                           onClick={() => setShowChefReview(true)}
@@ -362,7 +362,7 @@ function RecipeDetail() {
                         {recipe.steps.map((step, i) => (
                           <div key={i} className="print-step space-y-4">
                             <div className="flex items-start gap-4">
-                              <div className="w-8 h-8 flex items-center justify-center bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md flex-shrink-0">
+                              <div className="w-8 h-8 flex items-center justify-center bg-linear-to-r from-orange-400 to-red-400 text-white rounded-full font-semibold shadow-md shrink-0">
                                 {step.stepNo}
                               </div>
                               <div className="flex-1">
@@ -418,7 +418,7 @@ function RecipeDetail() {
                       onClick={handleMadeItToggle}
                       className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${madeIt
                         ? "bg-emerald-500 hover:bg-emerald-600 border-none text-white ring-4 ring-emerald-100"
-                        : "bg-gradient-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
+                        : "bg-linear-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
                         }`}
                     >
                       <FaCheckCircle className={`w-5 h-5 transition-transform duration-300 ${madeIt ? "scale-125" : "group-hover:scale-110"
@@ -437,33 +437,28 @@ function RecipeDetail() {
                   </div>
                 </div>
 
-                {/* --- Combined Reviews & Rating Card --- */}
+                {/* --- Reviews & Rating Card --- */}
                 <div className="card bg-base-100 shadow-md border border-orange-100 overflow-hidden">
-                  {/* Decorative Header Background */}
-                  <div className="h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+                  <div className="h-2 bg-linear-to-r from-yellow-400 to-orange-500"></div>
 
                   <div className="card-body items-center text-center p-6">
 
                     <h3 className="font-bold text-gray-500 text-sm uppercase tracking-widest mb-1">
                       Recipe Rating
                     </h3>
-
-                    {/* The Big Number */}
                     <div className="flex items-end justify-center gap-1 leading-none mb-2">
                       <span className="text-5xl font-black text-gray-800">
                         {stats.averageRating}
                       </span>
                       <span className="text-xl font-bold text-gray-300 mb-1">/ 5</span>
                     </div>
-
-                    {/* The Stars - Fixed Visibility */}
                     <div className="flex justify-center gap-1.5 mb-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <FaStar
                           key={i}
                           className={`text-2xl transition-colors duration-200 ${i < Math.round(stats.averageRating)
-                            ? "text-yellow-400 drop-shadow-sm" // Active: Bright Yellow + Shadow
-                            : "text-gray-200" // Inactive: Solid Light Gray (Much clearer than opacity)
+                            ? "text-yellow-400 drop-shadow-sm"
+                            : "text-gray-200"
                             }`}
                         />
                       ))}
@@ -472,11 +467,9 @@ function RecipeDetail() {
                     <p className="text-sm text-gray-400 font-medium mb-6">
                       ({stats.reviewCount} {stats.reviewCount === 1 ? "review" : "reviews"})
                     </p>
-
-                    {/* Action Button */}
                     <button
                       onClick={() => setShowReview(true)}
-                      className="btn w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-none shadow-md hover:shadow-orange-200 hover:-translate-y-0.5 transition-all rounded-xl"
+                      className="btn w-full bg-linear-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white border-none shadow-md hover:shadow-orange-200 hover:-translate-y-0.5 transition-all rounded-xl"
                     >
                       <FaStar className="mr-1" />
                       Rate This Recipe
@@ -518,7 +511,7 @@ function RecipeDetail() {
                   <div className="card-body">
                     <button
                       onClick={() => window.print()}
-                      className="btn w-full bg-gradient-to-r from-orange-400 to-red-400 text-white border-none"
+                      className="btn w-full bg-linear-to-r from-orange-400 to-red-400 text-white border-none"
                     >
                       <FaPrint className="mr-2" />
                       Print Recipe
@@ -535,8 +528,8 @@ function RecipeDetail() {
       {showReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
           <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-white/50 bg-white/70 backdrop-blur-2xl shadow-2xl animate-fadeIn">
-            <div className="text-center py-6 px-6 border-b border-white/40 bg-gradient-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
-              <h3 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
+            <div className="text-center py-6 px-6 border-b border-white/40 bg-linear-to-r from-orange-500/10 via-amber-300/10 to-red-500/10">
+              <h3 className="text-2xl font-extrabold bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
                 Rate this Recipe
               </h3>
               <p className="text-sm text-gray-600 mt-1">
@@ -550,7 +543,7 @@ function RecipeDetail() {
                     key={i}
                     onClick={() => setRating(i + 1)}
                     className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
-                      ? "text-yellow-400 drop-shadow-sm scale-110" // Selected: Bright Yellow
+                      ? "text-yellow-400 drop-shadow-sm scale-110"
                       : "text-gray-100 opacity-90 hover:text-yellow-400  hover:scale-105"        // Not Selected: Visible Gray (Standard UI)
                       }`}
                   />
@@ -574,7 +567,7 @@ function RecipeDetail() {
                     console.log({ rating, reviewText });
                     setShowReview(false);
                   }}
-                  className="btn flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"
+                  className="btn flex-1 rounded-xl bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"
                 >
                   Submit
                 </button>
@@ -584,12 +577,11 @@ function RecipeDetail() {
         </div>
       )}
 
-      {/* --- CHEF REVIEW MODAL (NEW) --- */}
+      {/* --- CHEF REVIEW MODAL --- */}
       {showChefReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md">
           <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-orange-100 bg-white shadow-2xl animate-fadeIn">
-            {/* Header */}
-            <div className="flex justify-between items-center py-4 px-6 border-b border-orange-50 bg-gradient-to-r from-orange-50 to-amber-50">
+            <div className="flex justify-between items-center py-4 px-6 border-b border-orange-50 bg-linear-to-r from-orange-50 to-amber-50">
               <h3 className="text-xl font-bold text-gray-800">
                 Review Chef {chef?.profile?.name}
               </h3>
@@ -662,7 +654,7 @@ function RecipeDetail() {
                 <button
                   onClick={handleChefReviewSubmit}
                   disabled={chefRating === 0}
-                  className="btn flex-1 bg-gradient-to-r from-orange-500 to-red-500 border-none text-white rounded-xl disabled:bg-gray-200 disabled:text-gray-400"
+                  className="btn flex-1 bg-linear-to-r from-orange-500 to-red-500 border-none text-white rounded-xl disabled:bg-gray-200 disabled:text-gray-400"
                 >
                   Submit Review
                 </button>

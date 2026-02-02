@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
     return (
-        <footer className="mt-auto bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 backdrop-blur-md border-t border-orange-200 shadow-lg">
+        <footer className="mt-auto bg-linear-to-br from-orange-50 via-red-50 to-amber-50 backdrop-blur-md border-t border-orange-200 shadow-lg">
             <div className="container mx-auto px-4 py-8 xl:py-12">
                 {/* Main footer content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 mb-8">
@@ -25,7 +25,7 @@ function Footer() {
                             </div>
 
                             <div>
-                                <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                                <h3 className="text-2xl font-bold bg-linear-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                                     BiteBot
                                 </h3>
                                 <p className="text-sm text-gray-600">
@@ -42,7 +42,7 @@ function Footer() {
 
                     {/* Quick Links Section */}
                     <nav className="space-y-4">
-                        <h3 className="text-lg font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent flex items-center gap-2">
+                        <h3 className="text-lg font-bold bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent flex items-center gap-2">
                             <FaUtensils className="w-4 h-4" />
                             Quick Links
                         </h3>
@@ -78,7 +78,7 @@ function Footer() {
 
                     {/* Resources Section */}
                     <nav className="space-y-4">
-                        <h3 className="text-lg font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
+                        <h3 className="text-lg font-bold bg-linear-to-r from-red-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
                             <FaCookie className="w-4 h-4" />
                             Resources
                         </h3>
@@ -159,7 +159,7 @@ function Footer() {
                 </div>
 
                 {/* Decorative elements */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 opacity-20"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-orange-500 via-red-500 to-amber-500 opacity-20"></div>
             </div>
         </footer>
     );

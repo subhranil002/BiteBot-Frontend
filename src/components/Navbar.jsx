@@ -65,14 +65,14 @@ function Navbar({ children }) {
           className="sticky top-0 z-50 transition-all duration-50
                             shadow-lg shadow-orange-200/10"
         >
-          <div className="bg-gradient-to-r from-orange-400/10 via-red-400/10 to-amber-400/10 backdrop-blur-xl transition-all duration-500 py-1">
+          <div className="bg-linear-to-r from-orange-400/10 via-red-400/10 to-amber-400/10 backdrop-blur-xl transition-all duration-500 py-1">
             <div className="container mx-auto px-4 md:px-8">
               <div className="navbar h-16 md:h-18">
                 {/* Left: Logo + Menu */}
                 <div className="flex-1 flex items-center gap-3">
                   <label
                     htmlFor="navbar-drawer"
-                    className="btn btn-ghost btn-square backdrop-blur-sm bg-gradient-to-br from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105 hover:shadow-orange-500/40"
+                    className="btn btn-ghost btn-square backdrop-blur-sm bg-linear-to-br from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105 hover:shadow-orange-500/40"
                     aria-label="Open menu"
                   >
                     <FaBars className="w-5 h-5" />
@@ -85,7 +85,7 @@ function Navbar({ children }) {
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
-                        <span className="bg-gradient-to-r from-orange-600 via-red-600 to-amber-600 bg-clip-text text-transparent font-bold text-2xl leading-6">
+                        <span className="bg-linear-to-r from-orange-600 via-red-600 to-amber-600 bg-clip-text text-transparent font-bold text-2xl leading-6">
                           BiteBot
                         </span>
                         <span className="text-xs text-gray-600 font-normal">
@@ -122,7 +122,7 @@ function Navbar({ children }) {
                     <div className="dropdown dropdown-end">
                       <label
                         tabIndex={0}
-                        className="btn btn-ghost btn-circle avatar backdrop-blur-sm bg-gradient-to-br from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105"
+                        className="btn btn-ghost btn-circle avatar backdrop-blur-sm bg-linear-to-br from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-105"
                       >
                         <div className="w-10 rounded-full ring-2 ring-white/30">
                           <img
@@ -140,7 +140,7 @@ function Navbar({ children }) {
                         <li className="p-2 border-b border-orange-100">
                           <div className="flex items-center gap-3">
                             <div className="avatar">
-                              <div className="w-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500">
+                              <div className="w-10 rounded-full bg-linear-to-br from-orange-500 to-red-500">
                                 <img
                                   alt="Profile Avatar"
                                   src={modifyCloudinaryURL(
@@ -209,13 +209,13 @@ function Navbar({ children }) {
                   ) : (
                     <button
                       onClick={() => navigate("/login")}
-                      className="btn m-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold shadow-xl shadow-orange-500/40 rounded-2xl backdrop-blur-sm transition-all duration-300 transform hover:shadow-orange-500/50 px-6 animate-bounce-gentle group relative overflow-hidden"
+                      className="btn m-3 bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold shadow-xl shadow-orange-500/40 rounded-2xl backdrop-blur-sm transition-all duration-300 transform hover:shadow-orange-500/50 px-6 animate-bounce-gentle group relative overflow-hidden"
                     >
                       <span className="relative z-10 flex items-center gap-2">
                         <FaUser className="w-4 h-4" />
                         Login
                       </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-linear-to-r from-red-500 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </button>
                   )}
                 </div>
@@ -229,10 +229,10 @@ function Navbar({ children }) {
 
       <div className="drawer-side z-50">
         <label htmlFor="navbar-drawer" className="drawer-overlay"></label>
-        <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-gradient-to-b from-white to-orange-50/30 text-gray-900 flex flex-col justify-between">
+        <aside className="menu p-6 w-80 min-h-full shadow-2xl backdrop-blur-xl border-r border-orange-200 bg-linear-to-b from-white to-orange-50/30 text-gray-900 flex flex-col justify-between">
           {/* Drawer Header */}
           <div>
-            <div className="flex items-center gap-3 mb-8 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-200">
+            <div className="flex items-center gap-3 mb-8 p-4 bg-linear-to-r from-orange-500/10 to-red-500/10 rounded-2xl border border-orange-200">
               <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 border-2 border-orange-500">
                 <img
                   src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
@@ -240,7 +240,7 @@ function Navbar({ children }) {
                 />
               </div>
               <div>
-                <h2 className="font-bold text-xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                <h2 className="font-bold text-xl bg-linear-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                   BiteBot
                 </h2>
                 <p className="text-xs text-gray-600">
@@ -279,9 +279,9 @@ function Navbar({ children }) {
               <Link
                 to="/"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 border border-orange-200 text-base-content transition-all duration-300 group shadow-sm"
+                className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-linear-to-r hover:from-orange-50 hover:to-amber-50 border border-orange-200 text-base-content transition-all duration-300 group shadow-sm"
               >
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                <div className="w-10 h-10 rounded-lg bg-linear-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
                   <FaHome className="w-4 h-4 text-white" />
                 </div>
                 <span className="font-semibold text-base">Home</span>
@@ -290,9 +290,9 @@ function Navbar({ children }) {
                 <>
                   <button
                     onClick={() => handleScroll("trending")}
-                    className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
+                    className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-red-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-sm">
                       <FaFire className="w-4 h-4 text-white" />
                     </div>
                     <span className="font-semibold text-base">Trending</span>
@@ -301,9 +301,9 @@ function Navbar({ children }) {
                   {/* 🌿 Fresh & New */}
                   <button
                     onClick={() => handleScroll("fresh")}
-                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
                       <GiHerbsBundle className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">
@@ -314,9 +314,9 @@ function Navbar({ children }) {
                   {/* 👤 Recommended */}
                   <button
                     onClick={() => handleScroll("for-you")}
-                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 border border-pink-200 text-base-content transition-all duration-300 group shadow-sm"
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-pink-50 hover:to-rose-50 border border-pink-200 text-base-content transition-all duration-300 group shadow-sm"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-pink-500 to-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
                       <FaUser className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold text-base group-hover:text-pink-700 transition-colors duration-300">
@@ -327,9 +327,9 @@ function Navbar({ children }) {
                   {/* ⚡ Quick & Easy */}
                   <button
                     onClick={() => handleScroll("quick")}
-                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 border border-green-200 text-base-content transition-all duration-300 group shadow-sm"
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-green-50 hover:to-emerald-50 border border-green-200 text-base-content transition-all duration-300 group shadow-sm"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
                       <FaBolt className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold text-base group-hover:text-green-700 transition-colors duration-300">
@@ -340,9 +340,9 @@ function Navbar({ children }) {
                   {/* 👑 Premium Picks */}
                   <button
                     onClick={() => handleScroll("premium")}
-                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-amber-50 border border-yellow-200 text-base-content transition-all duration-300 group shadow-sm"
+                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-yellow-50 hover:to-amber-50 border border-yellow-200 text-base-content transition-all duration-300 group shadow-sm"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-yellow-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
                       <FaCrown className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold text-base group-hover:text-yellow-700 transition-colors duration-300">
@@ -358,9 +358,9 @@ function Navbar({ children }) {
           <div className="border-t border-orange-200 pt-4 mt-auto">
             <Link
               to="/contact"
-              className="btn btn-ghost btn-lg w-full justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
+              className="btn btn-ghost btn-lg w-full justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-sky-50 hover:to-indigo-50 border border-sky-200 text-base-content transition-all duration-300 group shadow-sm"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-sky-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
                 <FaEnvelope className="w-5 h-5 text-white" />
               </div>
               <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">

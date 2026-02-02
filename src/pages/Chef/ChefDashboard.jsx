@@ -136,7 +136,7 @@ const ChefDashboard = () => {
 
     return (
         <HomeLayout>
-            <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50">
+            <div className="min-h-screen bg-linear-to-br from-orange-50 via-rose-50 to-amber-50">
                 <div className="container mx-auto px-4 py-8 space-y-8">
                     {/* Header Section */}
                     <div className="flex flex-col lg:flex-row gap-8">
@@ -150,7 +150,7 @@ const ChefDashboard = () => {
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <h1 className="card-title text-3xl bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                                        <h1 className="card-title text-3xl bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
                                             {profile.name}
                                         </h1>
                                         <p className="text-gray-600 mt-2">{profile.bio}</p>
@@ -237,7 +237,7 @@ const ChefDashboard = () => {
                     </div>
 
                     {/* Recipes Section */}
-                    <div className="space-y-6 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="text-center sm:text-left">
                                 <h2 className="text-2xl font-bold text-gray-800">Your Top Recipes</h2>

@@ -14,7 +14,7 @@ const Badge = ({ children, className = "" }) => (
 
 const Stat = ({ icon: Icon, iconClass = "", text }) => (
   <div className="flex items-center gap-2 text-gray-500 md:group-hover:text-gray-700 transition-colors">
-    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-200 to-amber-200 flex items-center justify-center border border-orange-300">
+    <div className="w-8 h-8 rounded-xl bg-linear-to-br from-orange-200 to-amber-200 flex items-center justify-center border border-orange-300">
       <Icon className={`w-4 h-4 ${iconClass}`} />
     </div>
     <span className="truncate">{text}</span>
@@ -89,7 +89,7 @@ function RecipeCard({ recipe }) {
     >
       <div className="relative bg-base-100 border border-orange-100/60 rounded-3xl shadow-lg overflow-hidden transition-all duration-300 md:group-hover:scale-[1.02] md:group-hover:shadow-2xl md:group-hover:border-orange-200 flex flex-col h-full">
         {/* Image */}
-        <figure className="relative overflow-hidden aspect-[16/10]">
+        <figure className="relative overflow-hidden aspect-16/10">
           <img
             src={recipe?.thumbnail?.secure_url}
             alt={recipe?.title ? `${recipe.title} thumbnail` : "Recipe image"}
@@ -101,7 +101,7 @@ function RecipeCard({ recipe }) {
 
           {recipe?.isPremium && (
             <div className="absolute top-3 left-3">
-              <Badge className="bg-gradient-to-r from-amber-400 to-yellow-400 text-white font-bold border-0 shadow-md backdrop-blur-sm">
+              <Badge className="bg-linear-to-r from-amber-400 to-yellow-400 text-white font-bold border-0 shadow-md backdrop-blur-sm">
                 <FaLock className="w-3 h-3 mr-1" /> PREMIUM
               </Badge>
             </div>
@@ -117,7 +117,7 @@ function RecipeCard({ recipe }) {
             className={[
               "absolute top-3 right-3 btn btn-circle rounded-full border transition-all duration-200 md:hover:scale-110 backdrop-blur-md",
               isFav
-                ? "bg-gradient-to-br from-rose-500 to-red-400 text-white border-red-300 shadow-lg"
+                ? "bg-linear-to-br from-rose-500 to-red-400 text-white border-red-300 shadow-lg"
                 : "bg-white/80 border-orange-100 text-orange-500 md:hover:bg-orange-50",
               loading ? "pointer-events-none opacity-80" : "",
             ].join(" ")}
@@ -131,9 +131,9 @@ function RecipeCard({ recipe }) {
         </figure>
 
         {/* Content */}
-        <div className="card-body flex flex-col flex-grow p-4 md:p-6">
+        <div className="card-body flex flex-col grow p-4 md:p-6">
           <div className="space-y-3">
-            <h3 className="card-title text-base md:text-lg font-bold bg-gradient-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent line-clamp-1 md:group-hover:brightness-110">
+            <h3 className="card-title text-base md:text-lg font-bold bg-linear-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent line-clamp-1 md:group-hover:brightness-110">
               {recipe?.title}
             </h3>
 
@@ -167,7 +167,7 @@ function RecipeCard({ recipe }) {
                   </Badge>
                 ))}
                 {recipe.dietaryLabels.length > 2 && (
-                  <Badge className="bg-gradient-to-r from-orange-200 to-amber-300 text-gray-800 border-0">
+                  <Badge className="bg-linear-to-r from-orange-200 to-amber-300 text-gray-800 border-0">
                     +{recipe.dietaryLabels.length - 2}
                   </Badge>
                 )}
@@ -183,8 +183,8 @@ function RecipeCard({ recipe }) {
               className={[
                 "w-full btn rounded-2xl font-bold transition-transform duration-200 md:hover:-translate-y-0.5 md:hover:shadow-xl border-0",
                 unlocked
-                  ? "bg-gradient-to-r from-orange-400 to-red-400 md:hover:from-orange-500 md:hover:to-red-500 text-white shadow-orange-200/40"
-                  : "bg-gradient-to-r from-yellow-400 to-amber-500 md:hover:from-yellow-500 md:hover:to-amber-600 text-gray-900 shadow-amber-200/40",
+                  ? "bg-linear-to-r from-orange-400 to-red-400 md:hover:from-orange-500 md:hover:to-red-500 text-white shadow-orange-200/40"
+                  : "bg-linear-to-r from-yellow-400 to-amber-500 md:hover:from-yellow-500 md:hover:to-amber-600 text-gray-900 shadow-amber-200/40",
               ].join(" ")}
             >
               <span className="flex items-center gap-2">

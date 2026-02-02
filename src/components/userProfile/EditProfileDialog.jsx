@@ -120,23 +120,14 @@ export default function EditProfileDialog() {
   };
 
   const onSubmit = async (data) => {
-    const formattedDietary = data.dietaryLabels.map((i) => i.value);
-    const formattedAllergens = data.allergens.map((i) => i.value);
-
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("bio", data.bio);
-    if (data.cuisine) formData.append("cuisine", data.cuisine);
-    if (data.avatar && data.avatar[0]) {
-      formData.append("avatar", data.avatar[0]);
-    }
-    formattedDietary.forEach((item) => formData.append("dietaryLabels[]", item));
-    formattedAllergens.forEach((item) => formData.append("allergens[]", item));
-
     try {
-      await dispatch(updateProfile(formData)).unwrap();
+      dispatch(updateProfile({
+        ...data,
+        dietaryLabels: data.dietaryLabels.map(i => i.value?.toLowerCase()),
+        allergens: data.allergens.map(i => i.value?.toLowerCase())
+      })).unwrap();
       dlgRef.current?.close();
-      reset(data); 
+      reset(data);
     } catch (err) {
       console.error("Profile update failed:", err);
     }
@@ -150,9 +141,9 @@ export default function EditProfileDialog() {
       aria-labelledby="edit-profile-title"
     >
       <div className="modal-box w-full max-w-3xl bg-white shadow-2xl border border-orange-100 rounded-3xl p-0 overflow-hidden">
-        
+
         {/* Header */}
-        <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-6 py-4 border-b border-orange-100 flex items-center justify-between">
+        <div className="bg-linear-to-r from-orange-50 to-amber-50 px-6 py-4 border-b border-orange-100 flex items-center justify-between">
           <h3
             id="edit-profile-title"
             className="font-bold text-xl text-gray-800 flex items-center gap-2"
@@ -171,7 +162,7 @@ export default function EditProfileDialog() {
 
         <div className="p-6 sm:p-8 max-h-[80vh] overflow-y-auto custom-scrollbar">
           <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-            
+
             {/* Top Section: Avatar & Basic Info */}
             <div className="flex flex-col sm:flex-row gap-8 items-start">
               {/* Avatar */}
@@ -216,9 +207,8 @@ export default function EditProfileDialog() {
                     </span>
                   </label>
                   <input
-                    className={`input input-bordered w-full bg-gray-50 focus:bg-white border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50 rounded-xl transition-all ${
-                      errors.name ? "input-error" : ""
-                    }`}
+                    className={`input input-bordered w-full bg-gray-50 focus:bg-white border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50 rounded-xl transition-all ${errors.name ? "input-error" : ""
+                      }`}
                     placeholder="Your Name"
                     {...register("name", {
                       required: "Name is required",
@@ -253,9 +243,9 @@ export default function EditProfileDialog() {
             {/* Food Preferences Section */}
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
-                 <h4 className="font-bold text-lg text-gray-800 flex items-center gap-2 mb-4">
-                    <FaUtensils className="text-orange-500" />
-                    Food Preferences
+                <h4 className="font-bold text-lg text-gray-800 flex items-center gap-2 mb-4">
+                  <FaUtensils className="text-orange-500" />
+                  Food Preferences
                 </h4>
               </div>
 
@@ -383,15 +373,15 @@ export default function EditProfileDialog() {
               >
                 Cancel
               </button>
-              
+
               {/* 2. Button is now disabled if !isDirty or isSubmitting */}
               <button
                 type="submit"
                 disabled={!isDirty || isSubmitting}
                 className={`btn border-none text-white shadow-lg transition-all rounded-xl gap-2 px-8
-                  ${!isDirty || isSubmitting 
-                    ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none" 
-                    : "bg-gradient-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
+                  ${!isDirty || isSubmitting
+                    ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none"
+                    : "bg-linear-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
                   }`}
               >
                 {isSubmitting ? (

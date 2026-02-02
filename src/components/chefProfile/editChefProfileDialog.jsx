@@ -9,7 +9,6 @@ import {
     FaLink,
     FaPlus,
     FaSave,
-    FaTimes,
     FaTrash,
     FaUtensils,
 } from "react-icons/fa";
@@ -22,7 +21,7 @@ import {
 } from "../../constants";
 import { updateProfile } from "../../redux/slices/authSlice";
 
-// Reusable Chip Component
+// Chip Component
 function Chip({ color, children, onRemove }) {
     const colorMap = {
         green:
@@ -65,7 +64,6 @@ export default function EditChefProfileDialog() {
         watch,
         setError,
         clearErrors,
-        // 1. Destructure isDirty here
         formState: { isSubmitting, errors, isDirty },
     } = useForm({
         mode: "onChange",
@@ -153,28 +151,14 @@ export default function EditChefProfileDialog() {
     };
 
     const onSubmit = async (data) => {
-        const formattedDietary = data.dietaryLabels.map((i) => i.value);
-        const formattedAllergens = data.allergens.map((i) => i.value);
-        const formattedLinks = data.externalLinks.map((i) => i.value);
-
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("bio", data.bio);
-        if (data.cuisine) formData.append("cuisine", data.cuisine);
-        if (data.avatar && data.avatar[0]) {
-            formData.append("avatar", data.avatar[0]);
-        }
-        formData.append("chefProfile[education]", data.education);
-        formData.append("chefProfile[experience]", data.experience);
-
-        formattedDietary.forEach((item) => formData.append("dietaryLabels[]", item));
-        formattedAllergens.forEach((item) => formData.append("allergens[]", item));
-        formattedLinks.forEach((item) => formData.append("chefProfile[externalLinks][]", item));
-
         try {
-            await dispatch(updateProfile(formData)).unwrap();
+            dispatch(updateProfile({
+                ...data,
+                dietaryLabels: data.dietaryLabels.map(i => i.value?.toLowerCase()),
+                allergens: data.allergens.map(i => i.value?.toLowerCase()),
+                externalLinks : data.externalLinks.map((i) => i.value)
+            }));
             dlgRef.current?.close();
-            // Optional: reset to new values so isDirty resets
             reset(data);
         } catch (err) {
             console.error("Profile update failed:", err);
@@ -191,7 +175,7 @@ export default function EditChefProfileDialog() {
             <div className="modal-box w-full max-w-3xl bg-white shadow-2xl border border-orange-100 rounded-3xl p-0 overflow-hidden">
 
                 {/* Header */}
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 px-6 py-4 border-b border-orange-100 flex items-center justify-between">
+                <div className="bg-linear-to-r from-orange-50 to-amber-50 px-6 py-4 border-b border-orange-100 flex items-center justify-between">
                     <h3 id="edit-profile-title" className="font-bold text-xl text-gray-800 flex items-center gap-2">
                         <FaBriefcase className="text-orange-500" />
                         Edit Chef Profile
@@ -430,14 +414,13 @@ export default function EditChefProfileDialog() {
                                 Cancel
                             </button>
 
-                            {/* 2. IS DIRTY CHECK IMPLEMENTED HERE */}
                             <button
                                 type="submit"
                                 disabled={!isDirty || isSubmitting}
                                 className={`btn border-none text-white shadow-lg transition-all rounded-xl gap-2 px-8
                   ${!isDirty || isSubmitting
                                         ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none"
-                                        : "bg-gradient-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
+                                        : "bg-linear-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
                                     }`}
                             >
                                 {isSubmitting ? (
