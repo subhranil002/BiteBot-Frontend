@@ -41,8 +41,8 @@ function Navbar({ children }) {
   };
 
   const handleLogout = async () => {
-    const res = await dispatch(logout());
-    if (res?.payload?.success) navigate("/login");
+    await dispatch(logout());
+    navigate("/login");
   };
 
   function modifyCloudinaryURL(url) {

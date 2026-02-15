@@ -1,13 +1,16 @@
+// Finalized
+
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-function HomeLayout({ children }) {
-    return (
-        <>
-            <Navbar>{children}</Navbar>
-            <Footer />
-        </>
-    );
-}
+export default function HomeLayout({ children }) {
+  return (
+    <>
+      {/* Passing children to render the main content of the page */}
+      <Navbar>{children}</Navbar>
 
-export default HomeLayout;
+      {/* Footer displayed at the bottom of the layout */}
+      <Footer />
+    </>
+  );
+}

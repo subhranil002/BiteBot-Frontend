@@ -1,3 +1,5 @@
+// Finalized
+
 import {
   GiCarrot,
   GiCheeseWedge,

@@ -1,3 +1,5 @@
+// Finalized
+
 import "leaflet/dist/leaflet.css";
 
 import L from "leaflet";
@@ -16,6 +18,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import contactUsApi from "../apis/user/contactUsApi";
 import HomeLayout from "../layouts/HomeLayout";
 
+/* Custom marker icon for the map */
 const orangeIcon = new L.Icon({
   iconUrl,
   shadowUrl: iconShadow,
@@ -25,13 +28,14 @@ const orangeIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-function ContactUs() {
+export default function ContactUs() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  // Submit contact form data to API
   const onSubmit = async (data) => {
     await contactUsApi(data);
   };
@@ -68,9 +72,9 @@ function ContactUs() {
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                  {/* Name */}
+                  {/* Subject field */}
                   <div className="form-control flex flex-col">
-                    <label htmlFor="name" className="label mb-2">
+                    <label htmlFor="subject" className="label mb-2">
                       <span className="label-text font-semibold text-gray-700">
                         Subject
                       </span>
@@ -81,25 +85,25 @@ function ContactUs() {
                         required: "Subject is required",
                         minLength: {
                           value: 5,
-                          message: "Subject must be at least 2 characters",
+                          message: "Subject must be at least 5 characters",
                         },
                         maxLength: {
                           value: 30,
-                          message: "Subject must be at most 50 characters",
+                          message: "Subject must be at most 30 characters",
                         },
                       })}
                       type="text"
                       placeholder="Enter your subject"
                       className="input w-full input-bordered focus:border-orange-400 focus:ring focus:ring-orange-200"
                     />
-                    {errors.name && (
+                    {errors.subject && (
                       <span className="label-text-alt text-error mt-1">
                         {errors.subject.message}
                       </span>
                     )}
                   </div>
 
-                  {/* Message */}
+                  {/* Message field */}
                   <div className="form-control flex flex-col">
                     <label htmlFor="message" className="label mb-2">
                       <span className="label-text font-semibold text-gray-700">
@@ -125,7 +129,7 @@ function ContactUs() {
                     )}
                   </div>
 
-                  {/* Submit */}
+                  {/* Submit button */}
                   <div className="form-control mt-6">
                     <button className="btn bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold gap-2 rounded-2xl shadow-md transition-all duration-300 w-full">
                       <FiSend className="text-lg" />
@@ -136,7 +140,7 @@ function ContactUs() {
               </div>
             </div>
 
-            {/* Contact Info */}
+            {/* Contact Information */}
             <div className="space-y-6 w-full lg:max-w-sm">
               <div className="card bg-white shadow-md border border-orange-100 hover:shadow-lg transition-all duration-300">
                 <div className="card-body p-6 space-y-4">
@@ -144,6 +148,7 @@ function ContactUs() {
                     Contact Information
                   </h3>
 
+                  {/* Email */}
                   <div className="flex items-start gap-4">
                     <div className="bg-orange-100 p-3 rounded-full">
                       <FiMail className="text-xl text-orange-600" />
@@ -154,6 +159,7 @@ function ContactUs() {
                     </div>
                   </div>
 
+                  {/* Phone */}
                   <div className="flex items-start gap-4">
                     <div className="bg-orange-100 p-3 rounded-full">
                       <FiPhone className="text-xl text-orange-600" />
@@ -164,6 +170,7 @@ function ContactUs() {
                     </div>
                   </div>
 
+                  {/* Address */}
                   <div className="flex items-start gap-4">
                     <div className="bg-orange-100 p-3 rounded-full">
                       <FiMapPin className="text-xl text-orange-600" />
@@ -186,6 +193,8 @@ function ContactUs() {
               <h2 className="card-title text-2xl font-bold mb-4 text-orange-600">
                 Find Us
               </h2>
+
+              {/* Leaflet map centered at Kolkata */}
               <div className="rounded-lg overflow-hidden h-64 border border-orange-100">
                 <MapContainer
                   center={[22.5726, 88.3639]}
@@ -212,5 +221,3 @@ function ContactUs() {
     </HomeLayout>
   );
 }
-
-export default ContactUs;

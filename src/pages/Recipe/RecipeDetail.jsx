@@ -4,18 +4,19 @@ import {
   FaCheckCircle,
   FaClock,
   FaFire,
-  FaShareAlt,
   FaHeart,
-  FaPrint,
-  FaStar,
-  FaUsers,
   FaPen, // Added for the review icon
+  FaPrint,
+  FaShareAlt,
+  FaStar,
   FaTimes, // Added for modal close
+  FaUsers,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
+import Loading from "../../components/Loading";
 import HomeLayout from "../../layouts/HomeLayout";
 import { getRecipeById, resetRecipe } from "../../redux/slices/recipeSlice";
 
@@ -25,7 +26,7 @@ function RecipeDetail() {
   const { userData } = useSelector((state) => state.auth);
 
   const [isFav, setIsFav] = useState(
-    userData?.favourites?.find((fav) => fav.toString() === id)
+    userData?.favourites?.find((fav) => fav.toString() === id),
   );
 
   const [cost, setCost] = useState({ total: 0, perServing: 0 });
@@ -107,14 +108,18 @@ function RecipeDetail() {
 
   const handleChefReviewSubmit = () => {
     // API Call logic for Chef Review goes here
-    console.log("Submitting Chef Review:", { chefId: chef?._id, rating: chefRating, text: chefReviewText });
+    console.log("Submitting Chef Review:", {
+      chefId: chef?._id,
+      rating: chefRating,
+      text: chefReviewText,
+    });
     toast.success("Thanks for reviewing the Chef!");
     setShowChefReview(false);
     setChefRating(0);
     setChefReviewText("");
   };
 
-  if (!recipe) return "Loading...";
+  if (!recipe) return <Loading />;
 
   const statTabs = [
     {
@@ -134,12 +139,12 @@ function RecipeDetail() {
     },
     ...(recipe?.nutrition?.totalCalories
       ? [
-        {
-          icon: <FaFire />,
-          label: "Calories",
-          value: recipe.nutrition.totalCalories,
-        },
-      ]
+          {
+            icon: <FaFire />,
+            label: "Calories",
+            value: recipe.nutrition.totalCalories,
+          },
+        ]
       : []),
   ];
 
@@ -147,12 +152,12 @@ function RecipeDetail() {
     if (madeIt) {
       // Undo
       setMadeIt(false);
-      setMadeItCount(prev => prev - 1);
+      setMadeItCount((prev) => prev - 1);
       toast("Maybe next time!", { icon: "🍳" });
     } else {
       // Do
       setMadeIt(true);
-      setMadeItCount(prev => prev + 1);
+      setMadeItCount((prev) => prev + 1);
       toast.success("Yay! Hope it was delicious! 🎉");
     }
     // TODO: Call API here to persist the change
@@ -182,7 +187,6 @@ function RecipeDetail() {
       <div className="min-h-screen relative bg-linear-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
         <div className="container mx-auto px-4 py-10 relative z-10">
           <div className="max-w-6xl mx-auto space-y-10">
-
             {/* Hero Section */}
             <div className="hero relative rounded-3xl overflow-hidden shadow-xl border border-orange-100">
               <div className="hero-overlay bg-linear-to-t from-black/40 via-black/10 to-transparent"></div>
@@ -196,10 +200,11 @@ function RecipeDetail() {
               <button
                 onClick={toggleFav}
                 disabled={loading}
-                className={`absolute top-4 right-4 btn btn-circle ${isFav
-                  ? "bg-rose-500 text-white border-none"
-                  : "bg-white/80 text-gray-700 border-none hover:bg-white"
-                  }`}
+                className={`absolute top-4 right-4 btn btn-circle ${
+                  isFav
+                    ? "bg-rose-500 text-white border-none"
+                    : "bg-white/80 text-gray-700 border-none hover:bg-white"
+                }`}
               >
                 <FaHeart className="w-5 h-5" />
               </button>
@@ -229,7 +234,6 @@ function RecipeDetail() {
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
-
                 {/* --- CHEF INFO CARD --- */}
                 <div className="card bg-base-100 shadow-md border border-orange-100 hover:shadow-orange-200/60 transition-all hover:-translate-y-1">
                   <div className="card-body">
@@ -391,20 +395,26 @@ function RecipeDetail() {
 
               {/* Sidebar */}
               <div className="space-y-6">
-
                 {/* I MADE IT */}
                 {/* I MADE IT WIDGET */}
-                <div className={`card shadow-lg transition-all duration-500 border-2 ${madeIt
-                  ? "bg-emerald-50 border-emerald-400 shadow-emerald-100"
-                  : "bg-base-100 border-orange-100 hover:border-orange-200"
-                  }`}>
+                <div
+                  className={`card shadow-lg transition-all duration-500 border-2 ${
+                    madeIt
+                      ? "bg-emerald-50 border-emerald-400 shadow-emerald-100"
+                      : "bg-base-100 border-orange-100 hover:border-orange-200"
+                  }`}
+                >
                   <div className="card-body p-6 text-center">
-
                     {/* The Counter */}
                     <div className="flex flex-col items-center mb-4">
                       <div className="flex items-baseline gap-1">
-                        <span className={`text-4xl font-black transition-all duration-300 ${madeIt ? "text-emerald-600 scale-110" : "text-gray-800"
-                          }`}>
+                        <span
+                          className={`text-4xl font-black transition-all duration-300 ${
+                            madeIt
+                              ? "text-emerald-600 scale-110"
+                              : "text-gray-800"
+                          }`}
+                        >
                           {madeItCount}
                         </span>
                       </div>
@@ -416,24 +426,32 @@ function RecipeDetail() {
                     {/* The Button */}
                     <button
                       onClick={handleMadeItToggle}
-                      className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${madeIt
-                        ? "bg-emerald-500 hover:bg-emerald-600 border-none text-white ring-4 ring-emerald-100"
-                        : "bg-linear-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
-                        }`}
+                      className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${
+                        madeIt
+                          ? "bg-emerald-500 hover:bg-emerald-600 border-none text-white ring-4 ring-emerald-100"
+                          : "bg-linear-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
+                      }`}
                     >
-                      <FaCheckCircle className={`w-5 h-5 transition-transform duration-300 ${madeIt ? "scale-125" : "group-hover:scale-110"
-                        }`} />
+                      <FaCheckCircle
+                        className={`w-5 h-5 transition-transform duration-300 ${
+                          madeIt ? "scale-125" : "group-hover:scale-110"
+                        }`}
+                      />
                       {madeIt ? "I Made It!" : "I Made This"}
                     </button>
 
                     {/* Success Message Animation */}
-                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${madeIt ? "max-h-20 opacity-100 mt-3" : "max-h-0 opacity-0"
-                      }`}>
+                    <div
+                      className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                        madeIt
+                          ? "max-h-20 opacity-100 mt-3"
+                          : "max-h-0 opacity-0"
+                      }`}
+                    >
                       <p className="text-sm font-semibold text-emerald-600 bg-white/50 py-2 px-3 rounded-lg inline-flex items-center gap-2">
                         <span>🎉</span> Delicious choice!
                       </p>
                     </div>
-
                   </div>
                 </div>
 
@@ -442,7 +460,6 @@ function RecipeDetail() {
                   <div className="h-2 bg-linear-to-r from-yellow-400 to-orange-500"></div>
 
                   <div className="card-body items-center text-center p-6">
-
                     <h3 className="font-bold text-gray-500 text-sm uppercase tracking-widest mb-1">
                       Recipe Rating
                     </h3>
@@ -450,22 +467,26 @@ function RecipeDetail() {
                       <span className="text-5xl font-black text-gray-800">
                         {stats.averageRating}
                       </span>
-                      <span className="text-xl font-bold text-gray-300 mb-1">/ 5</span>
+                      <span className="text-xl font-bold text-gray-300 mb-1">
+                        / 5
+                      </span>
                     </div>
                     <div className="flex justify-center gap-1.5 mb-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <FaStar
                           key={i}
-                          className={`text-2xl transition-colors duration-200 ${i < Math.round(stats.averageRating)
-                            ? "text-yellow-400 drop-shadow-sm"
-                            : "text-gray-200"
-                            }`}
+                          className={`text-2xl transition-colors duration-200 ${
+                            i < Math.round(stats.averageRating)
+                              ? "text-yellow-400 drop-shadow-sm"
+                              : "text-gray-200"
+                          }`}
                         />
                       ))}
                     </div>
 
                     <p className="text-sm text-gray-400 font-medium mb-6">
-                      ({stats.reviewCount} {stats.reviewCount === 1 ? "review" : "reviews"})
+                      ({stats.reviewCount}{" "}
+                      {stats.reviewCount === 1 ? "review" : "reviews"})
                     </p>
                     <button
                       onClick={() => setShowReview(true)}
@@ -542,10 +563,11 @@ function RecipeDetail() {
                   <FaStar
                     key={i}
                     onClick={() => setRating(i + 1)}
-                    className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
-                      ? "text-yellow-400 drop-shadow-sm scale-110"
-                      : "text-gray-100 opacity-90 hover:text-yellow-400  hover:scale-105"        // Not Selected: Visible Gray (Standard UI)
-                      }`}
+                    className={`text-3xl cursor-pointer transition-all duration-200 ${
+                      i < rating
+                        ? "text-yellow-400 drop-shadow-sm scale-110"
+                        : "text-gray-100 opacity-90 hover:text-yellow-400  hover:scale-105" // Not Selected: Visible Gray (Standard UI)
+                    }`}
                   />
                 ))}
               </div>
@@ -598,10 +620,7 @@ function RecipeDetail() {
               <div className="flex items-center gap-3 bg-orange-50 p-3 rounded-xl border border-orange-100">
                 <div className="avatar">
                   <div className="w-10 h-10 rounded-full">
-                    <img
-                      src={chef?.profile?.avatar?.secure_url}
-                      alt="Chef"
-                    />
+                    <img src={chef?.profile?.avatar?.secure_url} alt="Chef" />
                   </div>
                 </div>
                 <div>
@@ -624,10 +643,11 @@ function RecipeDetail() {
                     <FaStar
                       key={i}
                       onClick={() => setChefRating(i + 1)}
-                      className={`text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 ${i < chefRating
-                        ? "opacity-100 drop-shadow-sm"
-                        : "opacity-30 hover:opacity-60"
-                        }`}
+                      className={`text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 ${
+                        i < chefRating
+                          ? "opacity-100 drop-shadow-sm"
+                          : "opacity-30 hover:opacity-60"
+                      }`}
                     />
                   ))}
                 </div>

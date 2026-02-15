@@ -1,13 +1,16 @@
+// Finalized
+
 import { memo, useCallback, useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import RecipeCard from "./RecipeCard";
 
-const CARD_WIDTH = 320;
+const CARD_WIDTH = 320; // Width used to calculate scroll distance
 
-function RecipeCarousel({ title, recipes }) {
-  const scrollRef = useRef(null);
+export default memo(function RecipeCarousel({ title, recipes }) {
+  const scrollRef = useRef(null); // Reference to the scroll container
 
+  // Scrolls carousel left or right by one card width
   const scroll = useCallback((direction) => {
     const container = scrollRef.current;
     if (!container) return;
@@ -20,12 +23,16 @@ function RecipeCarousel({ title, recipes }) {
     });
   }, []);
 
+  // Do not render section if there are no recipes
   if (!recipes?.length) return null;
 
   return (
     <div className="space-y-6">
+      {/* Section header with navigation buttons */}
       <div className="flex items-center justify-between px-2 md:px-4">
         {title}
+
+        {/* Arrow controls (hidden on small screens) */}
         <div className="hidden sm:flex gap-2">
           <button
             onClick={() => scroll("left")}
@@ -45,13 +52,13 @@ function RecipeCarousel({ title, recipes }) {
         </div>
       </div>
 
-      {/* Carousel */}
+      {/* Horizontal scrollable carousel */}
       <div
         ref={scrollRef}
         className="flex overflow-x-auto scroll-smooth"
         style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
+          scrollbarWidth: "none", // Hide scrollbar (Firefox)
+          msOverflowStyle: "none", // Hide scrollbar (IE/Edge)
         }}
       >
         {recipes.map((recipe) => (
@@ -62,6 +69,4 @@ function RecipeCarousel({ title, recipes }) {
       </div>
     </div>
   );
-}
-
-export default memo(RecipeCarousel);
+});

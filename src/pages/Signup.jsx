@@ -1,3 +1,5 @@
+// Finalized
+
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
@@ -13,7 +15,8 @@ import {
 } from "../constants";
 import { registerUser } from "../redux/slices/authSlice";
 
-const SignUp = () => {
+/* Signup page with form handling, file upload preview, and optional preferences */
+export default function SignUp() {
   const {
     register,
     handleSubmit,
@@ -22,13 +25,14 @@ const SignUp = () => {
     control,
   } = useForm();
 
+  // ref for decorative floating icons (render-only)
   const floatingIconsRef = useRef(FloatingIcons);
 
   // password visibility toggles
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // allergen search input state
+  // local state for allergen search input
   const [allergenSearch, setAllergenSearch] = useState("");
 
   const password = watch("password");
@@ -37,11 +41,13 @@ const SignUp = () => {
   const location = useLocation();
   const { isLoggedIn } = useSelector((state) => state.auth);
 
+  // submit handler — dispatch register and navigate on success
   const onSubmit = async (data) => {
     const res = await dispatch(registerUser(data));
     if (res?.payload?.success) navigate("/");
   };
 
+  // redirect if already logged in
   useEffect(() => {
     if (isLoggedIn) {
       const from = location.state?.from?.pathname || "/";
@@ -51,7 +57,7 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 p-6">
-      {/* Floating decorative icons */}
+      {/* Decorative floating icons (pointer-events-none so they don't block UI) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingIconsRef.current}
       </div>
@@ -70,7 +76,7 @@ const SignUp = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
         >
-          {/* Left column form fields */}
+          {/* Left column: avatar, name, email */}
           <div className="space-y-6">
             {/* Avatar upload & preview */}
             <div>
@@ -88,6 +94,7 @@ const SignUp = () => {
 
                   return (
                     <div className="flex flex-col items-center">
+                      {/* Preview when a file is selected */}
                       {previewUrl ? (
                         <div className="relative group">
                           <img
@@ -95,6 +102,7 @@ const SignUp = () => {
                             alt="Avatar preview"
                             className="w-24 h-24 rounded-full object-cover border-4 border-orange-300 shadow-lg"
                           />
+                          {/* clear selected file */}
                           <button
                             type="button"
                             onClick={() => field.onChange(null)}
@@ -104,11 +112,13 @@ const SignUp = () => {
                           </button>
                         </div>
                       ) : (
+                        /* placeholder when no file chosen */
                         <div className="w-24 h-24 flex items-center justify-center rounded-full bg-linear-to-br from-orange-200 to-red-200 border-4 border-orange-100 shadow-lg">
                           <FiUpload className="text-orange-400 text-2xl" />
                         </div>
                       )}
 
+                      {/* file input (hidden) */}
                       <label className="mt-3 cursor-pointer">
                         <input
                           type="file"
@@ -124,6 +134,7 @@ const SignUp = () => {
                         </span>
                       </label>
 
+                      {/* show validation error */}
                       {error && (
                         <p className="text-red-500 text-xs mt-1">
                           {error.message}
@@ -135,7 +146,7 @@ const SignUp = () => {
               />
             </div>
 
-            {/* Profile name */}
+            {/* Profile name input */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -161,7 +172,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Email input */}
+            {/* Email input with pattern validation */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -189,9 +200,9 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Right column form fields */}
+          {/* Right column: passwords, cuisine, allergens, dietary */}
           <div className="space-y-6">
-            {/* Password input */}
+            {/* Password field with visibility toggle */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -217,12 +228,13 @@ const SignUp = () => {
                   })}
                   className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 pr-10"
                 />
+                {/* toggle button */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute z-10 right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 focus:outline-none transition-colors"
                 >
-                  {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  {!showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
               </div>
               {errors.password && (
@@ -232,7 +244,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Confirm password input */}
+            {/* Confirm password with validation against password */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -254,7 +266,7 @@ const SignUp = () => {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute z-10 right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-orange-500 focus:outline-none transition-colors"
                 >
-                  {showConfirmPassword ? (
+                  {!showConfirmPassword ? (
                     <FiEyeOff size={20} />
                   ) : (
                     <FiEye size={20} />
@@ -295,7 +307,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Allergens selector (optional) */}
+            {/* Allergens selector (search + chips) */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -322,7 +334,7 @@ const SignUp = () => {
                     );
                   };
 
-                  // Filter suggestions based on input and exclude already selected
+                  // suggestions filtered by input and excluding selected items
                   const filteredSuggestions = ALLERGEN_OPTIONS.filter(
                     (allergen) =>
                       allergen
@@ -333,7 +345,7 @@ const SignUp = () => {
 
                   return (
                     <div className="relative">
-                      {/* Selected Chips */}
+                      {/* Selected items shown as removable chips */}
                       <div className="flex flex-wrap gap-2 mb-2 uppercase">
                         {selectedAllergens.map((item) => (
                           <span
@@ -352,7 +364,7 @@ const SignUp = () => {
                         ))}
                       </div>
 
-                      {/* Input Field */}
+                      {/* search input for allergens */}
                       <input
                         type="text"
                         value={allergenSearch}
@@ -365,7 +377,7 @@ const SignUp = () => {
                         className="input input-bordered w-full focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
                       />
 
-                      {/* Dropdown Suggestions */}
+                      {/* dropdown suggestions on input */}
                       {allergenSearch && filteredSuggestions.length > 0 && (
                         <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto uppercase">
                           {filteredSuggestions.map((allergen) => (
@@ -386,7 +398,7 @@ const SignUp = () => {
             </div>
             {/* End allergens selector */}
 
-            {/* Dietary preference checkboxes (optional) */}
+            {/* Dietary preference checkboxes */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -412,7 +424,7 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Submit & sign-in link */}
+          {/* Submit button + sign-in link */}
           <div className="col-span-1 md:col-span-2 mt-6">
             <button
               className="btn w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
@@ -437,6 +449,4 @@ const SignUp = () => {
       </div>
     </div>
   );
-};
-
-export default SignUp;
+}

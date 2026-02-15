@@ -1,3 +1,5 @@
+// Finalized
+
 import { memo, useEffect } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { FaBolt, FaFire, FaGem, FaUser } from "react-icons/fa";
@@ -12,6 +14,7 @@ import {
 } from "../../redux/slices/homeSlice";
 import RecipeCarousel from "../recipe/RecipeCarousel";
 
+/* Reusable section title with icon + gradient text */
 const Title = ({ Icon, gradient, children, pad = "px-1 sm:px-2" }) => (
   <h2
     className={`flex items-center gap-3 text-2xl sm:text-3xl font-extrabold text-gray-800 ${pad}`}
@@ -23,8 +26,10 @@ const Title = ({ Icon, gradient, children, pad = "px-1 sm:px-2" }) => (
   </h2>
 );
 
-function RecipeCarousels() {
+export default memo(function RecipeCarousels() {
   const dispatch = useDispatch();
+
+  // Select required slices from Redux store (optimized with shallowEqual)
   const {
     trendingNow,
     freshAndNew,
@@ -41,18 +46,22 @@ function RecipeCarousels() {
       premiumPicks: state.home.premiumPicks,
       isLoggedIn: state.auth.isLoggedIn,
     }),
-    shallowEqual
+    shallowEqual,
   );
 
+  // Fetch data only if not already available
   useEffect(() => {
     if (trendingNow.length === 0) dispatch(getTrending());
     if (freshAndNew.length === 0) dispatch(getFreshAndNew());
     if (quickAndEasy.length === 0) dispatch(getQuickAndEasy());
     if (premiumPicks.length === 0) dispatch(getPremium());
+
+    // Recommended section loads only for logged-in users
     if (isLoggedIn && recommendedForYou.length === 0)
       dispatch(getRecommended());
   }, [isLoggedIn]);
 
+  // Section configuration for dynamic rendering
   const sections = [
     {
       id: "for-you",
@@ -65,7 +74,6 @@ function RecipeCarousels() {
         </Title>
       ),
       recipes: recommendedForYou,
-      pad: "px-1 sm:px-2",
     },
     {
       id: "trending",
@@ -92,7 +100,6 @@ function RecipeCarousels() {
         </Title>
       ),
       recipes: freshAndNew,
-      pad: "px-1 sm:px-2",
     },
     {
       id: "quick",
@@ -105,7 +112,6 @@ function RecipeCarousels() {
         </Title>
       ),
       recipes: quickAndEasy,
-      pad: "px-1 sm:px-2",
     },
     {
       id: "premium",
@@ -123,6 +129,7 @@ function RecipeCarousels() {
 
   return (
     <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
+      {/* Render each carousel section dynamically */}
       {sections.map(({ id, title, recipes }) => (
         <section key={id} className="space-y-6" id={id}>
           <div className="px-1 sm:px-2">
@@ -132,6 +139,4 @@ function RecipeCarousels() {
       ))}
     </div>
   );
-}
-
-export default memo(RecipeCarousels);
+});

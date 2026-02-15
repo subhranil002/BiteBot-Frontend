@@ -1,3 +1,5 @@
+// Finalized
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { FaBolt, FaHeart, FaLock, FaUsers, FaUtensils } from "react-icons/fa";
@@ -6,12 +8,15 @@ import { useNavigate } from "react-router-dom";
 
 import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
 
+// Safely convert id to string
 const s = (id) => (id ? id.toString() : "");
 
+/* Small reusable badge component */
 const Badge = ({ children, className = "" }) => (
   <div className={`badge rounded-lg ${className}`}>{children}</div>
 );
 
+/* Icon + text stat row */
 const Stat = ({ icon: Icon, iconClass = "", text }) => (
   <div className="flex items-center gap-2 text-gray-500 md:group-hover:text-gray-700 transition-colors">
     <div className="w-8 h-8 rounded-xl bg-linear-to-br from-orange-200 to-amber-200 flex items-center justify-center border border-orange-300">
@@ -21,13 +26,14 @@ const Stat = ({ icon: Icon, iconClass = "", text }) => (
   </div>
 );
 
-function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe }) {
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.auth);
 
   const recipeId = s(recipe?._id);
   const chefId = s(recipe?.chefId);
 
+  // Determine if recipe is accessible to current user
   const unlocked = useMemo(() => {
     if (!recipe || !userData) return true;
 
@@ -41,6 +47,7 @@ function RecipeCard({ recipe }) {
     return subs.some((sub) => s(sub._id) === chefId);
   }, [recipe, userData, chefId]);
 
+  // Check if recipe is already in favourites
   const initialFav = useMemo(() => {
     const favs = userData?.favourites ?? [];
     return favs.some((fav) => s(fav) === recipeId);
@@ -49,10 +56,12 @@ function RecipeCard({ recipe }) {
   const [isFav, setIsFav] = useState(initialFav);
   const [loading, setLoading] = useState(false);
 
+  // Sync favourite state if userData changes
   useEffect(() => {
     setIsFav(initialFav);
   }, [initialFav]);
 
+  // Toggle favourite (optimistic UI update)
   const toggleFav = useCallback(async () => {
     if (!recipeId) return;
 
@@ -62,6 +71,7 @@ function RecipeCard({ recipe }) {
     try {
       await favouriteToggleApi(recipeId);
     } catch (err) {
+      // Revert on failure
       setIsFav((prev) => !prev);
       toast.error("Could not update favourite. Please try again.");
       console.error(err);
@@ -70,6 +80,7 @@ function RecipeCard({ recipe }) {
     }
   }, [recipeId]);
 
+  // Handle view/unlock button click
   const handleRecipeViewButton = useCallback(() => {
     if (!recipeId) return;
 
@@ -88,7 +99,7 @@ function RecipeCard({ recipe }) {
       aria-label={recipe?.title ?? "Recipe"}
     >
       <div className="relative bg-base-100 border border-orange-100/60 rounded-3xl shadow-lg overflow-hidden transition-all duration-300 md:group-hover:scale-[1.02] md:group-hover:shadow-2xl md:group-hover:border-orange-200 flex flex-col h-full">
-        {/* Image */}
+        {/* Image section */}
         <figure className="relative overflow-hidden aspect-16/10">
           <img
             src={recipe?.thumbnail?.secure_url}
@@ -99,6 +110,7 @@ function RecipeCard({ recipe }) {
             sizes="(max-width: 768px) 100vw, 400px"
           />
 
+          {/* Premium badge */}
           {recipe?.isPremium && (
             <div className="absolute top-3 left-3">
               <Badge className="bg-linear-to-r from-amber-400 to-yellow-400 text-white font-bold border-0 shadow-md backdrop-blur-sm">
@@ -107,7 +119,7 @@ function RecipeCard({ recipe }) {
             </div>
           )}
 
-          {/* Fav button */}
+          {/* Favourite button */}
           <button
             type="button"
             onClick={toggleFav}
@@ -130,19 +142,21 @@ function RecipeCard({ recipe }) {
           </button>
         </figure>
 
-        {/* Content */}
+        {/* Content section */}
         <div className="card-body flex flex-col grow p-4 md:p-6">
           <div className="space-y-3">
             <h3 className="card-title text-base md:text-lg font-bold bg-linear-to-r from-orange-600 via-red-500 to-amber-500 bg-clip-text text-transparent line-clamp-1 md:group-hover:brightness-110">
               {recipe?.title}
             </h3>
 
+            {/* Description (if available) */}
             {!!recipe?.description && (
               <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 md:group-hover:text-gray-700 transition-colors duration-200">
                 {recipe.description}
               </p>
             )}
 
+            {/* Basic stats */}
             <div className="grid grid-cols-2 gap-3 text-sm mt-2">
               <Stat
                 icon={FaUsers}
@@ -156,6 +170,7 @@ function RecipeCard({ recipe }) {
               />
             </div>
 
+            {/* Dietary labels (limited to 2 + count) */}
             {!!recipe?.dietaryLabels?.length && (
               <div className="card-actions flex flex-wrap gap-2 mt-2">
                 {recipe.dietaryLabels.slice(0, 2).map((label) => (
@@ -175,7 +190,7 @@ function RecipeCard({ recipe }) {
             )}
           </div>
 
-          {/* CTA */}
+          {/* Call-to-action button */}
           <div className="mt-auto pt-4">
             <button
               type="button"
@@ -207,5 +222,3 @@ function RecipeCard({ recipe }) {
     </article>
   );
 }
-
-export default RecipeCard;
