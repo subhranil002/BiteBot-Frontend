@@ -1,26 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { FaTimes } from "react-icons/fa";
 import { FiEye, FiEyeOff, FiUpload, FiX } from "react-icons/fi";
-import {
-  GiCarrot,
-  GiCheeseWedge,
-  GiChickenLeg,
-  GiCoffeeBeans,
-  GiCorn,
-  GiCroissant,
-  GiCupcake,
-  GiDonerKebab,
-  GiFruitBowl,
-  GiGrapes,
-  GiHotMeal,
-  GiMeat,
-  GiOlive,
-  GiPotato,
-  GiSushis,
-} from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { FloatingIcons } from "../components/FloatingFoodIcons";
 import {
   ALLERGEN_OPTIONS,
   CUISINE_OPTIONS,
@@ -37,11 +22,13 @@ const SignUp = () => {
     control,
   } = useForm();
 
-  // State for toggling visibility
+  const floatingIconsRef = useRef(FloatingIcons);
+
+  // password visibility toggles
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // State for Allergen Search Input
+  // allergen search input state
   const [allergenSearch, setAllergenSearch] = useState("");
 
   const password = watch("password");
@@ -49,52 +36,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn } = useSelector((state) => state.auth);
-
-  const foodIcons = [
-    <GiChickenLeg className="text-amber-500" />,
-    <GiFruitBowl className="text-red-400" />,
-    <GiHotMeal className="text-orange-500" />,
-    <GiSushis className="text-rose-500" />,
-    <GiCupcake className="text-pink-400" />,
-    <GiCheeseWedge className="text-yellow-400" />,
-    <GiDonerKebab className="text-amber-600" />,
-    <GiMeat className="text-red-500" />,
-    <GiCorn className="text-yellow-500" />,
-    <GiPotato className="text-amber-700" />,
-    <GiCarrot className="text-orange-600" />,
-    <GiOlive className="text-emerald-500" />,
-    <GiCoffeeBeans className="text-brown-500" />,
-    <GiCroissant className="text-amber-400" />,
-    <GiGrapes className="text-purple-400" />,
-  ];
-
-  const floatingIconsRef = useRef(
-    Array.from({ length: 40 }, (_, i) => {
-      const icon = foodIcons[Math.floor(Math.random() * foodIcons.length)];
-      const left = Math.random() * 100;
-      const duration = Math.random() * 20 + 15;
-      const delay = Math.random() * 5;
-      const size = Math.random() * 22 + 14;
-      const opacity = Math.random() * 0.6 + 0.3;
-      return (
-        <div
-          key={i}
-          className="absolute animate-float"
-          style={{
-            left: `${left}%`,
-            top: "100vh",
-            animationDuration: `${duration}s`,
-            animationDelay: `${delay}s`,
-            fontSize: `${size}px`,
-            opacity,
-            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))",
-          }}
-        >
-          {icon}
-        </div>
-      );
-    }),
-  );
 
   const onSubmit = async (data) => {
     const res = await dispatch(registerUser(data));
@@ -109,16 +50,10 @@ const SignUp = () => {
   }, [isLoggedIn, navigate, location]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-linear-to-br from-amber-50 via-orange-50 to-red-50 p-6">
-      {/* Floating icons */}
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 p-6">
+      {/* Floating decorative icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingIconsRef.current}
-      </div>
-
-      {/* Glowing blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-linear-to-r from-orange-300/30 to-amber-200/40 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-linear-to-r from-red-300/30 to-pink-200/30 rounded-full blur-3xl animate-pulse-slow delay-2000"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-4xl bg-white/70 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-3xl overflow-hidden">
@@ -135,9 +70,9 @@ const SignUp = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
         >
-          {/* LEFT COLUMN */}
+          {/* Left column form fields */}
           <div className="space-y-6">
-            {/* Avatar */}
+            {/* Avatar upload & preview */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Profile Avatar
@@ -163,9 +98,9 @@ const SignUp = () => {
                           <button
                             type="button"
                             onClick={() => field.onChange(null)}
-                            className="absolute -top-2 -right-2 btn btn-xs btn-error opacity-0 group-hover:opacity-100"
+                            className="absolute -top-2 -right-2 btn btn-xs btn-error"
                           >
-                            ×
+                            <FaTimes />
                           </button>
                         </div>
                       ) : (
@@ -200,7 +135,7 @@ const SignUp = () => {
               />
             </div>
 
-            {/* Name */}
+            {/* Profile name */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -226,7 +161,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Email */}
+            {/* Email input */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -254,9 +189,9 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
+          {/* Right column form fields */}
           <div className="space-y-6">
-            {/* Password */}
+            {/* Password input */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -297,7 +232,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Confirm Password */}
+            {/* Confirm password input */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -333,7 +268,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Cuisine */}
+            {/* Favorite cuisine select */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -344,7 +279,7 @@ const SignUp = () => {
                 {...register("profile_cuisine", {
                   required: "Cuisine is required",
                 })}
-                className="select select-bordered w-full capitalize focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 border-gray-200"
+                className="select select-bordered w-full uppercase focus:outline-none focus:shadow-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100 border-gray-200"
               >
                 <option value="">Select cuisine</option>
                 {CUISINE_OPTIONS.map((c) => (
@@ -360,7 +295,7 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* ---------------- NEW ALLERGENS SECTION ---------------- */}
+            {/* Allergens selector (optional) */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
@@ -378,7 +313,7 @@ const SignUp = () => {
                     if (!selectedAllergens.includes(allergen)) {
                       field.onChange([...selectedAllergens, allergen]);
                     }
-                    setAllergenSearch(""); // clear input after select
+                    setAllergenSearch("");
                   };
 
                   const handleRemove = (allergenToRemove) => {
@@ -399,7 +334,7 @@ const SignUp = () => {
                   return (
                     <div className="relative">
                       {/* Selected Chips */}
-                      <div className="flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-2 mb-2 uppercase">
                         {selectedAllergens.map((item) => (
                           <span
                             key={item}
@@ -409,7 +344,7 @@ const SignUp = () => {
                             <button
                               type="button"
                               onClick={() => handleRemove(item)}
-                              className="hover:text-red-600 transition-colors"
+                              className="hover:text-red-600 transition-colors cursor-pointer"
                             >
                               <FiX />
                             </button>
@@ -432,7 +367,7 @@ const SignUp = () => {
 
                       {/* Dropdown Suggestions */}
                       {allergenSearch && filteredSuggestions.length > 0 && (
-                        <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto">
+                        <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg shadow-xl mt-1 max-h-48 overflow-y-auto uppercase">
                           {filteredSuggestions.map((allergen) => (
                             <li
                               key={allergen}
@@ -449,13 +384,13 @@ const SignUp = () => {
                 }}
               />
             </div>
-            {/* ---------------- END ALLERGENS SECTION ---------------- */}
+            {/* End allergens selector */}
 
-            {/* Dietary Preferences */}
+            {/* Dietary preference checkboxes (optional) */}
             <div>
               <label className="label">
                 <span className="label-text font-semibold text-gray-700">
-                  Dietary Preferences
+                  Dietary Preferences (Optional)
                 </span>
               </label>
               <div className="flex flex-wrap gap-3">
@@ -470,14 +405,14 @@ const SignUp = () => {
                       {...register("profile_dietaryLabels")}
                       className="checkbox accent-orange-500"
                     />
-                    <span className="capitalize">{pref}</span>
+                    <span className="uppercase">{pref}</span>
                   </label>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit & sign-in link */}
           <div className="col-span-1 md:col-span-2 mt-6">
             <button
               className="btn w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 relative overflow-hidden group"

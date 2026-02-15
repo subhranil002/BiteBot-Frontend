@@ -50,7 +50,7 @@ function Navbar({ children }) {
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return url;
@@ -128,7 +128,7 @@ function Navbar({ children }) {
                           <img
                             alt="Profile Avatar"
                             src={modifyCloudinaryURL(
-                              userData?.profile?.avatar?.secure_url || ""
+                              userData?.profile?.avatar?.secure_url || "",
                             )}
                           />
                         </div>
@@ -144,7 +144,7 @@ function Navbar({ children }) {
                                 <img
                                   alt="Profile Avatar"
                                   src={modifyCloudinaryURL(
-                                    userData?.profile?.avatar?.secure_url || ""
+                                    userData?.profile?.avatar?.secure_url || "",
                                   )}
                                 />
                               </div>
@@ -288,6 +288,22 @@ function Navbar({ children }) {
               </Link>
               {isHome && (
                 <>
+                  {/* 👤 Recommended */}
+                  {isLoggedIn && (
+                    <button
+                      onClick={() => handleScroll("for-you")}
+                      className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 border border-pink-200 text-base-content transition-all duration-300 group shadow-sm"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
+                        <FaUser className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="font-semibold text-base group-hover:text-pink-700 transition-colors duration-300">
+                        Recommended for You
+                      </span>
+                    </button>
+                  )}
+
+                  {/* 🔥 Trending */}
                   <button
                     onClick={() => handleScroll("trending")}
                     className="btn btn-ghost btn-lg justify-start rounded-box bg-base-100 hover:bg-linear-to-r hover:from-red-50 hover:to-pink-50 border border-red-200 text-base-content transition-all duration-300 group shadow-sm"
@@ -308,19 +324,6 @@ function Navbar({ children }) {
                     </div>
                     <span className="font-semibold text-base group-hover:text-sky-700 transition-colors duration-300">
                       Fresh & New
-                    </span>
-                  </button>
-
-                  {/* 👤 Recommended */}
-                  <button
-                    onClick={() => handleScroll("for-you")}
-                    className="btn btn-ghost btn-lg justify-start items-center gap-3 rounded-box bg-base-100 hover:bg-linear-to-r hover:from-pink-50 hover:to-rose-50 border border-pink-200 text-base-content transition-all duration-300 group shadow-sm"
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-linear-to-br from-pink-500 to-rose-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md">
-                      <FaUser className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="font-semibold text-base group-hover:text-pink-700 transition-colors duration-300">
-                      Recommended for You
                     </span>
                   </button>
 

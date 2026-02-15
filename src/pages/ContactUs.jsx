@@ -94,7 +94,7 @@ function ContactUs() {
                     />
                     {errors.name && (
                       <span className="label-text-alt text-error mt-1">
-                        {errors.name.message}
+                        {errors.subject.message}
                       </span>
                     )}
                   </div>

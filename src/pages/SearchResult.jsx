@@ -8,7 +8,7 @@ import {
   FaSlidersH,
   FaStar,
 } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import RecipeCard from "../components/recipe/RecipeCard";
 import HomeLayout from "../layouts/HomeLayout";
@@ -248,7 +248,7 @@ function SearchResults() {
         return {
           ...prev,
           dietaryPreferences: currentPreferences.filter(
-            (p) => p !== preference
+            (p) => p !== preference,
           ),
         };
       } else {
@@ -300,8 +300,8 @@ function SearchResults() {
         filters.dietaryPreferences.length === 0 ||
         filters.dietaryPreferences.some((pref) =>
           recipe.tags?.some((tag) =>
-            tag.toLowerCase().includes(pref.toLowerCase())
-          )
+            tag.toLowerCase().includes(pref.toLowerCase()),
+          ),
         );
 
       return (
@@ -320,7 +320,7 @@ function SearchResults() {
     } else if (sortBy === "time") {
       results.sort(
         (a, b) =>
-          a.prepMinutes + a.cookMinutes - (b.prepMinutes + b.cookMinutes)
+          a.prepMinutes + a.cookMinutes - (b.prepMinutes + b.cookMinutes),
       );
     }
 
@@ -335,6 +335,8 @@ function SearchResults() {
   const updateTempFilter = (key, value) => {
     setTempFilters((prev) => ({ ...prev, [key]: value }));
   };
+
+  const navigate = useNavigate();
 
   const clearAllFilters = () => {
     setTempFilters(DEFAULT_FILTERS);
@@ -358,7 +360,7 @@ function SearchResults() {
       filters: {
         ...prev.filters,
         dietaryPreferences: prev.filters.dietaryPreferences.filter(
-          (p) => p !== preference
+          (p) => p !== preference,
         ),
       },
     }));
@@ -370,7 +372,7 @@ function SearchResults() {
       className={`bg-base-100 ${
         mobile
           ? ""
-          : "card shadow-xl border border-orange-100 h-fit sticky top-24"
+          : "card shadow-xl border border-orange-100 h-fit sticky top-22"
       }`}
     >
       <div className={`${mobile ? "p-4 space-y-4" : "card-body p-4 sm:p-6"}`}>
@@ -415,16 +417,6 @@ function SearchResults() {
               }
             />
           </div>
-          <input
-            type="range"
-            min="0"
-            max="500"
-            value={tempFilters.maxPrice}
-            onChange={(e) =>
-              updateTempFilter("maxPrice", Number(e.target.value))
-            }
-            className="range range-warning range-xs"
-          />
         </div>
 
         {/* Rating Filter */}
@@ -433,6 +425,16 @@ function SearchResults() {
             Minimum Rating
           </h4>
           <div className="space-y-2">
+            <label className="flex items-center gap-2 cursor-pointer hover:bg-orange-50 p-2 rounded transition-colors">
+              <input
+                type="radio"
+                name="rating"
+                className="radio radio-warning radio-sm"
+                checked={tempFilters.rating === 0}
+                onChange={() => updateTempFilter("rating", 0)}
+              />
+              <span className="text-xs text-gray-600">Any Rating</span>
+            </label>
             {[4, 3, 2, 1].map((stars) => (
               <label
                 key={stars}
@@ -460,16 +462,6 @@ function SearchResults() {
                 </div>
               </label>
             ))}
-            <label className="flex items-center gap-2 cursor-pointer hover:bg-orange-50 p-2 rounded transition-colors">
-              <input
-                type="radio"
-                name="rating"
-                className="radio radio-warning radio-sm"
-                checked={tempFilters.rating === 0}
-                onChange={() => updateTempFilter("rating", 0)}
-              />
-              <span className="text-xs text-gray-600">Any Rating</span>
-            </label>
           </div>
         </div>
 
@@ -487,7 +479,7 @@ function SearchResults() {
                   ? tempFilters.cuisine
                       .split("-")
                       .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
                       )
                       .join(" ")
                   : "All Cuisines"}
@@ -521,7 +513,7 @@ function SearchResults() {
                     {cuisine
                       .split("-")
                       .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1),
                       )
                       .join(" ")}
                   </button>
@@ -536,7 +528,7 @@ function SearchResults() {
           <h4 className="font-semibold text-gray-700 text-sm">
             Dietary Preferences
           </h4>
-          <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-1">
+          <div className="flex flex-wrap gap-2 max-h-20 overflow-y-auto p-1">
             {dietaryPreferences.map((pref) => (
               <label
                 key={pref}
@@ -569,7 +561,7 @@ function SearchResults() {
             onClick={clearAllFilters}
             className="btn btn-outline btn-sm border-orange-300 text-orange-600 flex-1"
           >
-            Clear All
+            Clear Filters
           </button>
           {mobile ? (
             <>
@@ -696,16 +688,13 @@ function SearchResults() {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
-            onClick={clearAllFilters}
+            onClick={() => {
+              clearAllFilters();
+              navigate("/search");
+            }}
             className="btn btn-outline border-orange-300 text-orange-600 btn-sm sm:btn-md"
           >
             Clear All Filters
-          </button>
-          <button
-            onClick={() => window.history.back()}
-            className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-0 text-white btn-sm sm:btn-md"
-          >
-            Back to Search
           </button>
         </div>
       </div>
@@ -754,13 +743,6 @@ function SearchResults() {
                 <div className="card-body p-4 sm:p-6">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
                     <div className="flex-1 min-w-0">
-                      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-2 truncate">
-                        <FaSearch className="inline w-4 h-4 sm:w-5 sm:h-5 text-orange-500 mr-2" />
-                        Results for{" "}
-                        <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-red-500">
-                          "{searchParams.searchTerm}"
-                        </span>
-                      </h1>
                       <p className="text-gray-600 text-sm sm:text-base">
                         Found{" "}
                         <span className="font-semibold text-orange-600">

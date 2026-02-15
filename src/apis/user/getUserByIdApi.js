@@ -9,6 +9,9 @@ export default async function getUserByIdApi(id) {
     success: (data) => {
       return data?.data?.message;
     },
+    error: (err) => {
+      return err?.response?.data?.message;
+    },
   });
 
   return (await res).data;
