@@ -20,6 +20,7 @@ import SearchResults from "./pages/SearchResult";
 import SignUp from "./pages/Signup";
 import Favorites from "./pages/User/Favourites";
 import { getProfile } from "./redux/slices/authSlice";
+import TeamPage from "./pages/TeamPage";
 
 function Router() {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ function Router() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/us" element={<TeamPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
