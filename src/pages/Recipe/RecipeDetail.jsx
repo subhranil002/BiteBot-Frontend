@@ -5,11 +5,11 @@ import {
   FaClock,
   FaFire,
   FaHeart,
-  FaPen, // Added for the review icon
+  FaPen, 
   FaPrint,
   FaShareAlt,
   FaStar,
-  FaTimes, // Added for modal close
+  FaTimes, 
   FaUsers,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +44,7 @@ function RecipeDetail() {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
 
-  // --- CHEF Review State (NEW) ---
+  // --- CHEF Review State ---
   const [showChefReview, setShowChefReview] = useState(false);
   const [chefRating, setChefRating] = useState(0);
   const [chefReviewText, setChefReviewText] = useState("");

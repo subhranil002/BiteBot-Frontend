@@ -7,7 +7,9 @@ import {
   FaGraduationCap,
   FaHeart,
   FaLink,
+  FaLock,
   FaStar,
+  FaUsers,
   FaUtensils,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -19,6 +21,7 @@ import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
 import EditChefProfileDialog from "../../components/chefProfile/editChefProfileDialog";
+import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 
 function ChefProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -98,7 +101,12 @@ function ChefProfile({ profileData }) {
 
   return (
     <>
-      {isOwnProfile && <EditChefProfileDialog profileData={profileData} />}
+      {isOwnProfile && (
+        <>
+          <EditChefProfileDialog profileData={userData} />
+          <ChangePasswordDialog />
+        </>
+      )}
       <HomeLayout>
         <div className="min-h-screen bg-linear-to-br from-orange-50 via-rose-50 to-amber-50">
           <div className="container mx-auto px-4 py-10">
@@ -146,7 +154,7 @@ function ChefProfile({ profileData }) {
                   </p>
                 </div>
 
-                {/* Details: Specialty & Links */}
+                {/* Specialty & Links */}
                 <div className="flex flex-wrap gap-6">
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
@@ -160,7 +168,7 @@ function ChefProfile({ profileData }) {
                     </div>
                   </div>
 
-                  {/* 2. External Links */}
+                  {/* External Links */}
                   {profileData?.chefProfile?.externalLinks?.length > 0 && (
                     <div className="flex flex-col gap-1.5">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
@@ -203,7 +211,7 @@ function ChefProfile({ profileData }) {
 
                   <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                     <div className="p-1.5 bg-rose-100 rounded-full text-rose-500">
-                      <FaHeart className="w-3 h-3" />
+                      <FaUsers className="w-3 h-3" />
                     </div>
                     <span>
                       <strong className="text-gray-800">
@@ -215,16 +223,27 @@ function ChefProfile({ profileData }) {
                 </div>
               </div>
 
-              {/* RIGHT SIDE: Actions */}
               <div className="flex flex-col gap-3 w-full md:w-auto shrink-0 min-w-[200px]">
                 {isOwnProfile ? (
-                  <button
-                    onClick={() => document.getElementById("edit-profile")?.showModal()}
-                    className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
-                  >
-                    <FaEdit className="w-4 h-4" />
-                    Edit Profile
-                  </button>
+                  <>
+                    {/* Edit Profile */}
+                    <button
+                      onClick={() => document.getElementById("edit-profile")?.showModal()}
+                      className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
+                    >
+                      <FaEdit className="w-4 h-4" />
+                      Edit Profile
+                    </button>
+
+                    {/* Change Password */}
+                    <button
+                      onClick={() => document.getElementById("change-password")?.showModal()}
+                      className="btn btn-outline border-orange-200 hover:border-orange-400 hover:bg-orange-50 text-gray-700 font-bold transition-all rounded-2xl w-full flex gap-2 items-center justify-center"
+                    >
+                      <FaLock className="w-3.5 h-3.5 text-orange-500" />
+                      Change Password
+                    </button>
+                  </>
                 ) : (
                   <button
                     onClick={() => subscribeToggle()}

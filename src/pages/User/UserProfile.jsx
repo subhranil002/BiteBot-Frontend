@@ -1,10 +1,11 @@
-import { FaCalendarAlt, FaEdit } from "react-icons/fa";
+import { FaCalendarAlt, FaEdit, FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
+import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 
 function UserProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -24,7 +25,12 @@ function UserProfile({ profileData }) {
 
   return (
     <>
-      {isOwnProfile && <EditProfileDialog profileData={userData} />}
+      {isOwnProfile && (
+        <>
+          <EditProfileDialog profileData={userData} />
+          <ChangePasswordDialog />
+        </>
+      )}
       <HomeLayout>
         <div className="relative min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-amber-50 overflow-hidden">
           {/* ✨ Ambient blobs */}
@@ -86,9 +92,21 @@ function UserProfile({ profileData }) {
 
                     {/* Buttons */}
                     {isOwnProfile && (
-                      <div className="flex justify-center md:justify-end w-full md:w-auto mt-4 md:mt-0">
+                      <div className="flex flex-wrap justify-center md:justify-end gap-3 w-full md:w-auto mt-4 md:mt-0">
+                        {/* Change Password Button */}
                         <button
-                          className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md"
+                          className="btn btn-outline border-orange-200 hover:bg-orange-50 hover:border-orange-400 text-gray-700 font-semibold rounded-xl"
+                          onClick={() =>
+                            document.getElementById("change-password")?.showModal()
+                          }
+                        >
+                          <FaLock className="w-3.5 h-3.5 text-orange-500" />
+                          <span className="hidden sm:inline">Change Password</span>
+                        </button>
+
+                        {/* Edit Profile Button */}
+                        <button
+                          className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md rounded-xl"
                           onClick={() =>
                             document.getElementById("edit-profile")?.showModal()
                           }

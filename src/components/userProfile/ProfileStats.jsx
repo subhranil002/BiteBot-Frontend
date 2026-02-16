@@ -41,6 +41,14 @@ function ProfileStats({ profileData }) {
       iconBg: "bg-yellow-50",
     },
     {
+      id: "cuisine",
+      icon: FaGlobe,
+      label: "Cuisine",
+      value: profileData?.profile?.cuisine || "N/A",
+      iconColor: "text-purple-500",
+      iconBg: "bg-purple-50",
+    },
+    {
       id: "dietary",
       icon: FaSeedling,
       label: "Dietary",
@@ -65,14 +73,6 @@ function ProfileStats({ profileData }) {
         profileData?.profile?.allergens?.length > 0
           ? profileData.profile.allergens
           : ["No allergens listed"],
-    },
-    {
-      id: "cuisine",
-      icon: FaGlobe,
-      label: "Cuisine",
-      value: profileData?.profile?.cuisine || "N/A",
-      iconColor: "text-purple-500",
-      iconBg: "bg-purple-50",
     },
   ];
 

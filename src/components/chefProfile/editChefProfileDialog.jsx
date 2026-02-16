@@ -71,8 +71,8 @@ export default function EditChefProfileDialog() {
             name: profile.name || "",
             bio: profile.bio || "",
             avatar: null,
-            education: chefProfile.education || "",
-            experience: chefProfile.experience || "",
+            educationList: chefProfile.education || [], //?.map(v => ({ value: v })) ,
+            experienceList: chefProfile.experience || [],  //?.map(v => ({ value: v })) ,
             dietaryLabels: profile.dietaryLabels?.map((v) => ({ value: v })) || [],
             allergens: profile.allergens?.map((v) => ({ value: v })) || [],
             externalLinks: chefProfile.externalLinks?.map((v) => ({ value: v })) || [],
@@ -80,31 +80,24 @@ export default function EditChefProfileDialog() {
             dietaryDraft: "",
             allergenDraft: "",
             linkDraft: "",
+            eduDraft: "",
+            expDraft: "",
         },
     });
 
-    const {
-        fields: dietaryFields,
-        append: appendDietary,
-        remove: removeDietary,
-    } = useFieldArray({ control, name: "dietaryLabels" });
-
-    const {
-        fields: allergenFields,
-        append: appendAllergen,
-        remove: removeAllergen,
-    } = useFieldArray({ control, name: "allergens" });
-
-    const {
-        fields: linkFields,
-        append: appendLink,
-        remove: removeLink,
-    } = useFieldArray({ control, name: "externalLinks" });
+    // Field Arrays for dynamic inputs
+    const { fields: eduFields, append: appendEdu, remove: removeEdu } = useFieldArray({ control, name: "educationList" });
+    const { fields: expFields, append: appendExp, remove: removeExp } = useFieldArray({ control, name: "experienceList" });
+    const { fields: dietaryFields, append: appendDietary, remove: removeDietary } = useFieldArray({ control, name: "dietaryLabels" });
+    const { fields: allergenFields, append: appendAllergen, remove: removeAllergen } = useFieldArray({ control, name: "allergens" });
+    const { fields: linkFields, append: appendLink, remove: removeLink } = useFieldArray({ control, name: "externalLinks" });
 
     const watchedFileList = watch("avatar");
     const dietaryDraft = watch("dietaryDraft");
     const allergenDraft = watch("allergenDraft");
     const linkDraft = watch("linkDraft");
+    const eduDraft = watch("eduDraft");
+    const expDraft = watch("expDraft");
 
     useEffect(() => {
         const file = watchedFileList?.[0];
@@ -120,10 +113,7 @@ export default function EditChefProfileDialog() {
         if (previewUrl) return previewUrl;
         const url = profile?.avatar?.secure_url;
         if (url) {
-            return url.replace(
-                "/upload/",
-                "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
-            );
+            return url.replace("/upload/", "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/");
         }
         return null;
     };
@@ -156,7 +146,9 @@ export default function EditChefProfileDialog() {
                 ...data,
                 dietaryLabels: data.dietaryLabels.map(i => i.value?.toLowerCase()),
                 allergens: data.allergens.map(i => i.value?.toLowerCase()),
-                externalLinks : data.externalLinks.map((i) => i.value)
+                externalLinks: data.externalLinks.map((i) => i.value),
+                education: data.educationList.map(i => i.value),
+                experience: data.experienceList.map(i => i.value)
             }));
             dlgRef.current?.close();
             reset(data);
@@ -166,12 +158,7 @@ export default function EditChefProfileDialog() {
     };
 
     return (
-        <dialog
-            id="edit-profile"
-            ref={dlgRef}
-            className="modal backdrop-blur-sm"
-            aria-labelledby="edit-profile-title"
-        >
+        <dialog id="edit-profile" ref={dlgRef} className="modal backdrop-blur-sm" aria-labelledby="edit-profile-title">
             <div className="modal-box w-full max-w-3xl bg-white shadow-2xl border border-orange-100 rounded-3xl p-0 overflow-hidden">
 
                 {/* Header */}
@@ -180,11 +167,7 @@ export default function EditChefProfileDialog() {
                         <FaBriefcase className="text-orange-500" />
                         Edit Chef Profile
                     </h3>
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-circle btn-ghost text-gray-500 hover:bg-orange-100 hover:text-orange-600"
-                        onClick={() => dlgRef.current?.close()}
-                    >
+                    <button type="button" className="btn btn-sm btn-circle btn-ghost text-gray-500 hover:bg-orange-100 hover:text-orange-600" onClick={() => dlgRef.current?.close()}>
                         <AiOutlineClose className="w-5 h-5" />
                     </button>
                 </div>
@@ -192,37 +175,23 @@ export default function EditChefProfileDialog() {
                 <div className="p-6 sm:p-8 max-h-[80vh] overflow-y-auto custom-scrollbar">
                     <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
 
-                        {/* Top Section: Avatar & Basic Info */}
+                        {/* Avatar & Basic Info */}
                         <div className="flex flex-col sm:flex-row gap-8 items-start">
                             <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
                                 <div className="relative group">
                                     <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-lg overflow-hidden bg-orange-50 ring-2 ring-orange-100">
                                         {getAvatarUrl() ? (
-                                            <img
-                                                src={getAvatarUrl()}
-                                                alt="Avatar"
-                                                className="object-cover w-full h-full"
-                                            />
+                                            <img src={getAvatarUrl()} alt="Avatar" className="object-cover w-full h-full" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-4xl text-orange-300 font-bold">
                                                 {profile.name?.charAt(0)}
                                             </div>
                                         )}
                                     </div>
-                                    <label
-                                        htmlFor="avatar-upload"
-                                        className="absolute bottom-1 right-1 bg-gray-800 text-white p-2.5 rounded-full shadow-lg hover:scale-110 transition cursor-pointer border-2 border-white"
-                                        title="Change avatar"
-                                    >
+                                    <label htmlFor="avatar-upload" className="absolute bottom-1 right-1 bg-gray-800 text-white p-2.5 rounded-full shadow-lg hover:scale-110 transition cursor-pointer border-2 border-white" title="Change avatar">
                                         <FaCamera className="w-4 h-4" />
                                     </label>
-                                    <input
-                                        id="avatar-upload"
-                                        type="file"
-                                        accept="image/*"
-                                        className="hidden"
-                                        {...register("avatar")}
-                                    />
+                                    <input id="avatar-upload" type="file" accept="image/*" className="hidden" {...register("avatar")} />
                                 </div>
                             </div>
 
@@ -239,12 +208,7 @@ export default function EditChefProfileDialog() {
 
                                 <div className="form-control w-full">
                                     <label className="label"><span className="label-text font-bold text-gray-700">Bio</span></label>
-                                    <textarea
-                                        rows={3}
-                                        className="textarea textarea-bordered w-full bg-gray-50 focus:bg-white border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50 rounded-xl transition-all"
-                                        placeholder="Share your culinary journey..."
-                                        {...register("bio", { maxLength: 500 })}
-                                    />
+                                    <textarea rows={3} className="textarea textarea-bordered w-full bg-gray-50 focus:bg-white border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50 rounded-xl transition-all" placeholder="Share your culinary journey..." {...register("bio", { maxLength: 500 })} />
                                 </div>
                             </div>
                         </div>
@@ -252,30 +216,69 @@ export default function EditChefProfileDialog() {
                         <div className="divider"></div>
 
                         {/* Professional Background Section */}
-                        <section className="space-y-4">
+                        <section className="space-y-6">
                             <h4 className="font-bold text-lg text-gray-800 flex items-center gap-2">
                                 <FaBriefcase className="text-orange-500" />
                                 Professional Background
                             </h4>
 
-                            <div className="grid grid-cols-1 gap-4">
-                                <div className="form-control w-full">
-                                    <label className="label"><span className="label-text font-semibold text-gray-600 flex items-center gap-2"><FaGraduationCap /> Education / Certification</span></label>
+                            {/* Education  */}
+                            <div className="form-control w-full">
+                                <label className="label"><span className="label-text font-semibold text-gray-600 flex items-center gap-2"><FaGraduationCap /> Education / Certification</span></label>
+                                <div className="flex gap-2 mb-3">
                                     <input
                                         className="input input-bordered w-full border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 rounded-xl"
-                                        placeholder="e.g. Le Cordon Bleu, Certified Nutritionist"
-                                        {...register("education")}
+                                        placeholder="e.g. Le Cordon Bleu"
+                                        {...register("educationList")}
                                     />
+                                    <button
+                                        type="button"
+                                        className="btn bg-orange-100 text-orange-600 border-orange-200 hover:bg-orange-200"
+                                        onClick={() => {
+                                            ensureUniqueAppend(eduFields, eduDraft, appendEdu, "educationList");
+                                            reset({ ...getValues(), eduDraft: "" });
+                                        }}
+                                    >
+                                        <FaPlus />
+                                    </button>
                                 </div>
+                                <div className="flex flex-col gap-2">
+                                    {eduFields.map((field, idx) => (
+                                        <div key={field.id} className="flex items-center justify-between p-2 bg-orange-50/50 border border-orange-100 rounded-lg">
+                                            <span className="text-sm text-gray-700">{field.value}</span>
+                                            <button type="button" onClick={() => removeEdu(idx)} className="text-red-400 hover:text-red-600"><FaTrash className="w-3 h-3"/></button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
 
-                                <div className="form-control w-full">
-                                    <label className="label"><span className="label-text font-semibold text-gray-600 flex items-center gap-2"><FaBriefcase /> Work Experience</span></label>
-                                    <textarea
-                                        rows={3}
-                                        className="textarea textarea-bordered w-full border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 rounded-xl"
-                                        placeholder="e.g. 5 years as Head Chef at The Ritz..."
-                                        {...register("experience")}
+                            {/* Experience  */}
+                            <div className="form-control w-full">
+                                <label className="label"><span className="label-text font-semibold text-gray-600 flex items-center gap-2"><FaBriefcase /> Work Experience</span></label>
+                                <div className="flex gap-2 mb-3">
+                                    <input
+                                        className="input input-bordered w-full border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 rounded-xl"
+                                        placeholder="e.g. 5 years as Head Chef at The Ritz"
+                                        {...register("experienceList")}
                                     />
+                                    <button
+                                        type="button"
+                                        className="btn bg-orange-100 text-orange-600 border-orange-200 hover:bg-orange-200"
+                                        onClick={() => {
+                                            ensureUniqueAppend(expFields, expDraft, appendExp, "experienceList");
+                                            reset({ ...getValues(), expDraft: "" });
+                                        }}
+                                    >
+                                        <FaPlus />
+                                    </button>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    {expFields.map((field, idx) => (
+                                        <div key={field.id} className="flex items-center justify-between p-2 bg-orange-50/50 border border-orange-100 rounded-lg">
+                                            <span className="text-sm text-gray-700">{field.value}</span>
+                                            <button type="button" onClick={() => removeExp(idx)} className="text-red-400 hover:text-red-600"><FaTrash className="w-3 h-3"/></button>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </section>
@@ -287,17 +290,9 @@ export default function EditChefProfileDialog() {
                                 <div className="flex gap-2">
                                     <div className="relative flex-1">
                                         <FaLink className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input
-                                            className={`input input-bordered w-full pl-10 border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 rounded-xl ${errors.linkDraft ? "input-error" : ""}`}
-                                            placeholder="https://portfolio.com"
-                                            {...register("linkDraft")}
-                                        />
+                                        <input className={`input input-bordered w-full pl-10 border-gray-200 focus:border-orange-400 focus:ring-2 focus:ring-orange-100 rounded-xl ${errors.linkDraft ? "input-error" : ""}`} placeholder="https://portfolio.com" {...register("linkDraft")} />
                                     </div>
-                                    <button
-                                        type="button"
-                                        className="btn bg-orange-100 text-orange-600 border-orange-200 hover:bg-orange-200 hover:border-orange-300"
-                                        onClick={handleAddLink}
-                                    >
+                                    <button type="button" className="btn bg-orange-100 text-orange-600 border-orange-200 hover:bg-orange-200" onClick={handleAddLink}>
                                         <FaPlus />
                                     </button>
                                 </div>
@@ -312,11 +307,7 @@ export default function EditChefProfileDialog() {
                                                 </div>
                                                 <span className="text-sm text-gray-600 truncate">{field.value}</span>
                                             </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeLink(idx)}
-                                                className="btn btn-xs btn-circle btn-ghost text-red-400 hover:bg-red-50 hover:text-red-600"
-                                            >
+                                            <button type="button" onClick={() => removeLink(idx)} className="btn btn-xs btn-circle btn-ghost text-red-400 hover:bg-red-50 hover:text-red-600">
                                                 <FaTrash />
                                             </button>
                                         </div>
@@ -328,7 +319,7 @@ export default function EditChefProfileDialog() {
 
                         <div className="divider"></div>
 
-                        {/* Cuisine, Dietary, Allergens Grid */}
+                        {/* Cuisine, Dietary, Allergens  */}
                         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="form-control w-full md:col-span-2">
                                 <label className="label">
@@ -336,20 +327,10 @@ export default function EditChefProfileDialog() {
                                         <FaUtensils className="text-orange-500" />
                                         Culinary Specialty
                                     </span>
-                                    <span className="label-text-alt text-gray-500">
-                                        What is your primary cooking style?
-                                    </span>
                                 </label>
-                                <select
-                                    className="select select-bordered w-full border-gray-200 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/50 rounded-xl transition-all font-medium text-gray-700"
-                                    {...register("cuisine")}
-                                >
+                                <select className="select select-bordered w-full border-gray-200 focus:border-orange-400 rounded-xl font-medium text-gray-700" {...register("cuisine")}>
                                     <option value="">Select Specialty</option>
-                                    {CUISINE_OPTIONS.map((c) => (
-                                        <option key={c} value={c}>
-                                            {c}
-                                        </option>
-                                    ))}
+                                    {CUISINE_OPTIONS.map((c) => (<option key={c} value={c}>{c}</option>))}
                                 </select>
                             </div>
 
@@ -360,14 +341,10 @@ export default function EditChefProfileDialog() {
                                         <option value="">Select Option</option>
                                         {DIETARY_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                                     </select>
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-square bg-emerald-100 text-emerald-600 border-emerald-200 hover:bg-emerald-200"
-                                        onClick={() => {
-                                            ensureUniqueAppend(dietaryFields, dietaryDraft, appendDietary, "dietaryLabels");
-                                            reset({ ...getValues(), dietaryDraft: "" });
-                                        }}
-                                    >
+                                    <button type="button" className="btn btn-sm btn-square bg-emerald-100 text-emerald-600 border-emerald-200 hover:bg-emerald-200" onClick={() => {
+                                        ensureUniqueAppend(dietaryFields, dietaryDraft, appendDietary, "dietaryLabels");
+                                        reset({ ...getValues(), dietaryDraft: "" });
+                                    }}>
                                         <FaPlus />
                                     </button>
                                 </div>
@@ -385,14 +362,10 @@ export default function EditChefProfileDialog() {
                                         <option value="">Select Option</option>
                                         {ALLERGEN_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                                     </select>
-                                    <button
-                                        type="button"
-                                        className="btn btn-sm btn-square bg-rose-100 text-rose-600 border-rose-200 hover:bg-rose-200"
-                                        onClick={() => {
-                                            ensureUniqueAppend(allergenFields, allergenDraft, appendAllergen, "allergens");
-                                            reset({ ...getValues(), allergenDraft: "" });
-                                        }}
-                                    >
+                                    <button type="button" className="btn btn-sm btn-square bg-rose-100 text-rose-600 border-rose-200 hover:bg-rose-200" onClick={() => {
+                                        ensureUniqueAppend(allergenFields, allergenDraft, appendAllergen, "allergens");
+                                        reset({ ...getValues(), allergenDraft: "" });
+                                    }}>
                                         <FaPlus />
                                     </button>
                                 </div>
@@ -406,32 +379,12 @@ export default function EditChefProfileDialog() {
 
                         {/* Footer Actions */}
                         <div className="flex items-center justify-end gap-3 pt-6 border-t border-orange-100">
-                            <button
-                                type="button"
-                                className="btn btn-ghost hover:bg-gray-100 rounded-xl"
-                                onClick={() => dlgRef.current?.close()}
-                            >
-                                Cancel
-                            </button>
-
-                            <button
-                                type="submit"
-                                disabled={!isDirty || isSubmitting}
-                                className={`btn border-none text-white shadow-lg transition-all rounded-xl gap-2 px-8
-                  ${!isDirty || isSubmitting
-                                        ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none"
-                                        : "bg-linear-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
-                                    }`}
-                            >
-                                {isSubmitting ? (
-                                    <span className="loading loading-spinner loading-sm"></span>
-                                ) : (
-                                    <FaSave />
-                                )}
+                            <button type="button" className="btn btn-ghost hover:bg-gray-100 rounded-xl" onClick={() => dlgRef.current?.close()}>Cancel</button>
+                            <button type="submit" disabled={!isDirty || isSubmitting} className={`btn border-none text-white shadow-lg transition-all rounded-xl gap-2 px-8 ${!isDirty || isSubmitting ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none" : "bg-linear-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"}`}>
+                                {isSubmitting ? <span className="loading loading-spinner loading-sm"></span> : <FaSave />}
                                 {isDirty ? "Save Profile" : "No Changes"}
                             </button>
                         </div>
-
                     </form>
                 </div>
             </div>
