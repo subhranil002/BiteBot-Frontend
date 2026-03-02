@@ -1,168 +1,129 @@
-import {
-    FaCookie,
-    FaGithub,
-    FaHeart,
-    FaInstagram,
-    FaTwitter,
-    FaUtensils,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { 
+    FaTwitter, 
+    FaInstagram, 
+    FaGithub, 
+    FaHeart, 
+    FaArrowRight 
+} from 'react-icons/fa';
 
-function Footer() {
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
+
     return (
-        <footer className="mt-auto bg-linear-to-br from-orange-50 via-red-50 to-amber-50 backdrop-blur-md border-t border-orange-200 shadow-lg">
-            <div className="container mx-auto px-4 py-8 xl:py-12">
-                {/* Main footer content */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 mb-8">
-                    {/* Brand Section */}
-                    <div className="space-y-4 md:col-span-2 lg:col-span-1">
-                        <Link to="/" className="flex items-center gap-3 group">
-                            <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 border-2 border-orange-500">
+        <footer className="relative mt-auto overflow-hidden bg-linear-to-br from-orange-50/80 via-white to-amber-50/80 border-t border-orange-100">
+            {/* Top Wave/Gradient Decorative Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[150px] bg-linear-to-b from-orange-400/10 to-transparent blur-3xl pointer-events-none rounded-full"></div>
+
+            <div className="container mx-auto px-6 md:px-12 lg:px-20 pt-12 pb-6 relative z-10">
+                
+                {/* 1. Header & Brand Statement */}
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12">
+                    <div className="max-w-2xl">
+                        <Link to="/" className="inline-block mb-6 group">
+                            <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg bg-white border border-orange-100 overflow-hidden transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105">
                                 <img
                                     src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
-                                    alt="Bite Bot"
+                                    alt="BiteBot Logo"
+                                    className="w-full h-full object-cover"
                                 />
                             </div>
-
-                            <div>
-                                <h3 className="text-2xl font-bold bg-linear-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-                                    BiteBot
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                    Discover. Cook. Impress. Repeat
-                                </p>
-                            </div>
                         </Link>
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                            Your culinary companion for discovering amazing
-                            recipes, cooking tips, and creating unforgettable
-                            meals.
-                        </p>
+                        <h2 className="text-3xl md:text-5xl font-light text-gray-900 leading-[1.1] tracking-tight">
+                            Discover. Cook. <br />
+                            <span className="font-bold bg-linear-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                                Impress. Repeat.
+                            </span>
+                        </h2>
                     </div>
 
-                    {/* Quick Links Section */}
-                    <nav className="space-y-4">
-                        <h3 className="text-lg font-bold bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent flex items-center gap-2">
-                            <FaUtensils className="w-4 h-4" />
-                            Quick Links
-                        </h3>
-                        <ul className="space-y-3 text-sm">
-                            <li>
-                                <Link
-                                    to="/"
-                                    className="text-gray-600 hover:text-orange-600 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-orange-400 rounded-full mr-3 group-hover:bg-orange-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/chat"
-                                    className="text-gray-600 hover:text-red-500 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-red-400 rounded-full mr-3 group-hover:bg-red-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Recipe Chat
-                                </Link>
-                            </li>
-                            <li>
-                                <span
-                                    className="text-gray-600 hover:text-amber-600 transition-all duration-300 flex items-center group font-medium cursor-pointer"
-                                >
-                                    <span className="w-2 h-2 bg-amber-400 rounded-full mr-3 group-hover:bg-amber-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Trending Recipes
-                                </span>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    {/* Resources Section */}
-                    <nav className="space-y-4">
-                        <h3 className="text-lg font-bold bg-linear-to-r from-red-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
-                            <FaCookie className="w-4 h-4" />
-                            Resources
-                        </h3>
-                        <ul className="space-y-3 text-sm">
-                            <li>
-                                <Link
-                                    to="/docs"
-                                    className="text-gray-600 hover:text-cyan-600 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3 group-hover:bg-cyan-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Documentation
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/privacy"
-                                    className="text-gray-600 hover:text-violet-600 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-violet-400 rounded-full mr-3 group-hover:bg-violet-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Privacy Policy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    to="/contact"
-                                    className="text-gray-600 hover:text-indigo-600 transition-all duration-300 flex items-center group font-medium"
-                                >
-                                    <span className="w-2 h-2 bg-indigo-400 rounded-full mr-3 group-hover:bg-indigo-500 transition-colors duration-300 group-hover:scale-125"></span>
-                                    Contact Us
-                                </Link>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    {/* Social */}
-                    <aside className="space-y-4 md:col-span-2 lg:col-span-1">
-                        {/* Social links */}
-                        <div className="space-y-2 flex flex-col  ">
-                            <p className="text-sm text-gray-600 font-medium text-center">
-                                Follow us
-                            </p>
-                            <div className="flex gap-3 justify-center">
-                                <a
-                                    href="#"
-                                    className="p-3 bg-white backdrop-blur-sm rounded-xl border-2 border-orange-200 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
-                                    aria-label="Follow us on Twitter"
-                                >
-                                    <FaTwitter className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="p-3 bg-white backdrop-blur-sm rounded-xl border-2 border-pink-200 hover:bg-pink-500 hover:border-pink-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
-                                    aria-label="Follow us on Instagram"
-                                >
-                                    <FaInstagram className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300" />
-                                </a>
-                                <a
-                                    href="#"
-                                    className="p-3 bg-white backdrop-blur-sm rounded-xl border-2 border-gray-300 hover:bg-gray-800 hover:border-gray-800 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg group"
-                                    aria-label="View our GitHub"
-                                >
-                                    <FaGithub className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-300" />
-                                </a>
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-
-                {/* Bottom section */}
-                <div className="w-full border-t border-orange-200 pt-6 flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
-                    <div className="flex items-center justify-center md:justify-start gap-4 text-sm w-full md:w-auto">
-                        <p className="flex items-center gap-2 text-gray-600 font-medium">
-                            © {new Date().getFullYear()} BiteBot. Crafted with
-                            <FaHeart className="inline w-4 h-4 text-red-500 animate-pulse" />
-                            for food lovers
-                        </p>
+                    {/* Socials - Architectural layout */}
+                    <div className="flex gap-3 lg:pb-2">
+                        {[
+                            { icon: FaTwitter, label: "Twitter", href: "#" },
+                            { icon: FaInstagram, label: "Instagram", href: "#" },
+                            { icon: FaGithub, label: "GitHub", href: "#" },
+                        ].map((social, idx) => (
+                            <a
+                                key={idx}
+                                href={social.href}
+                                aria-label={social.label}
+                                className="group relative flex items-center justify-center w-12 h-12 rounded-full border border-orange-200 bg-white/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.2)]"
+                            >
+                                <div className="absolute inset-0 bg-linear-to-tr from-orange-500 to-red-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+                                <social.icon className="w-4 h-4 text-gray-600 relative z-10 group-hover:text-white transition-colors duration-300" />
+                            </a>
+                        ))}
                     </div>
                 </div>
 
-                {/* Decorative elements */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-orange-500 via-red-500 to-amber-500 opacity-20"></div>
+                {/* 2. Navigation Grid - Clean editorial lines */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 border-y border-orange-900/10 py-8">
+                    {/* Quick Links */}
+                    <div>
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-orange-600 mb-4">Navigation</h3>
+                        <nav className="flex flex-col">
+                            {[
+                                { name: "Home", path: "/" },
+                                { name: "Recipe Chat", path: "/chat" },
+                                { name: "Trending Recipes", path: "#" }
+                            ].map((link, idx) => (
+                                <Link
+                                    key={idx}
+                                    to={link.path}
+                                    className="group flex items-center justify-between py-2.5 border-b border-orange-900/5 hover:border-orange-500 transition-colors duration-300"
+                                >
+                                    <span className="text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                                        {link.name}
+                                    </span>
+                                    <FaArrowRight className="text-orange-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out text-sm" />
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+
+                    {/* Resources */}
+                    <div>
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-orange-600 mb-4">Resources</h3>
+                        <nav className="flex flex-col">
+                            {[
+                                { name: "Documentation", path: "/docs" },
+                                { name: "Privacy Policy", path: "/privacy" },
+                                { name: "Contact Us", path: "/contact" }
+                            ].map((link, idx) => (
+                                <Link
+                                    key={idx}
+                                    to={link.path}
+                                    className="group flex items-center justify-between py-2.5 border-b border-orange-900/5 hover:border-orange-500 transition-colors duration-300"
+                                >
+                                    <span className="text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                                        {link.name}
+                                    </span>
+                                    <FaArrowRight className="text-orange-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out text-sm" />
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
+
+                {/* 3. Bottom Layer - Giant Watermark & Copyright */}
+                <div className="relative mt-8 flex items-center justify-center overflow-hidden h-24 md:h-32 rounded-2xl bg-white/30 backdrop-blur-md border border-white/50">
+                    {/* Massive Background Text */}
+                    <h1 className="absolute text-[14vw] md:text-[10vw] font-black leading-none text-orange-900/5 select-none pointer-events-none tracking-tighter">
+                        BITEBOT
+                    </h1>
+                    
+                    {/* Copyright Info overlaid */}
+                    <div className="absolute bottom-4 left-0 right-0 px-6 flex flex-col md:flex-row items-center justify-between gap-3 w-full">
+                        <p className="text-xs font-semibold text-gray-500 tracking-wide">
+                            © {currentYear} BITEBOT .
+                        </p>
+                        <p className="flex items-center gap-2 text-xs font-medium text-gray-500 bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
+                            Crafted with <FaHeart className="w-3 h-3 text-red-500 animate-pulse" /> for food lovers
+                        </p>
+                    </div>
+                </div>
             </div>
         </footer>
     );
 }
-
-export default Footer;

@@ -128,7 +128,7 @@ export default memo(function RecipeCarousels() {
   ];
 
   return (
-    <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-gradient-to-b from-white via-orange-50/40 to-amber-50/50">
+    <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-linear-to-b from-white via-orange-50/40 to-amber-50/50">
       {/* Render each carousel section dynamically */}
       {sections.map(({ id, title, recipes }) => (
         <section key={id} className="space-y-6" id={id}>

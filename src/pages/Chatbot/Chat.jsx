@@ -5,9 +5,9 @@ import {
   FaRobot,
   FaUtensils,
   FaLightbulb,
-  FaGlobe,
-  FaChevronDown
+  FaChevronDown,
 } from "react-icons/fa";
+import { LuCookingPot } from "react-icons/lu";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -33,6 +33,7 @@ const ChatbotPage = () => {
   ]);
 
   const [inputMessage, setInputMessage] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -100,35 +101,56 @@ const ChatbotPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 flex flex-col">
+    <div className="min-h-screen bg-linear-to-br from-orange-50 via-white to-amber-50 flex flex-col">
       {/* Header with Back Button */}
-      <header className="relative border-b border-orange-100/50 backdrop-blur-sm py-6 px-4 sm:px-6">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="btn btn-sm absolute left-4 top-4 sm:left-6 sm:top-auto sm:bottom-auto bg-orange-500 text-white hover:bg-white hover:text-orange-500 border-orange-500 backdrop-blur-sm shadow-sm hover:shadow transition-all duration-300 rounded-full flex items-center gap-2"
-        >
-          <FaArrowLeft className="w-4 h-4" />
-          <span>Back</span>
-        </button>
+      <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-lg border-b border-gray-100 py-3 px-4 sm:px-6 flex items-center justify-between shadow-sm transition-all">
+        {/* Left: Back Button & Branding */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2.5 bg-gray-50 cursor-pointer text-gray-600 hover:bg-orange-50 hover:text-orange-600 rounded-full transition-colors flex items-center justify-center"
+            aria-label="Go back"
+          >
+            <FaArrowLeft className="w-4 h-4" />
+          </button>
 
-        {/* Title & Subtitle */}
-        <div className="flex flex-col items-center justify-center text-center mt-10 sm:mt-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center gap-2">
-            <FaRobot className="text-orange-500" />
-            BiteBot
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Discover. Cook. Impress. Repeat
-          </p>
-          <span className="badge badge-sm badge-warning align-middle mr-1 bg-orange-500 text-white">
-            BETA
-          </span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-linear-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20">
+              <FaRobot className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-lg font-bold text-gray-900 tracking-tight leading-none flex items-center gap-1.5">
+                BiteBot
+                {/* <span className="text-[9px] font-extrabold tracking-wider bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-sm uppercase">
+                  Beta
+                </span> */}
+              </h1>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Controls (Language Only) */}
+        <div className="flex items-center gap-2 relative">
+          {/* Language Selector */}
+          <div className="relative">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold rounded-lg pl-3 pr-7 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 cursor-pointer hover:bg-gray-100 transition-colors"
+            >
+              <option value="en">English</option>
+              <option value="hi">Hindi-Latin</option>
+              <option value="bn">Bengali-Latin</option>
+            </select>
+            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-[10px]">
+              <FaChevronDown />
+            </div>
+          </div>
         </div>
       </header>
 
       {/* Chat Container */}
-      <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-[19rem] pt-4">
+      <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-76 pt-4">
         <div className="space-y-6">
           {messages.map((msg) => (
             <div
@@ -141,11 +163,11 @@ const ChatbotPage = () => {
                   }`}
               >
                 {/* Avatar */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${msg.type === "user"
-                        ? "bg-gradient-to-br from-orange-500 to-amber-600"
-                        : "bg-gradient-to-br from-gray-600 to-gray-800"
+                      ? "bg-linear-to-br from-orange-500 to-amber-600"
+                      : "bg-linear-to-br from-gray-600 to-gray-800"
                       }`}
                   >
                     {msg.type === "user" ? (
@@ -166,8 +188,8 @@ const ChatbotPage = () => {
                 <div>
                   <div
                     className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${msg.type === "user"
-                        ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white"
-                        : "bg-white text-gray-800 border border-gray-200"
+                      ? "bg-linear-to-br from-orange-500 to-amber-600 text-white"
+                      : "bg-white text-gray-800 border border-gray-200"
                       }`}
                   >
                     {msg.content}
@@ -219,7 +241,7 @@ const ChatbotPage = () => {
           {isLoading && (
             <div className="flex justify-start">
               <div className="flex gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white">
+                <div className="w-9 h-9 rounded-full bg-linear-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white">
                   <FaRobot />
                 </div>
                 <div className="bg-white px-4 py-3 rounded-2xl shadow-sm border border-gray-200 flex items-center gap-2">
@@ -243,56 +265,8 @@ const ChatbotPage = () => {
       {/* Floating Input Area */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 px-4 py-4 z-50">
         <div className="max-w-4xl mx-auto space-y-3">
-
-          {/* Controls (Mode Toggle + Language) */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-
-            {/* Mode Switcher */}
-            <div className="flex bg-gray-100 p-1 rounded-xl w-full sm:w-auto">
-              <button
-                onClick={() => setMode('recipe')}
-                className={`flex-1 sm:flex-none flex cursor-pointer items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${mode === 'recipe'
-                    ? 'bg-white text-orange-600 shadow-sm ring-1 ring-black/5'
-                    : 'text-gray-500 hover:text-gray-700'
-                  }`}
-              >
-                <FaUtensils className={mode === 'recipe' ? 'text-orange-500' : 'text-gray-400'} />
-                Find Recipe
-              </button>
-              <button
-                onClick={() => setMode('tips')}
-                className={`flex-1 sm:flex-none flex cursor-pointer items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${mode === 'tips'
-                    ? 'bg-white text-amber-600 shadow-sm ring-1 ring-black/5'
-                    : 'text-gray-500 hover:text-gray-700'
-                  }`}
-              >
-                <FaLightbulb className={mode === 'tips' ? 'text-amber-500' : 'text-gray-400'} />
-                Cooking Tips
-              </button>
-            </div>
-
-            {/* Language Selector */}
-            <div className="relative w-full sm:w-auto">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                <FaGlobe />
-              </div>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full sm:w-40 appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-xl pl-9 pr-8 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 cursor-pointer transition-all hover:bg-gray-100"
-              >
-                <option value="en">English</option>
-                <option value="hi">Hindi (हिंदी)</option>
-                <option value="bn">Bengali (বাংলা)</option>
-              </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">
-                <FaChevronDown />
-              </div>
-            </div>
-          </div>
-
           {/* Quick Suggestions */}
-          <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+          <div className="flex flex-wrap gap-2 justify-center">
             {quickSuggestions.map((suggestion, i) => (
               <button
                 key={i}
@@ -304,8 +278,58 @@ const ChatbotPage = () => {
             ))}
           </div>
 
-          {/* Input + Send */}
+          {/* Input + Send + Menu */}
           <div className="flex gap-3 items-end">
+            
+            {/* Moved 3-Dot Menu Toggle */}
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className={`p-3 rounded-full cursor-pointer transition-colors ${
+                  isMenuOpen ? 'bg-gray-200 text-gray-900' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+                aria-label="Menu options"
+              >
+                <LuCookingPot className="w-5 h-5" />
+              </button>
+
+              {/* The Dropdown Card - Positioned above the button */}
+              {isMenuOpen && (
+                <div className="absolute left-0 bottom-full mb-3 w-48 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden transform origin-bottom-left transition-all z-50">
+                  <div className="p-1.5 flex flex-col gap-1">
+                    <button
+                      onClick={() => {
+                        setMode('recipe');
+                        setIsMenuOpen(false);
+                      }}
+                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === 'recipe'
+                          ? 'bg-orange-50 text-orange-600 font-medium'
+                          : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                    >
+                      <FaUtensils className={mode === 'recipe' ? 'text-orange-500' : 'text-gray-400'} />
+                      Find Recipe
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setMode('tips');
+                        setIsMenuOpen(false);
+                      }}
+                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === 'tips'
+                          ? 'bg-amber-50 text-amber-600 font-medium'
+                          : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                    >
+                      <FaLightbulb className={mode === 'tips' ? 'text-amber-500' : 'text-gray-400'} />
+                      Cooking Tips
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Textarea */}
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
@@ -316,12 +340,14 @@ const ChatbotPage = () => {
               disabled={isLoading}
               style={{ fieldSizing: "content", maxHeight: "120px" }}
             />
+
+            {/* Send Button */}
             <button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isLoading}
               className={`p-3 rounded-full transition-all shrink-0 ${inputMessage.trim() && !isLoading
-                  ? "bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                ? "bg-linear-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
             >
               {isLoading ? (
