@@ -1,6 +1,6 @@
 // Finalized
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaBolt, FaHeart, FaLock, FaUsers, FaUtensils } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -34,7 +34,7 @@ export default function RecipeCard({ recipe }) {
   const chefId = s(recipe?.chefId);
 
   // Determine if recipe is accessible to current user
-  const unlocked = useMemo(() => {
+  const unlocked = () => {
     if (!recipe || !userData) return true;
 
     if (userData.role === "CHEF") {
@@ -45,13 +45,12 @@ export default function RecipeCard({ recipe }) {
 
     const subs = userData?.profile?.subscribed ?? [];
     return subs.some((sub) => s(sub._id) === chefId);
-  }, [recipe, userData, chefId]);
+  };
 
   // Check if recipe is already in favourites
-  const initialFav = useMemo(() => {
-    const favs = userData?.favourites ?? [];
-    return favs.some((fav) => s(fav) === recipeId);
-  }, [userData, recipeId]);
+  const initialFav = (userData?.favourites ?? []).some(
+    (fav) => s(fav) === recipeId,
+  );
 
   const [isFav, setIsFav] = useState(initialFav);
   const [loading, setLoading] = useState(false);
@@ -62,7 +61,7 @@ export default function RecipeCard({ recipe }) {
   }, [initialFav]);
 
   // Toggle favourite (optimistic UI update)
-  const toggleFav = useCallback(async () => {
+  const toggleFav = async () => {
     if (!recipeId) return;
 
     setLoading(true);
@@ -78,19 +77,19 @@ export default function RecipeCard({ recipe }) {
     } finally {
       setLoading(false);
     }
-  }, [recipeId]);
+  };
 
   // Handle view/unlock button click
-  const handleRecipeViewButton = useCallback(() => {
+  const handleRecipeViewButton = () => {
     if (!recipeId) return;
 
-    if (unlocked) {
+    if (unlocked()) {
       navigate(`/recipe/${recipeId}`);
     } else {
       toast.error("Please subscribe to this chef to unlock recipe");
       navigate(`/profile/${chefId}`);
     }
-  }, [unlocked, recipeId, chefId, navigate]);
+  };
 
   return (
     <article
@@ -197,13 +196,13 @@ export default function RecipeCard({ recipe }) {
               onClick={handleRecipeViewButton}
               className={[
                 "w-full btn rounded-2xl font-bold transition-transform duration-200 md:hover:-translate-y-0.5 md:hover:shadow-xl border-0",
-                unlocked
+                unlocked()
                   ? "bg-linear-to-r from-orange-400 to-red-400 md:hover:from-orange-500 md:hover:to-red-500 text-white shadow-orange-200/40"
                   : "bg-linear-to-r from-yellow-400 to-amber-500 md:hover:from-yellow-500 md:hover:to-amber-600 text-gray-900 shadow-amber-200/40",
               ].join(" ")}
             >
               <span className="flex items-center gap-2">
-                {unlocked ? (
+                {unlocked() ? (
                   <>
                     <FaBolt className="w-3 h-3" />
                     View Recipe

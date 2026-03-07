@@ -1,11 +1,11 @@
 import { FaCalendarAlt, FaEdit, FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
+import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 import EditProfileDialog from "../../components/userProfile/EditProfileDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
-import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 
 function UserProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -15,7 +15,7 @@ function UserProfile({ profileData }) {
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return url;
@@ -50,7 +50,7 @@ function UserProfile({ profileData }) {
                       <img
                         alt="Profile Avatar"
                         src={modifyCloudinaryURL(
-                          profileData?.profile?.avatar?.secure_url || ""
+                          profileData?.profile?.avatar?.secure_url || "",
                         )}
                       />
                     ) : (
@@ -83,7 +83,7 @@ function UserProfile({ profileData }) {
                                 month: "long",
                                 year: "numeric",
                                 timeZone: "Asia/Kolkata",
-                              }
+                              },
                             )}
                           </span>
                         </div>
@@ -95,18 +95,22 @@ function UserProfile({ profileData }) {
                       <div className="flex flex-wrap justify-center md:justify-end gap-3 w-full md:w-auto mt-4 md:mt-0">
                         {/* Change Password Button */}
                         <button
-                          className="btn btn-outline border-orange-200 hover:bg-orange-50 hover:border-orange-400 text-gray-700 font-semibold rounded-xl"
+                          className="btn btn-outline border-orange-200 hover:bg-orange-50 hover:border-orange-400 text-gray-700 font-semibold rounded-xl w-15 sm:w-42"
                           onClick={() =>
-                            document.getElementById("change-password")?.showModal()
+                            document
+                              .getElementById("change-password")
+                              ?.showModal()
                           }
                         >
-                          <FaLock className="w-3.5 h-3.5 text-orange-500" />
-                          <span className="hidden sm:inline">Change Password</span>
+                          <FaLock className="w-4 h-4 text-orange-500" />
+                          <span className="hidden sm:inline">
+                            Change Password
+                          </span>
                         </button>
 
                         {/* Edit Profile Button */}
                         <button
-                          className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md rounded-xl"
+                          className="btn btn-primary bg-gradient-to-r from-orange-500 to-red-500 border-none text-white font-semibold shadow-md rounded-xl w-15 sm:w-42"
                           onClick={() =>
                             document.getElementById("edit-profile")?.showModal()
                           }

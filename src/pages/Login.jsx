@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { FloatingIcons } from "../components/FloatingFoodIcons";
+import { EMAIL_REGEX, PASSWORD_REGEX } from "../constants";
 import { login } from "../redux/slices/authSlice";
 
 export default function Login() {
@@ -78,8 +79,7 @@ export default function Login() {
               {...register("email", {
                 required: "Email is required",
                 pattern: {
-                  value:
-                    /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                  value: EMAIL_REGEX,
                   message: "Invalid email address",
                 },
               })}
@@ -111,8 +111,7 @@ export default function Login() {
                     message: "Password must be at least 8 characters",
                   },
                   pattern: {
-                    value:
-                      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/,
+                    value: PASSWORD_REGEX,
                     message:
                       "Must include uppercase, number, and special character",
                   },

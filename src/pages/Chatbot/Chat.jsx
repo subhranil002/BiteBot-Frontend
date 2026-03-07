@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
   FaArrowLeft,
+  FaChevronDown,
+  FaLightbulb,
   FaPaperPlane,
   FaRobot,
   FaUtensils,
-  FaLightbulb,
-  FaChevronDown,
 } from "react-icons/fa";
 import { LuCookingPot } from "react-icons/lu";
 import { useSelector } from "react-redux";
@@ -94,7 +94,7 @@ const ChatbotPage = () => {
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return url;
@@ -155,25 +155,28 @@ const ChatbotPage = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
-                }`}
+              className={`flex ${
+                msg.type === "user" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
-                className={`flex gap-3 max-w-[80%] ${msg.type === "user" ? "flex-row-reverse" : ""
-                  }`}
+                className={`flex gap-3 max-w-[80%] ${
+                  msg.type === "user" ? "flex-row-reverse" : ""
+                }`}
               >
                 {/* Avatar */}
                 <div className="shrink-0">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${msg.type === "user"
-                      ? "bg-linear-to-br from-orange-500 to-amber-600"
-                      : "bg-linear-to-br from-gray-600 to-gray-800"
-                      }`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${
+                      msg.type === "user"
+                        ? "bg-linear-to-br from-orange-500 to-amber-600"
+                        : "bg-linear-to-br from-gray-600 to-gray-800"
+                    }`}
                   >
                     {msg.type === "user" ? (
                       <img
                         src={modifyCloudinaryURL(
-                          userData?.profile?.avatar?.secure_url
+                          userData?.profile?.avatar?.secure_url,
                         )}
                         alt="user avatar"
                         className="w-9 h-9 rounded-full object-cover"
@@ -187,10 +190,11 @@ const ChatbotPage = () => {
                 {/* Message Bubble */}
                 <div>
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${msg.type === "user"
-                      ? "bg-linear-to-br from-orange-500 to-amber-600 text-white"
-                      : "bg-white text-gray-800 border border-gray-200"
-                      }`}
+                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${
+                      msg.type === "user"
+                        ? "bg-linear-to-br from-orange-500 to-amber-600 text-white"
+                        : "bg-white text-gray-800 border border-gray-200"
+                    }`}
                   >
                     {msg.content}
                   </div>
@@ -280,13 +284,14 @@ const ChatbotPage = () => {
 
           {/* Input + Send + Menu */}
           <div className="flex gap-3 items-end">
-            
             {/* Moved 3-Dot Menu Toggle */}
             <div className="relative shrink-0">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`p-3 rounded-full cursor-pointer transition-colors ${
-                  isMenuOpen ? 'bg-gray-200 text-gray-900' : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
+                  isMenuOpen
+                    ? "bg-gray-200 text-gray-900"
+                    : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900"
                 }`}
                 aria-label="Menu options"
               >
@@ -299,29 +304,41 @@ const ChatbotPage = () => {
                   <div className="p-1.5 flex flex-col gap-1">
                     <button
                       onClick={() => {
-                        setMode('recipe');
+                        setMode("recipe");
                         setIsMenuOpen(false);
                       }}
-                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === 'recipe'
-                          ? 'bg-orange-50 text-orange-600 font-medium'
-                          : 'text-gray-600 hover:bg-gray-50'
-                        }`}
+                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
+                        mode === "recipe"
+                          ? "bg-orange-50 text-orange-600 font-medium"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
                     >
-                      <FaUtensils className={mode === 'recipe' ? 'text-orange-500' : 'text-gray-400'} />
+                      <FaUtensils
+                        className={
+                          mode === "recipe"
+                            ? "text-orange-500"
+                            : "text-gray-400"
+                        }
+                      />
                       Find Recipe
                     </button>
 
                     <button
                       onClick={() => {
-                        setMode('tips');
+                        setMode("tips");
                         setIsMenuOpen(false);
                       }}
-                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === 'tips'
-                          ? 'bg-amber-50 text-amber-600 font-medium'
-                          : 'text-gray-600 hover:bg-gray-50'
-                        }`}
+                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
+                        mode === "tips"
+                          ? "bg-amber-50 text-amber-600 font-medium"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
                     >
-                      <FaLightbulb className={mode === 'tips' ? 'text-amber-500' : 'text-gray-400'} />
+                      <FaLightbulb
+                        className={
+                          mode === "tips" ? "text-amber-500" : "text-gray-400"
+                        }
+                      />
                       Cooking Tips
                     </button>
                   </div>
@@ -334,7 +351,11 @@ const ChatbotPage = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={mode === 'recipe' ? "Ask for a recipe or list ingredients..." : "Ask for cooking tips (e.g. how to chop onions)..."}
+              placeholder={
+                mode === "recipe"
+                  ? "Ask for a recipe or list ingredients..."
+                  : "Ask for cooking tips (e.g. how to chop onions)..."
+              }
               className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-shadow"
               rows={1}
               disabled={isLoading}
@@ -345,10 +366,11 @@ const ChatbotPage = () => {
             <button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isLoading}
-              className={`p-3 rounded-full transition-all shrink-0 ${inputMessage.trim() && !isLoading
-                ? "bg-linear-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
+              className={`p-3 rounded-full transition-all shrink-0 ${
+                inputMessage.trim() && !isLoading
+                  ? "bg-linear-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

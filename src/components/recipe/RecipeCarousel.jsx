@@ -1,17 +1,17 @@
 // Finalized
 
-import { memo, useCallback, useRef } from "react";
+import { useRef } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import RecipeCard from "./RecipeCard";
 
 const CARD_WIDTH = 320; // Width used to calculate scroll distance
 
-export default memo(function RecipeCarousel({ title, recipes }) {
+export default function RecipeCarousel({ title, recipes }) {
   const scrollRef = useRef(null); // Reference to the scroll container
 
   // Scrolls carousel left or right by one card width
-  const scroll = useCallback((direction) => {
+  const scroll = (direction) => {
     const container = scrollRef.current;
     if (!container) return;
 
@@ -21,7 +21,7 @@ export default memo(function RecipeCarousel({ title, recipes }) {
       left: container.scrollLeft + amount,
       behavior: "smooth",
     });
-  }, []);
+  };
 
   // Do not render section if there are no recipes
   if (!recipes?.length) return null;
@@ -69,4 +69,4 @@ export default memo(function RecipeCarousel({ title, recipes }) {
       </div>
     </div>
   );
-});
+}

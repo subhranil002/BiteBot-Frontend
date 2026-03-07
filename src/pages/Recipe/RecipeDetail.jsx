@@ -5,11 +5,11 @@ import {
   FaClock,
   FaFire,
   FaHeart,
-  FaPen, 
+  FaPen,
   FaPrint,
   FaShareAlt,
   FaStar,
-  FaTimes, 
+  FaTimes,
   FaUsers,
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -381,7 +381,7 @@ function RecipeDetail() {
                                 <img
                                   src={step.imageUrl.secure_url}
                                   alt={`Step ${step.stepNo}`}
-                                  className="rounded-lg shadow-md w-full max-h-96 object-cover"
+                                  className="rounded-lg shadow-md w-full max-h-96 object-contain"
                                 />
                               </div>
                             )}

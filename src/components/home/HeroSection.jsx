@@ -50,7 +50,7 @@ function Badge({ children, tone }) {
 /* Hero section displayed at the top of the homepage */
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-white via-orange-50 to-amber-50">
+    <section className="relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="container mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
           {/* Left: Heading, description, and actions */}

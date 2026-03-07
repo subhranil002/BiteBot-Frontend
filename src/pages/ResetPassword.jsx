@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import resetPasswordApi from "../apis/user/resetPasswordApi";
 import { FloatingIcons } from "../components/FloatingFoodIcons";
+import { PASSWORD_REGEX } from "../constants";
 
 export default function ResetPassword() {
   const {
@@ -88,7 +89,12 @@ export default function ResetPassword() {
                   required: "Password is required",
                   minLength: {
                     value: 8,
-                    message: "Minimum 8 characters required",
+                    message: "Password must be at least 8 characters",
+                  },
+                  pattern: {
+                    value: PASSWORD_REGEX,
+                    message:
+                      "Must include uppercase, number, and special character",
                   },
                 })}
                 className="input input-bordered w-full placeholder-gray-400 text-gray-800 focus:border-orange-400 focus:ring-2 focus:ring-orange-100"

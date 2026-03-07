@@ -1,6 +1,6 @@
 // Finalized
 
-import { memo, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { FaBolt, FaFire, FaGem, FaUser } from "react-icons/fa";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import {
   getTrending,
 } from "../../redux/slices/homeSlice";
 import RecipeCarousel from "../recipe/RecipeCarousel";
+import RecipeCarouselSkeleton from "../recipe/RecipeCarouselSkeleton";
 
 /* Reusable section title with icon + gradient text */
 const Title = ({ Icon, gradient, children, pad = "px-1 sm:px-2" }) => (
@@ -26,8 +27,9 @@ const Title = ({ Icon, gradient, children, pad = "px-1 sm:px-2" }) => (
   </h2>
 );
 
-export default memo(function RecipeCarousels() {
+export default function RecipeCarousels() {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   // Select required slices from Redux store (optimized with shallowEqual)
   const {
@@ -51,14 +53,20 @@ export default memo(function RecipeCarousels() {
 
   // Fetch data only if not already available
   useEffect(() => {
-    if (trendingNow.length === 0) dispatch(getTrending());
-    if (freshAndNew.length === 0) dispatch(getFreshAndNew());
-    if (quickAndEasy.length === 0) dispatch(getQuickAndEasy());
-    if (premiumPicks.length === 0) dispatch(getPremium());
+    (async () => {
+      setLoading(true);
 
-    // Recommended section loads only for logged-in users
-    if (isLoggedIn && recommendedForYou.length === 0)
-      dispatch(getRecommended());
+      if (trendingNow.length === 0) await dispatch(getTrending());
+      if (freshAndNew.length === 0) await dispatch(getFreshAndNew());
+      if (quickAndEasy.length === 0) await dispatch(getQuickAndEasy());
+      if (premiumPicks.length === 0) await dispatch(getPremium());
+
+      // Recommended section loads only for logged-in users
+      if (isLoggedIn && recommendedForYou.length === 0)
+        await dispatch(getRecommended());
+
+      setLoading(false);
+    })();
   }, [isLoggedIn]);
 
   // Section configuration for dynamic rendering
@@ -127,8 +135,21 @@ export default memo(function RecipeCarousels() {
     },
   ];
 
+  if (loading)
+    return (
+      <>
+        {sections.map((_, i) => (
+          <section key={i} className="space-y-6" id={i}>
+            <div className="px-1 sm:px-2">
+              <RecipeCarouselSkeleton key={i} />
+            </div>
+          </section>
+        ))}
+      </>
+    );
+
   return (
-    <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-linear-to-b from-white via-orange-50/40 to-amber-50/50">
+    <div className="mx-auto sm:px-6 lg:px-8 space-y-10 bg-white py-10">
       {/* Render each carousel section dynamically */}
       {sections.map(({ id, title, recipes }) => (
         <section key={id} className="space-y-6" id={id}>
@@ -139,4 +160,4 @@ export default memo(function RecipeCarousels() {
       ))}
     </div>
   );
-});
+}

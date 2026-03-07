@@ -1,5 +1,5 @@
 // Under construction
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaChevronDown,
   FaDollarSign,
@@ -189,7 +189,7 @@ function SearchResults() {
   }, [searchParams.filters]);
 
   // Computed values - no need for separate state
-  const activeFiltersCount = useMemo(() => {
+  const activeFiltersCount = () => {
     const { filters } = searchParams;
     let count = 0;
     if (
@@ -202,7 +202,7 @@ function SearchResults() {
     // if (filters.vegetarianOnly) count++;
     if (filters.dietaryPreferences.length > 0) count++;
     return count;
-  }, [searchParams.filters]);
+  };
 
   // Available cuisines from recipes data
   const availableCuisines = [
@@ -276,7 +276,7 @@ function SearchResults() {
   };
 
   // Derived filtered + sorted recipes
-  const filteredRecipes = useMemo(() => {
+  const filteredRecipes = () => {
     const { searchTerm, filters, sortBy } = searchParams;
 
     let results = recipesData.filter((recipe) => {
@@ -325,7 +325,7 @@ function SearchResults() {
     }
 
     return results;
-  }, [searchParams]);
+  };
 
   // Unified update functions
   const updateSearchParam = (key, value) => {

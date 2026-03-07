@@ -33,11 +33,12 @@ export default function ContactUs() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
-  // Submit contact form data to API
   const onSubmit = async (data) => {
     await contactUsApi(data);
+    reset();
   };
 
   return (

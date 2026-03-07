@@ -1,4 +1,6 @@
-import { useState } from "react";
+// Finalized
+
+import { useEffect, useState } from "react";
 import {
   FaBars,
   FaBolt,
@@ -20,13 +22,90 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { logout } from "../redux/slices/authSlice";
 
-function Navbar({ children }) {
+const colorClasses = {
+  pink: {
+    activeBg: "bg-pink-200",
+    hoverBg: "hover:bg-pink-200",
+    iconActive: "bg-pink-500",
+    iconDefault: "bg-pink-100",
+    text: "text-pink-500",
+  },
+  red: {
+    activeBg: "bg-red-200",
+    hoverBg: "hover:bg-red-200",
+    iconActive: "bg-red-500",
+    iconDefault: "bg-red-100",
+    text: "text-red-500",
+  },
+  sky: {
+    activeBg: "bg-sky-200",
+    hoverBg: "hover:bg-sky-200",
+    iconActive: "bg-sky-500",
+    iconDefault: "bg-sky-100",
+    text: "text-sky-500",
+  },
+  emerald: {
+    activeBg: "bg-emerald-200",
+    hoverBg: "hover:bg-emerald-200",
+    iconActive: "bg-emerald-500",
+    iconDefault: "bg-emerald-100",
+    text: "text-emerald-500",
+  },
+  amber: {
+    activeBg: "bg-amber-200",
+    hoverBg: "hover:bg-amber-200",
+    iconActive: "bg-amber-500",
+    iconDefault: "bg-amber-100",
+    text: "text-amber-500",
+  },
+};
+
+export default function Navbar({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [searchTerm, setSearchTerm] = useState("");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
+  const [activeSection, setActiveSection] = useState("");
+
+  const sections = [
+    {
+      id: "for-you",
+      label: "Recommended",
+      icon: FaUser,
+      color: "pink",
+      show: isLoggedIn,
+    },
+    {
+      id: "trending",
+      label: "Trending",
+      icon: FaFire,
+      color: "red",
+      show: true,
+    },
+    {
+      id: "fresh",
+      label: "Fresh & New",
+      icon: GiHerbsBundle,
+      color: "sky",
+      show: true,
+    },
+    {
+      id: "quick",
+      label: "Quick & Easy",
+      icon: FaBolt,
+      color: "emerald",
+      show: true,
+    },
+    {
+      id: "premium",
+      label: "Premium Picks",
+      icon: FaCrown,
+      color: "amber",
+      show: true,
+    },
+  ];
 
   // Helper to close the DaisyUI drawer
   const closeSidebar = () => {
@@ -43,14 +122,21 @@ function Navbar({ children }) {
 
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
+
     if (section) {
-      const elementPosition = section.getBoundingClientRect().top + window.scrollY;
+      setActiveSection(sectionId);
+
+      const elementPosition =
+        section.getBoundingClientRect().top + window.scrollY;
+
       const offset = 100;
+
       window.scrollTo({
         top: elementPosition - offset,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
+
     closeSidebar();
   };
 
@@ -64,20 +150,43 @@ function Navbar({ children }) {
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return url;
   }
 
+  useEffect(() => {
+    const sections = ["for-you", "trending", "fresh", "quick", "premium"];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-40% 0px -50% 0px",
+        threshold: 0.1,
+      },
+    );
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="drawer bg-gray-50/30">
       <input id="navbar-drawer" type="checkbox" className="drawer-toggle" />
 
-      <div className="drawer-content flex flex-col min-h-screen">
+      <div className="drawer-content flex flex-col min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
         <header className="sticky top-4 z-50 px-4 md:px-8 w-full max-w-[1400px] mx-auto pointer-events-none transition-all duration-300">
           <div className="navbar pointer-events-auto min-h-16 md:min-h-20 bg-white/70 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(249,115,22,0.06)] rounded-3xl px-3 transition-all">
-
             {/* Left: Hamburger & Elegant Branding */}
             <div className="navbar-start gap-2 md:gap-4 flex-1">
               <label
@@ -103,9 +212,13 @@ function Navbar({ children }) {
 
             {/* Search Input */}
             <div className="navbar-center hidden lg:flex flex-1 justify-center max-w-xl w-full">
-              <form onSubmit={handleSearch} className="w-full relative group" role="search">
+              <form
+                onSubmit={handleSearch}
+                className="w-full relative group"
+                role="search"
+              >
                 <div className="absolute inset-0 bg-linear-to-r from-orange-400 to-red-400 rounded-2xl blur opacity-0 group-focus-within:opacity-20 transition-opacity duration-500"></div>
-                <div className="relative flex items-center bg-gray-100/50 hover:bg-white focus-within:bg-white border border-transparent hover:border-gray-200 focus-within:border-orange-200 rounded-2xl px-4 transition-all duration-300">
+                <div className="relative flex items-center bg-gray-200/70 hover:bg-white focus-within:bg-white border border-transparent hover:border-gray-300 focus-within:border-orange-200 rounded-2xl px-4 transition-all duration-300">
                   <FaSearch className="w-4 h-4 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
                   <input
                     type="text"
@@ -184,8 +297,7 @@ function Navbar({ children }) {
                         to="/chat"
                         className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                       >
-                        <FaUtensils className="text-orange-500" /> Recipe
-                        Chat
+                        <FaUtensils className="text-orange-500" /> Recipe Chat
                       </Link>
                     </li>
                     <li>
@@ -224,117 +336,149 @@ function Navbar({ children }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 mt-8">
-          {children}
-        </main>
+        <main className="flex-1 mt-8">{children}</main>
       </div>
 
       {/* The Sidebar Drawer */}
       <div className="drawer-side z-100">
-        <label htmlFor="navbar-drawer" aria-label="close sidebar" className="drawer-overlay bg-gray-900/20 backdrop-blur-sm"></label>
+        <label
+          htmlFor="navbar-drawer"
+          aria-label="close sidebar"
+          className="drawer-overlay bg-gray-900/20 backdrop-blur-sm"
+        ></label>
 
         {/* Floating Island Sidebar */}
         <aside className="menu p-0 w-80 min-h-full bg-white/95 backdrop-blur-3xl border-r border-orange-100 flex flex-col pt-8 pb-6 px-4 text-base-content">
-
           {/* Brand area */}
           <div className="flex items-center gap-4 mb-8 px-2">
             <div className="avatar">
               <div className="w-12 h-12 rounded-4xl shadow-md border border-orange-100">
-                <img src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png" alt="Bite Bot" />
+                <img
+                  src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
+                  alt="Bite Bot"
+                />
               </div>
             </div>
             <div>
-              <h2 className="font-black text-2xl tracking-tight text-gray-900">BiteBot</h2>
-              <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">Discover. Cook. Impress. Repeat</p>
+              <h2 className="font-black text-2xl tracking-tight text-gray-900">
+                BiteBot
+              </h2>
+              <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">
+                Discover. Cook. Impress. Repeat
+              </p>
             </div>
           </div>
 
           {/* Mobile Search - Visible only on small screens */}
-          <form onSubmit={handleSearch} className="mb-6 px-2 lg:hidden" role="search">
-            <div className="relative flex items-center bg-gray-100 hover:bg-gray-200 border border-transparent focus-within:border-orange-300 rounded-2xl px-4 transition-all">
+          <form
+            onSubmit={handleSearch}
+            className="mb-6 px-2 lg:hidden"
+            role="search"
+          >
+            <div className="relative flex items-center bg-gray-200 hover:bg-gray-200 border border-transparent focus-within:border-orange-300 rounded-2xl px-4 transition-all">
               <FaSearch className="w-4 h-4 text-gray-400" />
-              <input type="text" placeholder="Search..." className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-500 pl-3 h-11" onChange={(e) => setSearchTerm(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-500 pl-3 h-11"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </form>
 
           {/* Navigation Links using DaisyUI Menu styling */}
           <ul className="menu w-full px-0 gap-1 flex-1 overflow-y-auto no-scrollbar">
-            <li className="menu-title text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Menu</li>
+            <li className="menu-title text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
+              Menu
+            </li>
 
             <li>
-              <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); closeSidebar(); }} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-orange-50 transition-all duration-300">
+              <Link
+                to="/"
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  closeSidebar();
+                }}
+                className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-orange-200 transition-all duration-300 active:bg-transparent"
+              >
                 <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300">
                   <FaHome className="w-4 h-4 text-orange-500 group-hover:text-white transition-colors" />
                 </div>
-                <span className="font-semibold text-gray-700 group-hover:text-gray-900">Home</span>
+                <span className="font-semibold text-gray-700 group-hover:text-gray-900">
+                  Home
+                </span>
               </Link>
             </li>
 
-            {isHome && (
-              <>
-                {isLoggedIn && (
-                  <li>
-                    <button onClick={() => handleScroll("for-you")} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-pink-50 transition-all duration-300">
-                      <div className="w-8 h-8 rounded-xl bg-pink-100 flex items-center justify-center group-hover:bg-pink-500 transition-colors duration-300">
-                        <FaUser className="w-4 h-4 text-pink-500 group-hover:text-white transition-colors" />
-                      </div>
-                      <span className="font-semibold text-gray-700 group-hover:text-gray-900">For You</span>
-                    </button>
-                  </li>
-                )}
+            {isHome &&
+              sections
+                .filter((section) => section.show)
+                .map((section) => {
+                  const Icon = section.icon;
+                  const isActive = activeSection === section.id;
+                  const colors = colorClasses[section.color];
 
-                <li>
-                  <button onClick={() => handleScroll("trending")} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-red-50 transition-all duration-300">
-                    <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center group-hover:bg-red-500 transition-colors duration-300">
-                      <FaFire className="w-4 h-4 text-red-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <span className="font-semibold text-gray-700 group-hover:text-gray-900">Trending</span>
-                  </button>
-                </li>
+                  return (
+                    <li key={section.id}>
+                      <button
+                        onClick={() => handleScroll(section.id)}
+                        className={`group flex items-center gap-4 py-3 rounded-2xl transition-all duration-300
+                        ${isActive ? colors.activeBg : colors.hoverBg}`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors duration-300
+                          ${
+                            isActive
+                              ? colors.iconActive
+                              : `${colors.iconDefault} group-hover:${colors.iconActive}`
+                          }`}
+                        >
+                          <Icon
+                            className={`w-4 h-4 transition-colors
+                            ${isActive ? "text-white" : `${colors.text}`}`}
+                          />
+                        </div>
 
-                <li>
-                  <button onClick={() => handleScroll("fresh")} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-sky-50 transition-all duration-300">
-                    <div className="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center group-hover:bg-sky-500 transition-colors duration-300">
-                      <GiHerbsBundle className="w-4 h-4 text-sky-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <span className="font-semibold text-gray-700 group-hover:text-gray-900">Fresh & New</span>
-                  </button>
-                </li>
-
-                <li>
-                  <button onClick={() => handleScroll("quick")} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-emerald-50 transition-all duration-300">
-                    <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-500 transition-colors duration-300">
-                      <FaBolt className="w-4 h-4 text-emerald-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <span className="font-semibold text-gray-700 group-hover:text-gray-900">Quick & Easy</span>
-                  </button>
-                </li>
-
-                <li>
-                  <button onClick={() => handleScroll("premium")} className="group flex items-center gap-4 py-3 rounded-2xl hover:bg-amber-50 transition-all duration-300">
-                    <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-500 transition-colors duration-300">
-                      <FaCrown className="w-4 h-4 text-amber-500 group-hover:text-white transition-colors" />
-                    </div>
-                    <span className="font-semibold text-gray-700 group-hover:text-gray-900">Premium Picks</span>
-                  </button>
-                </li>
-              </>
-            )}
+                        <span
+                          className={`font-semibold ${
+                            isActive
+                              ? "text-gray-900"
+                              : "text-gray-700 group-hover:text-gray-900"
+                          }`}
+                        >
+                          {section.label}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
           </ul>
 
           {/* Footer Contact area inside Drawer */}
           <div className="mt-auto pt-6 w-full px-2 border-t border-gray-100 flex flex-col gap-2">
-            <Link to="/our-team" onClick={closeSidebar} className="group flex items-center gap-4 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-300 border border-transparent hover:border-gray-200">
+            <Link
+              to="/our-team"
+              onClick={closeSidebar}
+              className="group flex items-center gap-4 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-300 border border-transparent hover:border-gray-200"
+            >
               <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
                 <FaUsers className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-900 transition-colors" />
               </div>
-              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900">Our Team</span>
+              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900">
+                Our Team
+              </span>
             </Link>
-            <Link to="/contact" onClick={closeSidebar} className="group flex items-center gap-4 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-300 border border-transparent hover:border-gray-200">
+            <Link
+              to="/contact"
+              onClick={closeSidebar}
+              className="group flex items-center gap-4 px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all duration-300 border border-transparent hover:border-gray-200"
+            >
               <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
                 <FaEnvelope className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-900 transition-colors" />
               </div>
-              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900">Need Help?</span>
+              <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-900">
+                Need Help?
+              </span>
             </Link>
           </div>
         </aside>
@@ -342,5 +486,3 @@ function Navbar({ children }) {
     </div>
   );
 }
-
-export default Navbar;

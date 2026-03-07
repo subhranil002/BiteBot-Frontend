@@ -109,4 +109,8 @@ input::-webkit-credentials-auto-fill-button {
   }
 }
 
-
+.menu li > *:active,
+.menu li > *:focus,
+.menu li > *.active {
+  background-color: transparent !important;
+}

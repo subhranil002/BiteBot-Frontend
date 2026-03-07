@@ -1,25 +1,33 @@
+// Finalized
+
 import { useEffect, useState } from "react";
 import { FaHeart, FaUtensils } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import getFavouritesApi from "../../apis/user/getFavouritesApi";
+import Loading from "../../components/Loading";
 import RecipeCard from "../../components/recipe/RecipeCard";
 import HomeLayout from "../../layouts/HomeLayout";
 
 export default function Favourites() {
   const [favourites, setFavourites] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch favourites on component mount
   useEffect(() => {
     (async () => {
       const res = await getFavouritesApi();
       setFavourites(res.data);
+      setLoading(false);
+      console.log(res.data);
     })();
   }, []);
 
+  if (loading) return <Loading />;
+
   return (
     <HomeLayout>
-      <div className="min-h-screen bg-gradient-to-b from-white via-orange-50/60 to-amber-50/60 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12">
         {/* Page header */}
         <div className="text-center px-6 space-y-4 mb-12">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -29,7 +37,7 @@ export default function Favourites() {
           </h1>
 
           <p className="text-gray-600 text-lg max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-            All your saved recipes — ready to cook, explore, and enjoy
+            All your saved recipes - ready to cook, explore, and enjoy
             <FaUtensils className="text-gray-400 text-2xl inline-block" />
           </p>
         </div>

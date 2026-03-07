@@ -50,3 +50,9 @@ export const DIETARY_OPTIONS = [
   "mediterranean",
   "low-fat",
 ];
+
+export const PASSWORD_REGEX =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])[\s\S]{8,}$/;
+
+export const EMAIL_REGEX =
+  /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
