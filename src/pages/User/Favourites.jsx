@@ -27,17 +27,17 @@ export default function Favourites() {
 
   return (
     <HomeLayout>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-12">
+      <div className="min-h-screen bg-linear-to-br from-orange-50 to-amber-50 py-12">
         {/* Page header */}
         <div className="text-center px-6 space-y-4 mb-12">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
-              Your Favourites
+            <span className="bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
+              Your Cookbook
             </span>
           </h1>
 
           <p className="text-gray-600 text-lg max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-            All your saved recipes - ready to cook, explore, and enjoy
+            All your bookmarked recipes - ready to cook, explore, and enjoy
             <FaUtensils className="text-gray-400 text-2xl inline-block" />
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function Favourites() {
             {/* Redirect to home to explore recipes */}
             <Link
               to="/"
-              className="btn mt-4 bg-gradient-to-r from-orange-500 to-red-500 
+              className="btn mt-4 bg-linear-to-r from-orange-500 to-red-500 
               hover:from-orange-600 hover:to-red-600 text-white 
               font-semibold border-0 shadow-md hover:shadow-lg 
               transition-all duration-300 normal-case text-lg 

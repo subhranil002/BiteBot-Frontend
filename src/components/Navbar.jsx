@@ -7,7 +7,6 @@ import {
   FaCrown,
   FaEnvelope,
   FaFire,
-  FaHeart,
   FaHome,
   FaSearch,
   FaSignOutAlt,
@@ -16,6 +15,7 @@ import {
   FaUsers,
   FaUtensils,
 } from "react-icons/fa";
+import { FaBookBookmark } from "react-icons/fa6";
 import { GiHerbsBundle } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -184,7 +184,7 @@ export default function Navbar({ children }) {
     <div className="drawer bg-gray-50/30">
       <input id="navbar-drawer" type="checkbox" className="drawer-toggle" />
 
-      <div className="drawer-content flex flex-col min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      <div className="drawer-content flex flex-col min-h-screen bg-linear-to-br from-orange-50 to-amber-50">
         <header className="sticky top-4 z-50 px-4 md:px-8 w-full max-w-[1400px] mx-auto pointer-events-none transition-all duration-300">
           <div className="navbar pointer-events-auto min-h-16 md:min-h-20 bg-white/70 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(249,115,22,0.06)] rounded-3xl px-3 transition-all">
             {/* Left: Hamburger & Elegant Branding */}
@@ -305,7 +305,7 @@ export default function Navbar({ children }) {
                         to={`/profile/${userData?._id.toString()}/favourites`}
                         className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                       >
-                        <FaHeart className="text-rose-500" /> My Favorites
+                        <FaBookBookmark className="text-rose-500" /> My Cookbook
                       </Link>
                     </li>
                     <li className="border-t border-orange-100 mt-1">

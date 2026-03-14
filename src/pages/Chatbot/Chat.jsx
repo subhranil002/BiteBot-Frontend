@@ -18,7 +18,7 @@ const ChatbotPage = () => {
   const { userData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState("recipe");
+  const [mode, setMode] = useState(null);
   const [language, setLanguage] = useState("en");
 
   const [messages, setMessages] = useState([
@@ -155,23 +155,20 @@ const ChatbotPage = () => {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${
-                msg.type === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
+                }`}
             >
               <div
-                className={`flex gap-3 max-w-[80%] ${
-                  msg.type === "user" ? "flex-row-reverse" : ""
-                }`}
+                className={`flex gap-3 max-w-[80%] min-w-0 ${msg.type === "user" ? "flex-row-reverse" : ""
+                  }`}
               >
                 {/* Avatar */}
                 <div className="shrink-0">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${
-                      msg.type === "user"
-                        ? "bg-linear-to-br from-orange-500 to-amber-600"
-                        : "bg-linear-to-br from-gray-600 to-gray-800"
-                    }`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-md ${msg.type === "user"
+                      ? "bg-linear-to-br from-orange-500 to-amber-600"
+                      : "bg-linear-to-br from-gray-600 to-gray-800"
+                      }`}
                   >
                     {msg.type === "user" ? (
                       <img
@@ -188,13 +185,12 @@ const ChatbotPage = () => {
                 </div>
 
                 {/* Message Bubble */}
-                <div>
+                <div className="min-w-0">
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-line shadow-sm ${
-                      msg.type === "user"
-                        ? "bg-linear-to-br from-orange-500 to-amber-600 text-white"
-                        : "bg-white text-gray-800 border border-gray-200"
-                    }`}
+                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap wrap-break-word shadow-sm ${msg.type === "user"
+                      ? "bg-linear-to-br from-orange-500 to-amber-600 text-white"
+                      : "bg-white text-gray-800 border border-gray-200"
+                      }`}
                   >
                     {msg.content}
                   </div>
@@ -270,114 +266,130 @@ const ChatbotPage = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-200 px-4 py-4 z-50">
         <div className="max-w-4xl mx-auto space-y-3">
           {/* Quick Suggestions */}
-          <div className="flex flex-wrap gap-2 justify-center">
-            {quickSuggestions.map((suggestion, i) => (
-              <button
-                key={i}
-                onClick={() => setInputMessage(suggestion)}
-                className="text-xs px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-600 rounded-full hover:bg-orange-50 hover:border-orange-200 hover:text-orange-600 transition-colors"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
+          {messages.length === 1 && (
+            <div className="flex flex-wrap gap-2 justify-center">
+              {quickSuggestions.map((suggestion, i) => (
+                <button
+                  key={i}
+                  onClick={() => setInputMessage(suggestion)}
+                  className="text-xs px-3 py-1.5 bg-gray-50 border border-gray-200 text-gray-600 rounded-full hover:bg-orange-50 hover:border-orange-200 hover:text-orange-600 transition-colors cursor-pointer"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Input + Send + Menu */}
-          <div className="flex gap-3 items-end">
-            {/* Moved 3-Dot Menu Toggle */}
-            <div className="relative shrink-0">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`p-3 rounded-full cursor-pointer transition-colors ${
-                  isMenuOpen
+          <div className="flex flex-col gap-2">
+
+            {/* Show Selected Tool Badge */}
+            {mode && (
+              <div className="flex items-center">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 border border-gray-200 text-gray-700 shadow-sm transition-all">
+                  {mode === "recipe" ? (
+                    <FaUtensils className="text-orange-500 w-3 h-3" />
+                  ) : (
+                    <FaLightbulb className="text-amber-500 w-3 h-3" />
+                  )}
+                  {mode === "recipe" ? "Find Recipe" : "Cooking Tips"}
+                  <button
+                    onClick={() => setMode(null)}
+                    className="ml-1 p-0.5 text-gray-400 hover:text-red-500 hover:bg-gray-200 rounded-full transition-colors cursor-pointer"
+                    aria-label="Clear tool"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+            )}
+
+            <div className="flex gap-3 items-end">
+              {/* 3-Dot Menu Toggle */}
+              <div className="relative shrink-0">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className={`p-3 rounded-full cursor-pointer transition-colors ${isMenuOpen || mode
                     ? "bg-gray-200 text-gray-900"
                     : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900"
-                }`}
-                aria-label="Menu options"
-              >
-                <LuCookingPot className="w-5 h-5" />
-              </button>
+                    }`}
+                  aria-label="Menu options"
+                >
+                  <LuCookingPot className="w-5 h-5" />
+                </button>
 
-              {/* The Dropdown Card - Positioned above the button */}
-              {isMenuOpen && (
-                <div className="absolute left-0 bottom-full mb-3 w-48 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden transform origin-bottom-left transition-all z-50">
-                  <div className="p-1.5 flex flex-col gap-1">
-                    <button
-                      onClick={() => {
-                        setMode("recipe");
-                        setIsMenuOpen(false);
-                      }}
-                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
-                        mode === "recipe"
+                {/* The Dropdown Card */}
+                {isMenuOpen && (
+                  <div className="absolute left-0 bottom-full mb-3 w-48 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden transform origin-bottom-left transition-all z-50">
+                    <div className="p-1.5 flex flex-col gap-1">
+                      <button
+                        onClick={() => {
+                          setMode("recipe");
+                          setIsMenuOpen(false);
+                        }}
+                        className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === "recipe"
                           ? "bg-orange-50 text-orange-600 font-medium"
                           : "text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      <FaUtensils
-                        className={
-                          mode === "recipe"
-                            ? "text-orange-500"
-                            : "text-gray-400"
-                        }
-                      />
-                      Find Recipe
-                    </button>
+                          }`}
+                      >
+                        <FaUtensils className={mode === "recipe" ? "text-orange-500" : "text-gray-400"} />
+                        Find Recipe
+                      </button>
 
-                    <button
-                      onClick={() => {
-                        setMode("tips");
-                        setIsMenuOpen(false);
-                      }}
-                      className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${
-                        mode === "tips"
+                      <button
+                        onClick={() => {
+                          setMode("tips");
+                          setIsMenuOpen(false);
+                        }}
+                        className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-colors ${mode === "tips"
                           ? "bg-amber-50 text-amber-600 font-medium"
                           : "text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      <FaLightbulb
-                        className={
-                          mode === "tips" ? "text-amber-500" : "text-gray-400"
-                        }
-                      />
-                      Cooking Tips
-                    </button>
+                          }`}
+                      >
+                        <FaLightbulb className={mode === "tips" ? "text-amber-500" : "text-gray-400"} />
+                        Cooking Tips
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Textarea */}
-            <textarea
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={
-                mode === "recipe"
-                  ? "Ask for a recipe or list ingredients..."
-                  : "Ask for cooking tips (e.g. how to chop onions)..."
-              }
-              className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-shadow"
-              rows={1}
-              disabled={isLoading}
-              style={{ fieldSizing: "content", maxHeight: "120px" }}
-            />
+              {/* Textarea */}
+              <textarea
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={
+                  mode === "recipe"
+                    ? "Ask for a recipe or list ingredients..."
+                    : mode === "tips"
+                      ? "Ask for cooking tips (e.g. how to chop onions)..."
+                      : "Type a message..."
+                }
+                className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-shadow"
+                rows={1}
+                disabled={isLoading}
+                style={{ fieldSizing: "content", maxHeight: "120px" }}
+              />
 
-            {/* Send Button */}
-            <button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isLoading}
-              className={`p-3 rounded-full transition-all shrink-0 ${
-                inputMessage.trim() && !isLoading
+              {/* Send Button */}
+              <button
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isLoading}
+                className={`p-3 rounded-full transition-all shrink-0 ${inputMessage.trim() && !isLoading
                   ? "bg-linear-to-br from-orange-500 to-amber-600 text-white shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
-            >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <FaPaperPlane className="w-5 h-5 pl-0.5" />
-              )}
-            </button>
+                  }`}
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <FaPaperPlane className="w-5 h-5 pl-0.5" />
+                )}
+              </button>
+            </div>
           </div>
 
           <p className="text-[10px] text-gray-400 text-center">

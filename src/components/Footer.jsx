@@ -66,8 +66,8 @@ export default function Footer() {
             <nav className="flex flex-col">
               {[
                 { name: "Home", path: "/" },
-                { name: "Recipe Chat", path: "/chat" },
-                { name: "Trending Recipes", path: "#" },
+                { name: "About Us", path: "/about" },
+                { name: "Our Team", path: "/our-team" },
               ].map((link, idx) => (
                 <Link
                   key={idx}

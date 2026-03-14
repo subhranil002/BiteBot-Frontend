@@ -1,42 +1,52 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaTwitter, FaQuoteLeft } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaQuoteLeft } from "react-icons/fa";
 import HomeLayout from "../layouts/HomeLayout";
 
 const teamMembers = [
   {
-    name: "Alex Rivera",
-    role: "Lead Architect",
-    image: "https://i.pravatar.cc/300?img=11",
-    bio: "Master of system design and spices. Alex spent 10 years scaling distributed systems before bringing that logic to the kitchen. Passionate about scalable code and spicy ramen.",
+    name: "Subhranil Chakraborty",
+    role: "The Simmering Strategist",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772466343/Subhranil_pei11c.jpg",
+    linkedin_url: "https://www.linkedin.com/in/subhranilchakraborty",
+    github_url: "https://www.github.com/subhranil002",
+    bio: "Master of long-term planning and slow-cooked perfection. Subhranil ensures every project boils down to flawless execution and sustainable architecture.",
     color: "from-orange-400 to-red-500",
   },
   {
-    name: "Sarah Chen",
-    role: "Frontend Artisan",
-    image: "https://i.pravatar.cc/300?img=5",
-    bio: "Turning complex recipes into buttery-smooth user interfaces. Sarah believes that UI/UX is the 'plating' of the software world—it has to look as good as it functions.",
+    name: "Wasiq Afnan Ansari",
+    role: "Sultan of the Sauce",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772469945/Wasiq_n7vl3o.jpg",
+    linkedin_url: "https://www.linkedin.com/in/wasiq-afnan-ansari-cs2021",
+    github_url: "https://www.github.com/wasiqAfnan",
+    bio: "Adding that extra kick to everything we build. Wasiq blends code and creativity to make sure our products always leave a lasting, flavorful impression.",
     color: "from-amber-400 to-orange-500",
   },
   {
-    name: "Marcus Thorne",
-    role: "Backend Chef",
-    image: "https://i.pravatar.cc/300?img=12",
-    bio: "Database whisperer. Marcus ensures every request is served hot and optimized. He manages our server clusters with the same precision he uses for a beef wellington.",
+    name: "Trisit Chanda",
+    role: "Keeper of the Secret Sauce",
+    image: "https://res.cloudinary.com/dar5gpc6v/image/upload/v1773255493/myImage.jpg",
+    linkedin_url: "https://www.linkedin.com/in/trisit-chanda-2a2548260",
+    github_url: "https://www.github.com/Trisitchanda",
+    bio: "Guarding the architecture and core algorithms. Trisit manages the hidden ingredients and robust logic that make our applications truly unique.",
     color: "from-rose-400 to-orange-600",
   },
   {
-    name: "Elena Rodriguez",
-    role: "AI Specialist",
-    image: "https://i.pravatar.cc/300?img=9",
-    bio: "The brain behind BiteBot. Elena focuses on Natural Language Processing to make sure our AI knows the subtle difference between cumin and cocoa.",
+    name: "Soudipta Sarkar",
+    role: "Tasting Director",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772470790/soudipta_zdndet.jpg",
+    linkedin_url: "https://www.linkedin.com/in/soudipta-sarkar-19a398312",
+    github_url: "https://www.github.com/soudipta6010",
+    bio: "Ensuring top-tier quality control. Soudipta rigorously tests every feature to guarantee a five-star user experience before it ever hits the table.",
     color: "from-orange-500 to-amber-600",
   },
   {
-    name: "Jamie Vaan",
-    role: "Product Visionary",
-    image: "https://i.pravatar.cc/300?img=13",
-    bio: "Bridging the gap between hunger and technology. Jamie has a knack for identifying the next big flavor profile in the tech ecosystem.",
+    name: "Nabanita Nath",
+    role: "Garnish Wizard",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772904668/NabanitaNath_l8i9bg.jpg",
+    linkedin_url: "https://www.linkedin.com/in/nabanita-nath-747837225",
+    github_url: "https://www.github.com/Nabanita315",
+    bio: "Master of aesthetics and final touches. Nabanita turns functional interfaces into visual masterpieces, making sure every pixel looks delectable.",
     color: "from-red-500 to-amber-500",
   },
 ];
@@ -46,7 +56,7 @@ const VerticalTeamPage = () => {
     <HomeLayout>
       <div className="relative min-h-screen bg-orange-50/30 overflow-hidden py-20">
         {/* Central "Vine" or Line (Desktop Only) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-orange-200 to-transparent hidden lg:block" />
+        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-linear-to-b from-transparent via-orange-200 to-transparent hidden lg:block" />
 
         <div className="container mx-auto px-6 relative">
           <div className="text-center mb-24">
@@ -77,7 +87,7 @@ const VerticalTeamPage = () => {
                   <div className="w-full lg:w-1/2 flex justify-center">
                     <div className="relative">
                       {/* Decorative Background Square */}
-                      <div className={`absolute -inset-4 bg-gradient-to-tr ${member.color} opacity-20 blur-2xl rounded-full animate-pulse`} />
+                      <div className={`absolute -inset-4 bg-linear-to-tr ${member.color} opacity-20 blur-2xl rounded-full animate-pulse`} />
                       
                       <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl">
                         <img 
@@ -91,7 +101,7 @@ const VerticalTeamPage = () => {
 
                   {/* Text Side */}
                   <div className={`w-full lg:w-1/2 text-center ${isEven ? "lg:text-left" : "lg:text-right"}`}>
-                    <div className={`inline-block p-2 rounded-lg bg-gradient-to-br ${member.color} text-white text-xs font-bold uppercase tracking-widest mb-4`}>
+                    <div className={`inline-block p-2 rounded-lg bg-linear-to-br ${member.color} text-white text-xs font-bold uppercase tracking-widest mb-4`}>
                       {member.role}
                     </div>
                     <h2 className="text-4xl font-bold text-gray-800 mb-4">{member.name}</h2>
@@ -104,9 +114,16 @@ const VerticalTeamPage = () => {
                     </div>
 
                     <div className={`flex gap-6 mt-8 justify-center ${isEven ? "lg:justify-start" : "lg:justify-end"}`}>
-                      <FaLinkedin className="text-gray-400 hover:text-orange-500 cursor-pointer transition-colors text-xl" />
-                      <FaGithub className="text-gray-400 hover:text-orange-500 cursor-pointer transition-colors text-xl" />
-                      <FaTwitter className="text-gray-400 hover:text-orange-500 cursor-pointer transition-colors text-xl" />
+                      {member.linkedin_url && (
+                        <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" aria-label={`${member.name}'s LinkedIn`}>
+                          <FaLinkedin className="text-gray-400 hover:text-orange-500 cursor-pointer transition-colors text-xl" />
+                        </a>
+                      )}
+                      {member.github_url && (
+                        <a href={member.github_url} target="_blank" rel="noopener noreferrer" aria-label={`${member.name}'s GitHub`}>
+                          <FaGithub className="text-gray-400 hover:text-orange-500 cursor-pointer transition-colors text-xl" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </motion.div>
