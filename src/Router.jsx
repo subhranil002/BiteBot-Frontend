@@ -21,6 +21,7 @@ import SignUp from "./pages/Signup";
 import Favorites from "./pages/User/Favourites";
 import { getProfile } from "./redux/slices/authSlice";
 import TeamPage from "./pages/TeamPage";
+import AboutPage from "./pages/About";
 
 function Router() {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword/:id" element={<ResetPassword />} />
+      <Route path="/about" element={<AboutPage />} />
       <Route element={<RequireAuth />}>
         <Route path="/chat" element={<Chat />} />
         <Route path="/search" element={<SearchResults />} />
