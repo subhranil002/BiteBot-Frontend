@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { FaArrowDown, FaCrown, FaHeart, FaLockOpen, FaPlay, FaSearch, FaStar, FaUserFriends } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { FaCrown, FaHeart, FaLockOpen, FaSearch, FaStar, FaUserFriends } from "react-icons/fa";
 import HomeLayout from "../layouts/HomeLayout";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 /* =========================================
-   1. MAGNETIC BUTTON (Optimized)
-   Physics only calculate on hover. Lightweight.
+   1. COMPONENTS (Untouched for your Grid)
 ========================================= */
 function FeatureCard({ title, desc, icon: Icon, span = "col-span-1", className = "", iconColor = "text-orange-500" }) {
     return (
@@ -34,7 +35,6 @@ function MagneticButton({ children }) {
         const { height, width, left, top } = ref.current.getBoundingClientRect();
         const middleX = clientX - (left + width / 2);
         const middleY = clientY - (top + height / 2);
-        // Reduced the pull strength slightly for a tighter feel
         setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
     };
 
@@ -50,52 +50,47 @@ function MagneticButton({ children }) {
             className="relative px-10 py-5 rounded-full bg-gray-900 text-white font-bold text-lg uppercase tracking-widest overflow-hidden group shadow-xl"
         >
             <span className="relative z-10">{children}</span>
-            {/* High-performance CSS transform hover overlay */}
             <div className="absolute inset-0 bg-linear-to-r from-orange-500 via-pink-500 to-purple-500 translate-y-full group-hover:translate-y-[0%] transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] z-0" />
         </motion.button>
     );
 }
 
 /* =========================================
-   2. VELOCITY KINETIC TYPOGRAPHY (Optimized)
-   Removed mix-blend-mode. Transform-only animations.
-========================================= */
-function VelocityText({ children }) {
-    const { scrollY } = useScroll();
-    const scrollVelocity = useVelocity(scrollY);
-    const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-
-    // Map scroll speed to a skew degree
-    const skewVelocity = useTransform(smoothVelocity, [-1000, 1000], [12, -12]);
-
-    return (
-        <motion.div style={{ skewY: skewVelocity }} className="origin-center">
-            <h1 className="text-[14vw] leading-[0.85] font-black tracking-tighter uppercase text-gray-900">
-                {children}
-            </h1>
-        </motion.div>
-    );
-}
-
-/* =========================================
-   3. MAIN EXPERIMENTAL PAGE (Light Theme)
+   2. MAIN PAGE
 ========================================= */
 export default function AboutPage() {
+
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
     return (
         <HomeLayout>
             <div className="bg-[#FAFAFA] min-h-screen text-gray-900 overflow-hidden selection:bg-orange-500 selection:text-white">
 
-                <div className="relative z-10 container mx-auto px-6 py-24 md:py-32">
+                {/* HERO SECTION - Simplified & Elegant */}
+                <div className="relative z-10 container mx-auto px-6 pt-32 pb-20 md:pt-48 md:pb-24 text-center">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="text-6xl md:text-8xl font-black tracking-tighter text-gray-900 mb-6 leading-tight"
+                    >
+                        Zero Waste <br />
+                        <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-orange-600 to-orange-500">
+                            Cooking.
+                        </span>
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto"
+                    >
+                        Your AI-powered culinary assistant. Turn what's in your fridge into your next masterpiece.
+                    </motion.p>
+                </div>
 
-                    {/* HERO KINETIC TEXT */}
-                    <div className="min-h-[85vh] flex flex-col justify-center items-center relative">
-                        <VelocityText>Zero</VelocityText>
-                        <VelocityText>Waste</VelocityText>
-                        <VelocityText>Cooking</VelocityText>
-                    </div>
-
-                    {/* BRUTALIST GRID + BITEBOT INFO */}
-                    <div className="py-32 border-t border-gray-200">
+                {/* BRUTALIST GRID + BITEBOT INFO (Untouched) */}
+                <div className="relative z-10 container mx-auto px-6 pb-32">
+                    <div className="pt-24 border-t border-gray-200">
 
                         {/* Section Header */}
                         <div className="max-w-3xl mb-16">
@@ -103,8 +98,8 @@ export default function AboutPage() {
                                 The Ecosystem
                             </h2>
                             <h3 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.1] text-gray-900">
-                                More than a recipe generator. <br />
-                                <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 to-pink-500">
+                                More than a recipe finder. <br />
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-orange-600 to-orange-500">
                                     It's a culinary network.
                                 </span>
                             </h3>
@@ -113,7 +108,7 @@ export default function AboutPage() {
                         {/* Bento Feature Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
 
-                            {/* Feature 1: AI Search (Spans 2 columns on large screens) */}
+                            {/* Feature 1: AI Search */}
                             <FeatureCard
                                 span="md:col-span-2"
                                 icon={FaSearch}
@@ -134,12 +129,12 @@ export default function AboutPage() {
                             {/* Feature 3: Digital Cookbook */}
                             <FeatureCard
                                 icon={FaHeart}
-                                title="Your Digital Vault"
-                                desc="Save your favorite AI generations or community posts into custom collections. Never lose that perfect Tuesday night pasta recipe again."
+                                title="Love It? Keep It."
+                                desc="your favorite flavors into custom digital cookbooks and never lose a recipe again."
                                 iconColor="text-pink-500"
                             />
 
-                            {/* Feature 4: Premium Creator Economy (Spans 2 columns) */}
+                            {/* Feature 4: Premium Creator Economy */}
                             <div className="md:col-span-2 lg:col-span-2 relative overflow-hidden p-8 md:p-10 rounded-3xl border border-orange-100 bg-linear-to-br from-orange-50 to-pink-50 shadow-sm flex flex-col justify-center">
                                 {/* Decorative background elements */}
                                 <div className="absolute -right-20 -top-20 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -189,25 +184,24 @@ export default function AboutPage() {
 
                         </div>
                     </div>
-
-                    {/* FULL WIDTH MARQUEE (Hardware Accelerated) */}
-                    <div className="py-24 overflow-hidden w-full whitespace-nowrap flex border-y border-gray-200 bg-white">
-                        <motion.div
-                            animate={{ x: ["0%", "-50%"] }}
-                            transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
-                            style={{ willChange: "transform" }}
-                            className="flex text-7xl md:text-9xl font-black uppercase"
-                        >
-                            <span className="px-8 text-gray-900">AI RECIPES.</span>
-                            <span className="px-8 text-transparent bg-clip-text bg-linear-to-r from-orange-500 to-pink-500">BITEBOT.</span>
-                            <span className="px-8 text-gray-200">SAVE FAVORITES.</span>
-                            <span className="px-8 text-gray-900">AI RECIPES.</span>
-                            <span className="px-8 text-transparent bg-clip-text bg-linear-to-r from-orange-500 to-pink-500">BITEBOT.</span>
-                            <span className="px-8 text-gray-200">SAVE FAVORITES.</span>
-                        </motion.div>
-                    </div>
-
                 </div>
+
+                {/* BOTTOM CTA - Replaced Marquee with a clean, colorful banner */}
+                <div className="relative py-24 bg-linear-to-r from-orange-500 via-orange-600 to-orange-500 text-center overflow-hidden">
+                    <div className="absolute inset-0 bg-white/5 mix-blend-overlay pointer-events-none" />
+                    <div className="relative z-10 container mx-auto px-6">
+                        <h2 className="text-4xl md:text-5xl font-black text-white mb-8 tracking-tight">
+                            Ready to transform your ingredients?
+                        </h2>
+                        <Link
+                            to={isLoggedIn ? "/" : "/login"}
+                            className="inline-block px-10 py-5 rounded-full bg-white text-orange-600 font-bold text-lg uppercase tracking-widest shadow-xl hover:scale-105 hover:shadow-orange-900/20 transition-all duration-300"
+                        >
+                            {isLoggedIn ? "Back to Kitchen" : "Join BiteBot Today"}
+                        </Link>
+                    </div>
+                </div>
+
             </div>
         </HomeLayout>
     );
