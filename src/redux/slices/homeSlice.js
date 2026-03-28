@@ -19,7 +19,7 @@ export const getTrending = createAsyncThunk("recipe/getTrending", async () => {
   try {
     return await getTrendingRecipesApi();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -29,7 +29,7 @@ export const getFreshAndNew = createAsyncThunk(
     try {
       return await getFreshAndNewRecipes();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 );
@@ -40,7 +40,7 @@ export const getRecommended = createAsyncThunk(
     try {
       return await getRecommendedRecipesApi();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 );
@@ -51,7 +51,7 @@ export const getQuickAndEasy = createAsyncThunk(
     try {
       return await getQuickAndEasyRecipesApi();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 );
@@ -60,7 +60,7 @@ export const getPremium = createAsyncThunk("recipe/getPremium", async () => {
   try {
     return await getPremiumRecipesApi();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 

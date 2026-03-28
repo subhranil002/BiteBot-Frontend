@@ -16,12 +16,12 @@ import { useSelector } from "react-redux";
 
 import subscribeApi from "../../apis/user/subscribeApi";
 import unsubscribeApi from "../../apis/user/unsubscribeApi";
+import EditChefProfileDialog from "../../components/chefProfile/editChefProfileDialog";
 import RecipeCard from "../../components/recipe/RecipeCard";
+import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 import ProfileStats from "../../components/userProfile/ProfileStats";
 import ProfileTabs from "../../components/userProfile/ProfileTabs";
 import HomeLayout from "../../layouts/HomeLayout";
-import EditChefProfileDialog from "../../components/chefProfile/editChefProfileDialog";
-import ChangePasswordDialog from "../../components/userProfile/ChangePasswordDialog";
 
 function ChefProfile({ profileData }) {
   const { userData } = useSelector((state) => state.auth);
@@ -30,8 +30,8 @@ function ChefProfile({ profileData }) {
 
   const [subscribed, setSubscribed] = useState(
     userData?.profile?.subscribed?.some(
-      (chef) => chef._id.toString() === profileData._id.toString()
-    )
+      (chef) => chef._id.toString() === profileData._id.toString(),
+    ),
   );
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +41,7 @@ function ChefProfile({ profileData }) {
     if (!recipes || recipes.length === 0) return "N/A";
 
     const allRatings = recipes.flatMap(
-      (recipe) => recipe?.reviews?.map((rev) => rev.rating) || []
+      (recipe) => recipe?.reviews?.map((rev) => rev.rating) || [],
     );
 
     if (allRatings.length === 0) return "0.0";
@@ -77,7 +77,7 @@ function ChefProfile({ profileData }) {
     if (import.meta.env.VITE_IMAGE_TRANSFORMATION === "true") {
       return url.replace(
         "/upload/",
-        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/"
+        "/upload/ar_1:1,c_auto,g_auto,w_500/r_max/",
       );
     }
     return url;
@@ -127,7 +127,7 @@ function ChefProfile({ profileData }) {
                       <img
                         alt="Profile Avatar"
                         src={modifyCloudinaryURL(
-                          profileData?.profile?.avatar?.secure_url || ""
+                          profileData?.profile?.avatar?.secure_url || "",
                         )}
                       />
                     ) : (
@@ -143,7 +143,6 @@ function ChefProfile({ profileData }) {
             {/* Info */}
             <div className="mt-20 mb-10 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
               <div className="space-y-6 max-w-3xl flex-1">
-
                 {/* Name & Bio */}
                 <div>
                   <h1 className="text-3xl sm:text-4xl font-extrabold bg-linear-to-r from-orange-400 via-red-400 to-amber-400 bg-clip-text text-transparent">
@@ -175,20 +174,22 @@ function ChefProfile({ profileData }) {
                         <FaLink /> Connect
                       </span>
                       <div className="flex flex-wrap gap-2">
-                        {profileData.chefProfile.externalLinks.map((link, index) => (
-                          <a
-                            key={index}
-                            href={link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="badge badge-lg h-auto py-2 px-3 gap-2 bg-white border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-600 transition-colors shadow-sm cursor-pointer rounded-xl"
-                          >
-                            <FaGlobe className="w-3 h-3" />
-                            <span className="font-medium text-sm">
-                              {new URL(link).hostname.replace("www.", "")}
-                            </span>
-                          </a>
-                        ))}
+                        {profileData.chefProfile.externalLinks.map(
+                          (link, index) => (
+                            <a
+                              key={index}
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="badge badge-lg h-auto py-2 px-3 gap-2 bg-white border-gray-200 text-gray-600 hover:border-orange-300 hover:text-orange-600 transition-colors shadow-sm cursor-pointer rounded-xl"
+                            >
+                              <FaGlobe className="w-3 h-3" />
+                              <span className="font-medium text-sm">
+                                {new URL(link).hostname.replace("www.", "")}
+                              </span>
+                            </a>
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
@@ -202,10 +203,13 @@ function ChefProfile({ profileData }) {
                     </div>
                     <span>
                       Joined{" "}
-                      {new Date(profileData.createdAt).toLocaleDateString("en-IN", {
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      {new Date(profileData.createdAt).toLocaleDateString(
+                        "en-IN",
+                        {
+                          month: "long",
+                          year: "numeric",
+                        },
+                      )}
                     </span>
                   </div>
 
@@ -228,7 +232,11 @@ function ChefProfile({ profileData }) {
                   <>
                     {/* Edit Profile */}
                     <button
-                      onClick={() => document.getElementById("edit-profile")?.showModal()}
+                      onClick={() =>
+                        document
+                          .getElementById("edit-chef-profile")
+                          ?.showModal()
+                      }
                       className="btn btn-primary bg-linear-to-r from-orange-500 to-red-500 border-none text-white font-bold shadow-lg hover:shadow-orange-200 transition-all rounded-2xl w-full"
                     >
                       <FaEdit className="w-4 h-4" />
@@ -237,7 +245,9 @@ function ChefProfile({ profileData }) {
 
                     {/* Change Password */}
                     <button
-                      onClick={() => document.getElementById("change-password")?.showModal()}
+                      onClick={() =>
+                        document.getElementById("change-password")?.showModal()
+                      }
                       className="btn btn-outline border-orange-200 hover:border-orange-400 hover:bg-orange-50 text-gray-700 font-bold transition-all rounded-2xl w-full flex gap-2 items-center justify-center"
                     >
                       <FaLock className="w-3.5 h-3.5 text-orange-500" />
@@ -248,14 +258,15 @@ function ChefProfile({ profileData }) {
                   <button
                     onClick={() => subscribeToggle()}
                     disabled={loading}
-                    className={`btn gap-2 ${subscribed
-
-                      ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
-
-                      : "bg-linear-to-r from-orange-400 to-red-500 text-white border-none"
-                      }`}
+                    className={`btn gap-2 ${
+                      subscribed
+                        ? "btn-outline border-orange-400 text-orange-600 hover:bg-orange-50"
+                        : "bg-linear-to-r from-orange-400 to-red-500 text-white border-none"
+                    }`}
                   >
-                    <FaHeart className={subscribed ? "text-rose-500" : "text-white"} />
+                    <FaHeart
+                      className={subscribed ? "text-rose-500" : "text-white"}
+                    />
                     {subscribed
                       ? "Unsubscribe"
                       : `Subscribe • $${profileData?.chefProfile?.subscriptionPrice}`}
@@ -282,9 +293,10 @@ function ChefProfile({ profileData }) {
             </div>
 
             {/* Professional Info Card */}
-            {(profileData?.chefProfile?.education || profileData?.chefProfile?.experience) && (
+            {(profileData?.chefProfile?.education?.length > 0 ||
+              profileData?.chefProfile?.experience?.length > 0) && (
               <div className="card bg-white shadow-xl border border-orange-100 overflow-hidden mb-10">
-                {/* Decorative Gradient Top */}
+                {/* Decorative Gradient */}
                 <div className="h-1.5 bg-linear-to-r from-orange-400 via-red-400 to-amber-400"></div>
 
                 <div className="card-body p-6 sm:p-8">
@@ -297,37 +309,51 @@ function ChefProfile({ profileData }) {
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                    {/* Education Column */}
-                    {profileData?.chefProfile?.education && (
+                    {/* Education */}
+                    {profileData?.chefProfile?.education?.length > 0 && (
                       <div className="group">
-                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-3">
+                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-4">
                           <FaGraduationCap className="text-orange-400 w-4 h-4" />
                           Education & Certifications
                         </h4>
-                        <div className="pl-4 border-l-4 border-orange-200 group-hover:border-orange-400 transition-colors py-1">
-                          <p className="text-gray-700 text-sm font-medium leading-relaxed">
-                            {profileData.chefProfile.education}
-                          </p>
+
+                        <div className="pl-4 border-l-4 border-orange-200 group-hover:border-orange-400 transition-colors space-y-3">
+                          {profileData.chefProfile.education.map(
+                            (edu, index) => (
+                              <p
+                                key={`edu-${index}`}
+                                className="text-gray-700 text-sm font-medium leading-relaxed"
+                              >
+                                {edu}
+                              </p>
+                            ),
+                          )}
                         </div>
                       </div>
                     )}
 
-                    {/* Experience Column */}
-                    {profileData?.chefProfile?.experience && (
+                    {/* Experience */}
+                    {profileData?.chefProfile?.experience?.length > 0 && (
                       <div className="group">
-                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-3">
+                        <h4 className="font-bold text-gray-400 uppercase tracking-widest text-xs flex items-center gap-2 mb-4">
                           <FaBriefcase className="text-amber-400 w-4 h-4" />
                           Work Experience
                         </h4>
-                        <div className="pl-4 border-l-4 border-amber-200 group-hover:border-amber-400 transition-colors py-1">
-                          <p className="text-gray-700 text-sm font-medium leading-relaxed whitespace-pre-line">
-                            {profileData.chefProfile.experience}
-                          </p>
+
+                        <div className="pl-4 border-l-4 border-amber-200 group-hover:border-amber-400 transition-colors space-y-3">
+                          {profileData.chefProfile.experience.map(
+                            (exp, index) => (
+                              <p
+                                key={`exp-${index}`}
+                                className="text-gray-700 text-sm font-medium leading-relaxed whitespace-pre-line"
+                              >
+                                {exp}
+                              </p>
+                            ),
+                          )}
                         </div>
                       </div>
                     )}
-
                   </div>
                 </div>
               </div>

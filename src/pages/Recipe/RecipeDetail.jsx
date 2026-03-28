@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   FaCheckCircle,
@@ -6,7 +6,6 @@ import {
   FaFire,
   FaHeart,
   FaPen,
-  FaPrint,
   FaShareAlt,
   FaStar,
   FaTimes,
@@ -15,7 +14,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
+import likeRecipeApi from "../../apis/recipe/likeRecipeApi";
+import unlikeRecipeApi from "../../apis/recipe/unlikeRecipeApi";
 import Loading from "../../components/Loading";
 import HomeLayout from "../../layouts/HomeLayout";
 import { getRecipeById, resetRecipe } from "../../redux/slices/recipeSlice";
@@ -23,7 +23,7 @@ import { getRecipeById, resetRecipe } from "../../redux/slices/recipeSlice";
 function RecipeDetail() {
   const { id } = useParams();
   const { recipe, chef, error } = useSelector((state) => state.recipe);
-  const { userData } = useSelector((state) => state.auth);
+  const { isLoggedIn, userData } = useSelector((state) => state.auth);
 
   const [isFav, setIsFav] = useState(
     userData?.favourites?.find((fav) => fav.toString() === id),
@@ -35,7 +35,6 @@ function RecipeDetail() {
     reviewCount: 0,
   });
 
-  const [loading, setLoading] = useState(false);
   const [madeIt, setMadeIt] = useState(false);
   const [madeItCount, setMadeItCount] = useState(0);
 
@@ -51,6 +50,7 @@ function RecipeDetail() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const debounceTimer = useRef(null);
 
   useEffect(() => {
     if (!id) {
@@ -99,12 +99,42 @@ function RecipeDetail() {
     setStats({ averageRating: Number(avg.toFixed(1)), reviewCount: count });
   }, [recipe]);
 
-  const toggleFav = async () => {
-    setLoading(true);
-    await favouriteToggleApi(recipe._id.toString());
-    setIsFav(!isFav);
-    setLoading(false);
+  // Toggle favourite
+  const toggleFav = () => {
+    if (!isLoggedIn) return navigate("/login");
+
+    const newState = !isFav;
+
+    // instant UI update
+    setIsFav(newState);
+
+    // clear previous debounce
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // debounce API call
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        if (newState) {
+          await likeRecipeApi(recipe._id.toString());
+        } else {
+          await unlikeRecipeApi(recipe._id.toString());
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update like");
+      }
+    }, 1000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   const handleChefReviewSubmit = () => {
     // API Call logic for Chef Review goes here
@@ -170,15 +200,11 @@ function RecipeDetail() {
       url: window.location.href,
     };
 
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(shareData.url);
-        toast.success("Link copied to clipboard!");
-      }
-    } catch (err) {
-      toast.error("Try again! Unable to share.");
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(shareData.url);
+      toast.success("Link copied to clipboard!");
     }
   };
 
@@ -199,7 +225,6 @@ function RecipeDetail() {
               {/* Like Button */}
               <button
                 onClick={toggleFav}
-                disabled={loading}
                 className={`absolute top-4 right-4 btn btn-circle ${
                   isFav
                     ? "bg-rose-500 text-white border-none"
@@ -526,19 +551,6 @@ function RecipeDetail() {
                     </div>
                   </div>
                 )}
-
-                {/* Print */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body">
-                    <button
-                      onClick={() => window.print()}
-                      className="btn w-full bg-linear-to-r from-orange-400 to-red-400 text-white border-none"
-                    >
-                      <FaPrint className="mr-2" />
-                      Print Recipe
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -586,7 +598,6 @@ function RecipeDetail() {
                 </button>
                 <button
                   onClick={() => {
-                    console.log({ rating, reviewText });
                     setShowReview(false);
                   }}
                   className="btn flex-1 rounded-xl bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold border-none shadow-md hover:shadow-lg transition-all"

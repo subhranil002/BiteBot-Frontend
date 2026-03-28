@@ -261,11 +261,24 @@ export default function EditProfileDialog() {
                     {...register("avatar", {
                       validate: {
                         fileSize: (files) =>
-                          !files?.[0] || files[0].size < 2000000 || "Max 2MB",
+                          !files?.[0] ||
+                          files[0].size < 2000000 ||
+                          "Image must be under 2MB",
+                        fileType: (files) =>
+                          !files?.[0] ||
+                          ["image/jpeg", "image/png", "image/webp"].includes(
+                            files[0].type,
+                          ) ||
+                          "Only JPG, PNG, or WEBP allowed",
                       },
                     })}
                   />
                 </div>
+                {errors.avatar && (
+                  <p className="text-red-500 text-xs mt-2 text-center max-w-[140px]">
+                    {errors.avatar.message}
+                  </p>
+                )}
               </div>
 
               {/* Name and Bio Section */}

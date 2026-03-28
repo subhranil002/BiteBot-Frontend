@@ -18,9 +18,9 @@ import RecipeDetail from "./pages/Recipe/RecipeDetail";
 import ResetPassword from "./pages/ResetPassword";
 import SearchResults from "./pages/SearchResult";
 import SignUp from "./pages/Signup";
+import TeamPage from "./pages/TeamPage";
 import Favorites from "./pages/User/Favourites";
 import { getProfile } from "./redux/slices/authSlice";
-import TeamPage from "./pages/TeamPage";
 
 function Router() {
   const dispatch = useDispatch();
@@ -50,9 +50,9 @@ function Router() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword/:id" element={<ResetPassword />} />
+      <Route path="/search" element={<SearchResults />} />
       <Route element={<RequireAuth />}>
         <Route path="/chat" element={<Chat />} />
-        <Route path="/search" element={<SearchResults />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/profile/:id/favourites" element={<Favorites />} />
         <Route path="/recipe/:id" element={<RecipeDetail />} />

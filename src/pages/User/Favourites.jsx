@@ -19,7 +19,6 @@ export default function Favourites() {
       const res = await getFavouritesApi();
       setFavourites(res.data);
       setLoading(false);
-      console.log(res.data);
     })();
   }, []);
 
@@ -32,12 +31,12 @@ export default function Favourites() {
         <div className="text-center px-6 space-y-4 mb-12">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
             <span className="bg-linear-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
-              Your Cookbook
+              Your Favourites
             </span>
           </h1>
 
           <p className="text-gray-600 text-lg max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-            All your bookmarked recipes - ready to cook, explore, and enjoy
+            All your saved recipes - ready to cook, explore, and enjoy
             <FaUtensils className="text-gray-400 text-2xl inline-block" />
           </p>
         </div>

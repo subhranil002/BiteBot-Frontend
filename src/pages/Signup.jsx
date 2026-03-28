@@ -41,12 +41,13 @@ export default function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const from = location.state?.from?.pathname || location.state?.from || "/";
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   // submit handler — dispatch register and navigate on success
   const onSubmit = async (data) => {
     const res = await dispatch(registerUser(data));
-    if (res?.payload?.success) navigate("/");
+    if (res?.payload?.success) navigate(from, { replace: true });
   };
 
   // redirect if already logged in

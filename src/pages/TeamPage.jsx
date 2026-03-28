@@ -1,13 +1,13 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { FaGithub, FaLinkedin, FaQuoteLeft } from "react-icons/fa";
+
 import HomeLayout from "../layouts/HomeLayout";
 
 const teamMembers = [
   {
     name: "Subhranil Chakraborty",
     role: "The Simmering Strategist",
-    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772466343/Subhranil_pei11c.jpg",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/ar_1:1,c_auto,g_auto,w_500/v1772466343/Subhranil_pei11c.jpg",
     linkedin_url: "https://www.linkedin.com/in/subhranilchakraborty",
     github_url: "https://www.github.com/subhranil002",
     bio: "Master of long-term planning and slow-cooked perfection. Subhranil ensures every project boils down to flawless execution and sustainable architecture.",
@@ -16,7 +16,7 @@ const teamMembers = [
   {
     name: "Wasiq Afnan Ansari",
     role: "Sultan of the Sauce",
-    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772469945/Wasiq_n7vl3o.jpg",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/ar_1:1,c_auto,g_auto,w_500/v1772469945/Wasiq_n7vl3o.jpg",
     linkedin_url: "https://www.linkedin.com/in/wasiq-afnan-ansari-cs2021",
     github_url: "https://www.github.com/wasiqAfnan",
     bio: "Adding that extra kick to everything we build. Wasiq blends code and creativity to make sure our products always leave a lasting, flavorful impression.",
@@ -33,17 +33,17 @@ const teamMembers = [
   },
   {
     name: "Soudipta Sarkar",
-    role: "Tasting Director",
-    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772470790/soudipta_zdndet.jpg",
+    role: "Future Flavor Forecaster",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/ar_1:1,c_auto,g_auto,w_500/v1772470790/soudipta_zdndet.jpg",
     linkedin_url: "https://www.linkedin.com/in/soudipta-sarkar-19a398312",
     github_url: "https://www.github.com/soudipta6010",
-    bio: "Ensuring top-tier quality control. Soudipta rigorously tests every feature to guarantee a five-star user experience before it ever hits the table.",
+    bio: "Always looking ahead to what’s next. Soudipta anticipates emerging trends, explores innovative ideas, and helps shape features that keep our products fresh, forward-thinking, and ready for the future.",
     color: "from-orange-500 to-amber-600",
   },
   {
     name: "Nabanita Nath",
     role: "Garnish Wizard",
-    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/v1772904668/NabanitaNath_l8i9bg.jpg",
+    image: "https://res.cloudinary.com/dmtmecmpn/image/upload/ar_1:1,c_auto,g_auto,w_500/v1772904668/NabanitaNath_l8i9bg.jpg",
     linkedin_url: "https://www.linkedin.com/in/nabanita-nath-747837225",
     github_url: "https://www.github.com/Nabanita315",
     bio: "Master of aesthetics and final touches. Nabanita turns functional interfaces into visual masterpieces, making sure every pixel looks delectable.",
@@ -55,9 +55,6 @@ const VerticalTeamPage = () => {
   return (
     <HomeLayout>
       <div className="relative min-h-screen bg-orange-50/30 overflow-hidden py-20">
-        {/* Central "Vine" or Line (Desktop Only) */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-linear-to-b from-transparent via-orange-200 to-transparent hidden lg:block" />
-
         <div className="container mx-auto px-6 relative">
           <div className="text-center mb-24">
             <motion.h1 

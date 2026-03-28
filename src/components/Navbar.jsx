@@ -1,12 +1,13 @@
 // Finalized
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   FaBars,
   FaBolt,
   FaCrown,
   FaEnvelope,
   FaFire,
+  FaHeart,
   FaHome,
   FaSearch,
   FaSignOutAlt,
@@ -15,7 +16,6 @@ import {
   FaUsers,
   FaUtensils,
 } from "react-icons/fa";
-import { FaBookBookmark } from "react-icons/fa6";
 import { GiHerbsBundle } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -24,37 +24,27 @@ import { logout } from "../redux/slices/authSlice";
 
 const colorClasses = {
   pink: {
-    activeBg: "bg-pink-200",
     hoverBg: "hover:bg-pink-200",
-    iconActive: "bg-pink-500",
     iconDefault: "bg-pink-100",
     text: "text-pink-500",
   },
   red: {
-    activeBg: "bg-red-200",
     hoverBg: "hover:bg-red-200",
-    iconActive: "bg-red-500",
     iconDefault: "bg-red-100",
     text: "text-red-500",
   },
   sky: {
-    activeBg: "bg-sky-200",
     hoverBg: "hover:bg-sky-200",
-    iconActive: "bg-sky-500",
     iconDefault: "bg-sky-100",
     text: "text-sky-500",
   },
   emerald: {
-    activeBg: "bg-emerald-200",
     hoverBg: "hover:bg-emerald-200",
-    iconActive: "bg-emerald-500",
     iconDefault: "bg-emerald-100",
     text: "text-emerald-500",
   },
   amber: {
-    activeBg: "bg-amber-200",
     hoverBg: "hover:bg-amber-200",
-    iconActive: "bg-amber-500",
     iconDefault: "bg-amber-100",
     text: "text-amber-500",
   },
@@ -67,7 +57,6 @@ export default function Navbar({ children }) {
   const isHome = location.pathname === "/";
   const [searchTerm, setSearchTerm] = useState("");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
-  const [activeSection, setActiveSection] = useState("");
 
   const sections = [
     {
@@ -124,12 +113,10 @@ export default function Navbar({ children }) {
     const section = document.getElementById(sectionId);
 
     if (section) {
-      setActiveSection(sectionId);
-
       const elementPosition =
         section.getBoundingClientRect().top + window.scrollY;
 
-      const offset = 100;
+      const offset = 130;
 
       window.scrollTo({
         top: elementPosition - offset,
@@ -156,35 +143,11 @@ export default function Navbar({ children }) {
     return url;
   }
 
-  useEffect(() => {
-    const sections = ["for-you", "trending", "fresh", "quick", "premium"];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-40% 0px -50% 0px",
-        threshold: 0.1,
-      },
-    );
-
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div className="drawer bg-gray-50/30">
       <input id="navbar-drawer" type="checkbox" className="drawer-toggle" />
 
-      <div className="drawer-content flex flex-col min-h-screen bg-linear-to-br from-orange-50 to-amber-50">
+      <div className="drawer-content flex flex-col min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
         <header className="sticky top-4 z-50 px-4 md:px-8 w-full max-w-[1400px] mx-auto pointer-events-none transition-all duration-300">
           <div className="navbar pointer-events-auto min-h-16 md:min-h-20 bg-white/70 backdrop-blur-2xl border border-white shadow-[0_8px_30px_rgb(249,115,22,0.06)] rounded-3xl px-3 transition-all">
             {/* Left: Hamburger & Elegant Branding */}
@@ -252,26 +215,28 @@ export default function Navbar({ children }) {
                     className="menu menu-sm dropdown-content rounded-2xl mt-3 w-64 p-3 shadow-2xl shadow-orange-300/30 border border-orange-200 backdrop-blur-xl bg-white/95 text-gray-900 space-y-1"
                   >
                     <li className="p-2 border-b border-orange-100">
-                      <div className="flex items-center gap-3">
-                        <div className="avatar">
-                          <div className="w-10 rounded-full bg-linear-to-br from-orange-500 to-red-500">
-                            <img
-                              alt="Profile Avatar"
-                              src={modifyCloudinaryURL(
-                                userData?.profile?.avatar?.secure_url || "",
-                              )}
-                            />
+                      <Link to={`/profile/${userData?._id.toString()}`}>
+                        <div className="flex items-center gap-3">
+                          <div className="avatar">
+                            <div className="w-10 rounded-full bg-linear-to-br from-orange-500 to-red-500">
+                              <img
+                                alt="Profile Avatar"
+                                src={modifyCloudinaryURL(
+                                  userData?.profile?.avatar?.secure_url || "",
+                                )}
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <p className="font-bold text-gray-900 truncate max-w-[145px]">
+                              {userData?.profile?.name}
+                            </p>
+                            <p className="text-xs text-gray-600 truncate max-w-[145px]">
+                              {userData?.email}
+                            </p>
                           </div>
                         </div>
-                        <div>
-                          <p className="font-bold text-gray-900">
-                            {userData?.profile?.name}
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            {userData?.email}
-                          </p>
-                        </div>
-                      </div>
+                      </Link>
                     </li>
                     <li>
                       <Link
@@ -305,7 +270,7 @@ export default function Navbar({ children }) {
                         to={`/profile/${userData?._id.toString()}/favourites`}
                         className="rounded-lg hover:bg-orange-50 transition-colors py-3"
                       >
-                        <FaBookBookmark className="text-rose-500" /> My Cookbook
+                        <FaHeart className="text-rose-500" /> My Favorites
                       </Link>
                     </li>
                     <li className="border-t border-orange-100 mt-1">
@@ -415,37 +380,24 @@ export default function Navbar({ children }) {
                 .filter((section) => section.show)
                 .map((section) => {
                   const Icon = section.icon;
-                  const isActive = activeSection === section.id;
                   const colors = colorClasses[section.color];
 
                   return (
                     <li key={section.id}>
                       <button
                         onClick={() => handleScroll(section.id)}
-                        className={`group flex items-center gap-4 py-3 rounded-2xl transition-all duration-300
-                        ${isActive ? colors.activeBg : colors.hoverBg}`}
+                        className={`group flex items-center gap-4 py-3 rounded-2xl transition-all duration-300 ${colors.hoverBg}`}
                       >
                         <div
                           className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors duration-300
-                          ${
-                            isActive
-                              ? colors.iconActive
-                              : `${colors.iconDefault} group-hover:${colors.iconActive}`
-                          }`}
+                          ${colors.iconDefault}`}
                         >
                           <Icon
-                            className={`w-4 h-4 transition-colors
-                            ${isActive ? "text-white" : `${colors.text}`}`}
+                            className={`w-4 h-4 transition-colors ${colors.text}`}
                           />
                         </div>
 
-                        <span
-                          className={`font-semibold ${
-                            isActive
-                              ? "text-gray-900"
-                              : "text-gray-700 group-hover:text-gray-900"
-                          }`}
-                        >
+                        <span className="font-semibold text-gray-700 group-hover:text-gray-900">
                           {section.label}
                         </span>
                       </button>

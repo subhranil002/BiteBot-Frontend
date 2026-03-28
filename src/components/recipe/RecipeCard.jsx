@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { FaBolt, FaLock, FaUsers, FaUtensils } from "react-icons/fa";
-import { BsBookmarkHeart,BsBookmarkHeartFill } from "react-icons/bs";
+import { FaBolt, FaHeart, FaLock, FaUsers, FaUtensils } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import favouriteToggleApi from "../../apis/recipe/favouriteToggleApi";
+import likeRecipeApi from "../../apis/recipe/likeRecipeApi";
+import unlikeRecipeApi from "../../apis/recipe/unlikeRecipeApi";
 
 // Safely convert id to string
 const s = (id) => (id ? id.toString() : "");
@@ -27,7 +27,7 @@ const Stat = ({ icon: Icon, iconClass = "", text }) => (
 
 export default function RecipeCard({ recipe }) {
   const navigate = useNavigate();
-  const { userData } = useSelector((state) => state.auth);
+  const { isLoggedIn, userData } = useSelector((state) => state.auth);
 
   const recipeId = s(recipe?._id);
   const chefId = s(recipe?.chefId);
@@ -46,37 +46,56 @@ export default function RecipeCard({ recipe }) {
     return subs.some((sub) => s(sub._id) === chefId);
   };
 
-  // Check if recipe is already bookmarked (mapping from backend favourites)
-  const initialBookmark = (userData?.favourites ?? []).some(
+  // Check if recipe is already in favourites
+  const initialFav = (userData?.favourites ?? []).some(
     (fav) => s(fav) === recipeId,
   );
 
-  const [isBookmarked, setIsBookmarked] = useState(initialBookmark);
-  const [loading, setLoading] = useState(false);
+  const [isFav, setIsFav] = useState(initialFav);
+  const debounceTimer = useRef(null);
 
-  // Sync bookmark state if userData changes
+  // Sync favourite state if userData changes
   useEffect(() => {
-    setIsBookmarked(initialBookmark);
-  }, [initialBookmark]);
+    setIsFav(initialFav);
+  }, [initialFav]);
 
-  // Toggle bookmark (optimistic UI update)
-  const toggleBookmark = async () => {
+  // Toggle favourite
+  const toggleFav = () => {
     if (!recipeId) return;
+    if (!isLoggedIn) return navigate("/login");
 
-    setLoading(true);
-    setIsBookmarked((prev) => !prev);
+    const newState = !isFav;
 
-    try {
-      await favouriteToggleApi(recipeId);
-    } catch (err) {
-      // Revert on failure
-      setIsBookmarked((prev) => !prev);
-      toast.error("Could not update bookmark. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
+    // instant UI update
+    setIsFav(newState);
+
+    // clear previous debounce
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
     }
+
+    // debounce API call
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        if (newState) {
+          await likeRecipeApi(recipeId);
+        } else {
+          await unlikeRecipeApi(recipeId);
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update like");
+      }
+    }, 1000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   // Handle view/unlock button click
   const handleRecipeViewButton = () => {
@@ -117,26 +136,24 @@ export default function RecipeCard({ recipe }) {
             </div>
           )}
 
-          {/* Bookmark button */}
+          {/* Favourite button */}
           <button
             type="button"
-            onClick={toggleBookmark}
-            disabled={loading}
-            aria-pressed={isBookmarked}
-            aria-label={isBookmarked ? "Remove bookmark" : "Bookmark recipe"}
+            onClick={toggleFav}
+            aria-pressed={isFav}
+            aria-label={isFav ? "Remove from favourites" : "Add to favourites"}
             className={[
               "absolute top-3 right-3 btn btn-circle rounded-full border transition-all duration-200 md:hover:scale-110 backdrop-blur-md",
-              isBookmarked
-                ? "bg-linear-to-br from-orange-500 to-amber-500 text-white border-orange-400 shadow-lg"
+              isFav
+                ? "bg-linear-to-br from-rose-500 to-red-400 text-white border-red-300 shadow-lg"
                 : "bg-white/80 border-orange-100 text-orange-500 md:hover:bg-orange-50",
-              loading ? "pointer-events-none opacity-80" : "",
             ].join(" ")}
           >
-            {isBookmarked ? (
-              <BsBookmarkHeartFill className="w-4 h-4 mx-auto transition-transform duration-200 scale-110" />
-            ) : (
-              <BsBookmarkHeart className="w-4 h-4 mx-auto transition-transform duration-200 scale-100" />
-            )}
+            <FaHeart
+              className={`w-4 h-4 mx-auto transition-transform duration-200 ${
+                isFav ? "scale-110" : "scale-100"
+              }`}
+            />
           </button>
         </figure>
 

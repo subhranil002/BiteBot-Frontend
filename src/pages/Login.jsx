@@ -21,16 +21,25 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from || "/"; // redirect target after login
+  const from = location.state?.from?.pathname || location.state?.from || "/";
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   // Dispatch login action and navigate on success
   const onSubmit = async (data) => {
     const res = await dispatch(login(data));
     if (res?.payload?.success) {
-      navigate("/");
+      navigate(from, { replace: true });
     }
   };
+
+  // const handleGuest = async () => {
+  //       setIsSubmitting(true);
+  //       const res = await dispatch(guestLogin());
+  //       if (res?.payload?.success) {
+  //           navigate(from, { replace: true });
+  //       }
+  //       setIsSubmitting(false);
+  //   };
 
   // Decorative floating icons reference
   const floatingIconsRef = useRef(FloatingIcons);
