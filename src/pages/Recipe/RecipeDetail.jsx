@@ -65,7 +65,7 @@ function RecipeDetail() {
     return () => {
       dispatch(resetRecipe());
     };
-  }, [id, dispatch]);
+  }, [id]);
 
   useEffect(() => {
     if (error) {
@@ -171,12 +171,12 @@ function RecipeDetail() {
     },
     ...(recipe?.nutrition?.totalCalories
       ? [
-        {
-          icon: <FaFire />,
-          label: "Calories",
-          value: recipe.nutrition.totalCalories,
-        },
-      ]
+          {
+            icon: <FaFire />,
+            label: "Calories",
+            value: recipe.nutrition.totalCalories,
+          },
+        ]
       : []),
   ];
 
@@ -207,6 +207,12 @@ function RecipeDetail() {
     }
   };
 
+  const toggleIngredientCheck = (index) => {
+    setCheckedIngredients((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+    );
+  };
+
   // --- MOCK DATA FOR TESTING CAROUSEL ---
   const dummySimilarRecipes = [
     {
@@ -220,21 +226,24 @@ function RecipeDetail() {
       dietaryLabels: ["Keto", "High-Protein", "Pescatarian"],
       isPremium: true,
       thumbnail: {
-        secure_url: "https://images.unsplash.com/photo-1625937751876-451522f98642?w=500&q=80",
+        secure_url:
+          "https://images.unsplash.com/photo-1625937751876-451522f98642?w=500&q=80",
       },
     },
     {
       _id: "mock2",
       chefId: "64xyz123abc",
       title: "Creamy Tuscan Chicken Miso",
-      description: "Rich, creamy chicken infused with incredible umami flavors.",
+      description:
+        "Rich, creamy chicken infused with incredible umami flavors.",
       totalCookingTime: 40,
       servings: 4,
       cuisine: "Italian-Fusion",
       dietaryLabels: ["Gluten-Free"],
       isPremium: false,
       thumbnail: {
-        secure_url: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80",
+        secure_url:
+          "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80",
       },
     },
     {
@@ -248,7 +257,8 @@ function RecipeDetail() {
       dietaryLabels: ["Vegan", "Dairy-Free"],
       isPremium: false,
       thumbnail: {
-        secure_url: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&q=80",
+        secure_url:
+          "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&q=80",
       },
     },
     {
@@ -262,7 +272,8 @@ function RecipeDetail() {
       dietaryLabels: ["High-Protein"],
       isPremium: true,
       thumbnail: {
-        secure_url: "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80",
+        secure_url:
+          "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80",
       },
     },
   ];
@@ -283,12 +294,11 @@ function RecipeDetail() {
 
               <button
                 onClick={toggleFav}
-                disabled={loading}
                 className={`absolute top-4 right-4 btn btn-circle ${
                   isFav
                     ? "bg-rose-500 text-white border-none"
                     : "bg-white/80 text-gray-700 border-none hover:bg-white"
-                  }`}
+                }`}
               >
                 <FaHeart className="w-5 h-5" />
               </button>
@@ -407,7 +417,10 @@ function RecipeDetail() {
                       <div className="card-body">
                         <h3 className="card-title text-gray-800">Cuisine</h3>
                         <div className="flex flex-wrap gap-2">
-                          {(Array.isArray(recipe.cuisine) ? recipe.cuisine : [recipe.cuisine]).map((item, idx) => (
+                          {(Array.isArray(recipe.cuisine)
+                            ? recipe.cuisine
+                            : [recipe.cuisine]
+                          ).map((item, idx) => (
                             <div
                               key={idx}
                               className="badge badge-outline border-red-600 text-red-600"
@@ -437,35 +450,62 @@ function RecipeDetail() {
                         <table className="table table-zebra">
                           <thead>
                             <tr>
-                              <th className="w-10"></th> {/* Checkbox Column */}
+                              <th className="w-10"></th>
                               <th>Ingredient</th>
                               <th>Quantity</th>
                               <th className="text-right">Cost</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {recipe.ingredients.map((ing, index) => {
-                              const isChecked = checkedIngredients.includes(index);
+                            {recipe?.ingredients?.map((ing, index) => {
+                              const isChecked =
+                                checkedIngredients.includes(index);
+
                               return (
                                 <tr
                                   key={index}
-                                  className={`transition-all duration-300 ${isChecked ? "opacity-50" : ""}`}
+                                  className={`transition-all duration-300 ${
+                                    isChecked ? "opacity-50" : ""
+                                  }`}
                                 >
                                   <td>
                                     <input
                                       type="checkbox"
                                       className="checkbox checkbox-sm checkbox-warning rounded-md"
                                       checked={isChecked}
-                                      onChange={() => toggleIngredientCheck(index)}
+                                      onChange={() =>
+                                        toggleIngredientCheck(index)
+                                      }
                                     />
                                   </td>
-                                  <td className={`font-medium ${isChecked ? "line-through text-gray-400" : "text-gray-800"}`}>
+
+                                  <td
+                                    className={`font-medium ${
+                                      isChecked
+                                        ? "line-through text-gray-400"
+                                        : "text-gray-800"
+                                    }`}
+                                  >
                                     {ing.name}
                                   </td>
-                                  <td className={`font-medium ${isChecked ? "line-through text-gray-400" : "text-gray-600"}`}>
+
+                                  <td
+                                    className={`font-medium ${
+                                      isChecked
+                                        ? "line-through text-gray-400"
+                                        : "text-gray-600"
+                                    }`}
+                                  >
                                     {ing.quantity} {ing.unit}
                                   </td>
-                                  <td className={`text-right ${isChecked ? "line-through text-gray-300" : "text-gray-500"}`}>
+
+                                  <td
+                                    className={`text-right ${
+                                      isChecked
+                                        ? "line-through text-gray-300"
+                                        : "text-gray-500"
+                                    }`}
+                                  >
                                     ₹{(Number(ing.marketPrice) || 0).toFixed(2)}
                                   </td>
                                 </tr>
@@ -516,19 +556,21 @@ function RecipeDetail() {
               <div className="space-y-6">
                 {/* I MADE IT WIDGET */}
                 <div
-                  className={`card shadow-lg transition-all duration-500 border-2 ${madeIt
+                  className={`card shadow-lg transition-all duration-500 border-2 ${
+                    madeIt
                       ? "bg-emerald-50 border-emerald-400 shadow-emerald-100"
                       : "bg-base-100 border-orange-100 hover:border-orange-200"
-                    }`}
+                  }`}
                 >
                   <div className="card-body p-6 text-center">
                     <div className="flex flex-col items-center mb-4">
                       <div className="flex items-baseline gap-1">
                         <span
-                          className={`text-4xl font-black transition-all duration-300 ${madeIt
+                          className={`text-4xl font-black transition-all duration-300 ${
+                            madeIt
                               ? "text-emerald-600 scale-110"
                               : "text-gray-800"
-                            }`}
+                          }`}
                         >
                           {madeItCount}
                         </span>
@@ -540,23 +582,26 @@ function RecipeDetail() {
 
                     <button
                       onClick={handleMadeItToggle}
-                      className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${madeIt
+                      className={`btn w-full text-sm font-semibold rounded-xl shadow-md transition-all duration-300 group ${
+                        madeIt
                           ? "bg-emerald-500 hover:bg-emerald-600 border-none text-white ring-4 ring-emerald-100"
                           : "bg-linear-to-r from-orange-400 to-red-400 border-none text-white hover:shadow-orange-200 hover:-translate-y-1"
-                        }`}
+                      }`}
                     >
                       <FaCheckCircle
-                        className={`w-5 h-5 transition-transform duration-300 ${madeIt ? "scale-125" : "group-hover:scale-110"
-                          }`}
+                        className={`w-5 h-5 transition-transform duration-300 ${
+                          madeIt ? "scale-125" : "group-hover:scale-110"
+                        }`}
                       />
                       {madeIt ? "I Made It!" : "I Made This"}
                     </button>
 
                     <div
-                      className={`transition-all duration-500 ease-in-out overflow-hidden ${madeIt
+                      className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                        madeIt
                           ? "max-h-20 opacity-100 mt-3"
                           : "max-h-0 opacity-0"
-                        }`}
+                      }`}
                     >
                       <p className="text-sm font-semibold text-emerald-600 bg-white/50 py-2 px-3 rounded-lg inline-flex items-center gap-2">
                         <span>🎉</span> Delicious choice!
@@ -585,16 +630,17 @@ function RecipeDetail() {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <FaStar
                           key={i}
-                          className={`text-2xl transition-colors duration-200 ${i < Math.round(stats.averageRating)
+                          className={`text-2xl transition-colors duration-200 ${
+                            i < Math.round(stats.averageRating)
                               ? "text-yellow-400 drop-shadow-sm"
                               : "text-gray-200"
-                            }`}
+                          }`}
                         />
                       ))}
                     </div>
 
                     <p className="text-sm text-gray-400 font-medium mb-6">
-                      ({stats.reviewCount}{" "}
+                      ({stats.reviewCount}
                       {stats.reviewCount === 1 ? "review" : "reviews"})
                     </p>
                     <button
@@ -635,19 +681,6 @@ function RecipeDetail() {
                     </div>
                   </div>
                 )}
-
-                {/* Print */}
-                <div className="card bg-base-100 shadow-md border border-orange-100">
-                  <div className="card-body">
-                    <button
-                      onClick={() => window.print()}
-                      className="btn w-full bg-linear-to-r from-orange-400 to-red-400 text-white border-none"
-                    >
-                      <FaPrint className="mr-2" />
-                      Print Recipe
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -663,7 +696,8 @@ function RecipeDetail() {
                             Craving Something Similar?
                           </h2>
                           <p className="text-gray-500 mt-2 font-medium">
-                            Explore these hand-picked recommendations based on this recipe.
+                            Explore these hand-picked recommendations based on
+                            this recipe.
                           </p>
                         </div>
                       </div>
@@ -695,10 +729,11 @@ function RecipeDetail() {
                   <FaStar
                     key={i}
                     onClick={() => setRating(i + 1)}
-                    className={`text-3xl cursor-pointer transition-all duration-200 ${i < rating
+                    className={`text-3xl cursor-pointer transition-all duration-200 ${
+                      i < rating
                         ? "text-yellow-400 drop-shadow-sm scale-110"
                         : "text-gray-100 opacity-90 hover:text-yellow-400 hover:scale-105"
-                      }`}
+                    }`}
                   />
                 ))}
               </div>
@@ -771,10 +806,11 @@ function RecipeDetail() {
                     <FaStar
                       key={i}
                       onClick={() => setChefRating(i + 1)}
-                      className={`text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 ${i < chefRating
+                      className={`text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 ${
+                        i < chefRating
                           ? "opacity-100 drop-shadow-sm"
                           : "opacity-30 hover:opacity-60"
-                        }`}
+                      }`}
                     />
                   ))}
                 </div>
