@@ -4,7 +4,6 @@ import {
   FaChevronDown,
   FaDollarSign,
   FaFilter,
-  FaSearch,
   FaSlidersH,
   FaStar,
 } from "react-icons/fa";

@@ -4,6 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import ChefOnly from "./components/auth/ChefOnly";
 import RequireAuth from "./components/auth/RequireAuth";
+import AboutPage from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
 import Chat from "./pages/Chatbot/Chat";
 import AddRecipe from "./pages/Chef/AddRecipe";
@@ -16,7 +17,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import RecipeDetail from "./pages/Recipe/RecipeDetail";
 import ResetPassword from "./pages/ResetPassword";
-import SearchResults from "./pages/SearchResult";
+import Search from "./pages/Search";
 import SignUp from "./pages/Signup";
 import TeamPage from "./pages/TeamPage";
 import Favorites from "./pages/User/Favourites";
@@ -50,7 +51,8 @@ function Router() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
       <Route path="/resetpassword/:id" element={<ResetPassword />} />
-      <Route path="/search" element={<SearchResults />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/search" element={<Search />} />
       <Route element={<RequireAuth />}>
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile/:id" element={<Profile />} />
