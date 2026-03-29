@@ -156,7 +156,7 @@ export default function ContactUs() {
                     </div>
                     <div>
                       <h4 className="font-semibold">Email</h4>
-                      <p className="text-gray-600">bitebot25@gmail.com</p>
+                      <p className="text-gray-600">bitezzy.app@gmail.com</p>
                     </div>
                   </div>
 
@@ -209,7 +209,7 @@ export default function ContactUs() {
                   />
                   <Marker position={[22.5726, 88.3639]} icon={orangeIcon}>
                     <Popup>
-                      <b>BiteBot HQ</b> <br />
+                      <b>Bitezzy HQ</b> <br />
                       Kolkata, West Bengal 🇮🇳
                     </Popup>
                   </Marker>

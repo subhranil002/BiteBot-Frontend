@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                             </div>
                             <div className="timeline-end mb-4">
                                 <div className="text-sm font-semibold text-base-content">New User Signup</div>
-                                <div className="text-xs text-base-content/60">Rahul99 joined BiteBot</div>
+                                <div className="text-xs text-base-content/60">Rahul99 joined Bitezzy</div>
                                 <div className="text-[10px] text-base-content/40 mt-1">25 mins ago</div>
                             </div>
                             <hr className="bg-base-200"/>

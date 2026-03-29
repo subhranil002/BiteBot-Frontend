@@ -23,7 +23,7 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-4xl flex items-center justify-center shadow-lg bg-white border border-orange-100 overflow-hidden transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105">
                 <img
                   src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
-                  alt="BiteBot Logo"
+                  alt="Bitezzy Logo"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -113,13 +113,13 @@ export default function Footer() {
         <div className="relative mt-8 flex items-center justify-center overflow-hidden h-24 md:h-32 rounded-2xl bg-white/30 backdrop-blur-md border border-white/50">
           {/* Massive Background Text */}
           <h1 className="absolute text-[14vw] md:text-[10vw] font-black leading-none text-orange-900/5 select-none pointer-events-none tracking-tighter">
-            BITEBOT
+            BITEZZY
           </h1>
 
           {/* Copyright Info overlaid */}
           <div className="absolute bottom-4 left-0 right-0 px-6 flex flex-col md:flex-row items-center justify-between gap-3 w-full">
             <p className="text-xs font-semibold text-gray-500 tracking-wide">
-              © {currentYear} BITEBOT .
+              © {currentYear} BITEZZY .
             </p>
             <p className="flex items-center gap-2 text-xs font-medium text-gray-500 bg-white/80 px-3 py-1.5 rounded-full shadow-sm">
               Crafted with{" "}

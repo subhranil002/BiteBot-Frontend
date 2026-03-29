@@ -59,7 +59,7 @@ export default function HeroSection() {
               <h1 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
                 Cook Smarter with{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 drop-shadow-sm">
-                  BiteBot
+                  Bitezzy
                 </span>
               </h1>
 

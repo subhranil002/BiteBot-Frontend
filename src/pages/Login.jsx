@@ -71,7 +71,7 @@ export default function Login() {
             Welcome Back
           </h1>
           <p className="text-gray-600 mt-2 text-sm font-medium">
-            Sign in to your BiteBot account
+            Sign in to your Bitezzy account
           </p>
         </div>
 

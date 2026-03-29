@@ -89,7 +89,7 @@ export default function AboutPage() {
                     </motion.p>
                 </div>
 
-                {/* BRUTALIST GRID + BITEBOT INFO (Untouched) */}
+                {/* BRUTALIST GRID + BITEZZY INFO (Untouched) */}
                 <div className="relative z-10 container mx-auto px-6 pb-32">
                     <div className="pt-24 border-t border-gray-200">
 
@@ -114,7 +114,7 @@ export default function AboutPage() {
                                 span="md:col-span-2"
                                 icon={FaSearch}
                                 title="AI Contextual Search"
-                                desc="Don't know what to make? Tell BiteBot what ingredients are expiring in your fridge, your macro goals, or your current mood. Our AI synthesizes exact, step-by-step recipes in seconds."
+                                desc="Don't know what to make? Tell Bitezzy what ingredients are expiring in your fridge, your macro goals, or your current mood. Our AI synthesizes exact, step-by-step recipes in seconds."
                                 className="bg-linear-to-br from-gray-100 to-gray-300 text-white border-none"
                                 iconColor="text-black bg-orange/50 border-white/20"
                             />
@@ -198,7 +198,7 @@ export default function AboutPage() {
                             to={isLoggedIn ? "/" : "/login"}
                             className="inline-block px-10 py-5 rounded-full bg-white text-orange-600 font-bold text-lg uppercase tracking-widest shadow-xl hover:scale-105 hover:shadow-orange-900/20 transition-all duration-300"
                         >
-                            {isLoggedIn ? "Back to Kitchen" : "Join BiteBot Today"}
+                            {isLoggedIn ? "Back to Kitchen" : "Join Bitezzy Today"}
                         </Link>
                     </div>
                 </div>
