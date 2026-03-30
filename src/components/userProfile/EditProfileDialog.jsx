@@ -76,7 +76,7 @@ export default function EditProfileDialog() {
     reset,
     control,
     watch,
-    formState: { isSubmitting, errors, isDirty },
+    formState: { errors, isDirty },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -483,19 +483,14 @@ export default function EditProfileDialog() {
               {/* Save button */}
               <button
                 type="submit"
-                disabled={!isDirty || isSubmitting}
+                disabled={!isDirty}
                 className={`btn border-none text-white shadow-lg rounded-xl gap-2 px-8 ${
-                  !isDirty || isSubmitting
+                  !isDirty
                     ? "bg-gray-300 cursor-not-allowed text-gray-500 shadow-none"
                     : "bg-linear-to-r from-orange-500 to-red-500 hover:shadow-orange-200 hover:-translate-y-0.5"
                 }`}
               >
-                {isSubmitting ? (
-                  <span className="loading loading-spinner loading-sm"></span>
-                ) : (
-                  <FaSave />
-                )}
-
+                <FaSave />
                 {isDirty ? "Save Changes" : "No Changes"}
               </button>
             </div>

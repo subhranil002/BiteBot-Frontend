@@ -368,8 +368,8 @@ function ChefProfile({ profileData }) {
                 </h3>
                 {profileData?.chefProfile?.recipes?.length ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {profileData?.chefProfile?.recipes.map((recipe) => (
-                      <div className="flex justify-center">
+                    {profileData?.chefProfile?.recipes.map((recipe, idx) => (
+                      <div className="flex justify-center" key={idx}>
                         <RecipeCard
                           key={recipe._id.toString()}
                           recipe={recipe}
