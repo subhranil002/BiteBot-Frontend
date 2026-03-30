@@ -14,13 +14,14 @@ import {
   FaUser,
   FaUtensils,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   ALLERGEN_OPTIONS,
   CUISINE_OPTIONS,
   DIETARY_OPTIONS,
 } from "../../constants";
+import { updateProfile } from "../../redux/slices/authSlice";
 
 /**
  * Reusable Chip component used to display selected
@@ -72,6 +73,7 @@ const EMPLOYMENT_TYPE_OPTIONS = [
 export default function EditChefProfileDialog() {
   const dlgRef = useRef(null);
 
+  const dispatch = useDispatch();
   const { userData } = useSelector((state) => state.auth);
 
   const profile = userData?.profile;
@@ -110,6 +112,7 @@ export default function EditChefProfileDialog() {
     watch,
     setError,
     clearErrors,
+    reset,
     formState: { errors, isDirty },
   } = useForm({
     mode: "onChange",
@@ -145,7 +148,7 @@ export default function EditChefProfileDialog() {
           description: item?.description ?? "",
         })) || [],
 
-      websiteSocialLinks:
+      externalLinks:
         chefProfile?.externalLinks?.map((v) => ({ value: v })) ?? [],
     },
   });
@@ -195,7 +198,7 @@ export default function EditChefProfileDialog() {
     remove: removeLink,
   } = useFieldArray({
     control,
-    name: "websiteSocialLinks",
+    name: "externalLinks",
   });
 
   // Watch avatar input to generate preview
@@ -438,15 +441,15 @@ export default function EditChefProfileDialog() {
       /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
 
     if (!flexibleUrlRegex.test(url)) {
-      setError("websiteSocialLinks", {
+      setError("externalLinks", {
         type: "manual",
         message: "Please enter a valid website link",
       });
       return;
     }
 
-    ensureUniqueAppend("websiteSocialLinks", url, appendLink);
-    clearErrors("websiteSocialLinks");
+    ensureUniqueAppend("externalLinks", url, appendLink);
+    clearErrors("externalLinks");
     setLinkDraft("");
   };
 
@@ -456,10 +459,10 @@ export default function EditChefProfileDialog() {
   const onSubmit = async (data) => {
     try {
       const payload = {
+        avatar: data.avatar || null,
         profile: {
           name: data.name,
           bio: data.bio,
-          avatar: data.avatar || null,
           cuisine: data.cuisine,
           dietaryLabels: data.dietaryLabels.map((i) => i.value.toLowerCase()),
           allergens: data.allergens.map((i) => i.value.toLowerCase()),
@@ -484,11 +487,17 @@ export default function EditChefProfileDialog() {
             endYear: item.isCurrentlyWorking ? "" : item.endYear,
             description: item.description,
           })),
-          websiteSocialLinks: data.websiteSocialLinks.map((i) => i.value),
+          externalLinks: data.externalLinks.map((i) => i.value),
         },
       };
 
-      console.log(payload);
+      // Close dialog immediately
+      dlgRef.current?.close();
+
+      await dispatch(updateProfile(payload)).unwrap();
+
+      // Reset form with latest saved data
+      reset(data);
     } catch (error) {
       console.error("Profile update failed:", error);
     }
@@ -1167,13 +1176,13 @@ export default function EditChefProfileDialog() {
                     <FaLink className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       className={`input input-bordered w-full pl-10 border-gray-200 focus:border-orange-400 rounded-xl ${
-                        errors.websiteSocialLinks ? "input-error" : ""
+                        errors.externalLinks ? "input-error" : ""
                       }`}
                       placeholder="https://portfolio.com"
                       value={linkDraft}
                       onChange={(e) => {
                         setLinkDraft(e.target.value);
-                        clearErrors("websiteSocialLinks");
+                        clearErrors("externalLinks");
                       }}
                     />
                   </div>
@@ -1187,9 +1196,9 @@ export default function EditChefProfileDialog() {
                   </button>
                 </div>
 
-                {errors.websiteSocialLinks && (
+                {errors.externalLinks && (
                   <span className="text-red-500 text-xs mt-1 ml-1">
-                    {errors.websiteSocialLinks.message}
+                    {errors.externalLinks.message}
                   </span>
                 )}
 
