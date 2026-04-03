@@ -1,6 +1,5 @@
 // Finalized
 
-import { useState } from "react";
 import {
   FaBars,
   FaBolt,
@@ -20,6 +19,7 @@ import { GiHerbsBundle } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { LOGO_URL } from "../constants";
 import { logout } from "../redux/slices/authSlice";
 
 const colorClasses = {
@@ -55,7 +55,7 @@ export default function Navbar({ children }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const isHome = location.pathname === "/";
-  const [searchTerm, setSearchTerm] = useState("");
+  const isSearchPage = location.pathname.includes("/search");
   const { userData, isLoggedIn, role } = useSelector((state) => state.auth);
 
   const sections = [
@@ -102,10 +102,8 @@ export default function Navbar({ children }) {
     if (drawer) drawer.checked = false;
   };
 
-  const handleSearch = (e) => {
-    e?.preventDefault();
-    if (!searchTerm.trim()) return;
-    navigate(`/search?q=${searchTerm.trim()}`);
+  const handleSearch = () => {
+    navigate(`/search`);
     closeSidebar();
   };
 
@@ -174,24 +172,28 @@ export default function Navbar({ children }) {
             </div>
 
             {/* Search Input */}
-            <div className="navbar-center hidden lg:flex flex-1 justify-center max-w-xl w-full">
-              <form
-                onSubmit={handleSearch}
-                className="w-full relative group"
-                role="search"
-              >
-                <div className="absolute inset-0 bg-linear-to-r from-orange-400 to-red-400 rounded-2xl blur opacity-0 group-focus-within:opacity-20 transition-opacity duration-500"></div>
-                <div className="relative flex items-center bg-gray-200/70 hover:bg-white focus-within:bg-white border border-transparent hover:border-gray-300 focus-within:border-orange-200 rounded-2xl px-4 transition-all duration-300">
-                  <FaSearch className="w-4 h-4 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
-                  <input
-                    type="text"
-                    placeholder="Search amazing recipes..."
-                    className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-400 pl-3 h-10 md:h-11"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </form>
-            </div>
+            {!isSearchPage && (
+              <div className="navbar-center hidden lg:flex flex-1 justify-center max-w-xl w-full">
+                <form
+                  onSubmit={handleSearch}
+                  className="w-full relative group"
+                  role="search"
+                >
+                  <div className="absolute inset-0 bg-linear-to-r from-orange-400 to-red-400 rounded-2xl blur opacity-0 group-focus-within:opacity-20 transition-opacity duration-500"></div>
+                  <div
+                    className="relative flex items-center bg-gray-200/70 hover:bg-white focus-within:bg-white border border-transparent hover:border-gray-300 focus-within:border-orange-200 rounded-2xl px-4 transition-all duration-300"
+                    onClick={handleSearch}
+                  >
+                    <FaSearch className="w-4 h-4 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+                    <input
+                      type="text"
+                      placeholder="Search amazing recipes..."
+                      className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-400 pl-3 h-10 md:h-11"
+                    />
+                  </div>
+                </form>
+              </div>
+            )}
 
             {/* Right: User / Login */}
             <div className="ml-4 flex items-center gap-3">
@@ -318,10 +320,7 @@ export default function Navbar({ children }) {
           <div className="flex items-center gap-4 mb-8 px-2">
             <div className="avatar">
               <div className="w-12 h-12 rounded-4xl shadow-md border border-orange-100">
-                <img
-                  src="https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png"
-                  alt="Bite Bot"
-                />
+                <img src={LOGO_URL} alt="Bitezzy" />
               </div>
             </div>
             <div>
@@ -335,21 +334,25 @@ export default function Navbar({ children }) {
           </div>
 
           {/* Mobile Search - Visible only on small screens */}
-          <form
-            onSubmit={handleSearch}
-            className="mb-6 px-2 lg:hidden"
-            role="search"
-          >
-            <div className="relative flex items-center bg-gray-200 hover:bg-gray-200 border border-transparent focus-within:border-orange-300 rounded-2xl px-4 transition-all">
-              <FaSearch className="w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-500 pl-3 h-11"
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </form>
+          {!isSearchPage && (
+            <form
+              onSubmit={handleSearch}
+              className="mb-6 px-2 lg:hidden"
+              role="search"
+            >
+              <div
+                className="relative flex items-center bg-gray-200 hover:bg-gray-200 border border-transparent focus-within:border-orange-300 rounded-2xl px-4 transition-all"
+                onClick={handleSearch}
+              >
+                <FaSearch className="w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="input input-ghost w-full focus:bg-transparent focus:outline-none border-none text-sm text-gray-800 placeholder-gray-500 pl-3 h-11"
+                />
+              </div>
+            </form>
+          )}
 
           {/* Navigation Links using DaisyUI Menu styling */}
           <ul className="menu w-full px-0 gap-1 flex-1 overflow-y-auto no-scrollbar">

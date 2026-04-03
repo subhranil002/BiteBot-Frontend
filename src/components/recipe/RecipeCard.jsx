@@ -12,7 +12,7 @@ const s = (id) => (id ? id.toString() : "");
 
 /* Small reusable badge component */
 const Badge = ({ children, className = "" }) => (
-  <div className={`badge rounded-lg ${className}`}>{children}</div>
+  <div className={`badge rounded-lg capitalize ${className}`}>{children}</div>
 );
 
 /* Icon + text stat row */
@@ -21,7 +21,7 @@ const Stat = ({ icon: Icon, iconClass = "", text }) => (
     <div className="w-8 h-8 rounded-xl bg-linear-to-br from-orange-200 to-amber-200 flex items-center justify-center border border-orange-300">
       <Icon className={`w-4 h-4 ${iconClass}`} />
     </div>
-    <span className="truncate">{text}</span>
+    <span className="truncate capitalize">{text}</span>
   </div>
 );
 

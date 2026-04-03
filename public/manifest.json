@@ -1,9 +1,9 @@
 {
-  "id": "/?source=pwa",
-  "name": "Bitezzy - Discover, Cook & Share Recipes",
+  "id": "/",
+  "name": "Bitezzy - Discover, Cook & Share Recipes Online",
   "short_name": "Bitezzy",
   "description": "Your AI-powered culinary companion. Discover recipes from top chefs, cook with step-by-step guidance, and share your own creations with a passionate food community.",
-  "start_url": "/?source=pwa",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "display_override": [
@@ -24,25 +24,25 @@
   ],
   "icons": [
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -50,14 +50,14 @@
   ],
   "screenshots": [
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/home.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Bitezzy – Home Screen"
     },
     {
-      "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+      "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/home-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
@@ -72,7 +72,7 @@
       "url": "/search?source=pwa-shortcut",
       "icons": [
         {
-          "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+          "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -85,7 +85,7 @@
       "url": "/chat?source=pwa-shortcut",
       "icons": [
         {
-          "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+          "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -98,7 +98,7 @@
       "url": "/favourites?source=pwa-shortcut",
       "icons": [
         {
-          "src": "https://sojkuuzpt346czem.public.blob.vercel-storage.com/Gemini_Generated_Image_is5dc8is5dc8is5d.png",
+          "src": "https://lyrmkpqpg9ryov0u.public.blob.vercel-storage.com/logo.png",
           "sizes": "96x96",
           "type": "image/png"
         }

@@ -20,7 +20,7 @@ const NEVER_CACHE = [
 ];
 
 // API origin — requests here get Network-First treatment
-const API_ORIGINS = ["https://api.bitebot.site"];
+const API_ORIGINS = ["https://api.bitezzy.store"];
 
 // ──────────────────────────────────────────────
 //  INSTALL — Pre-cache critical shell assets
